@@ -73,12 +73,23 @@ function checkUserRole($user_id, $role = null)
 
 function getDatabaseConnection()
 {
+  $config = require 'dbcon.php';
 
-  $host = 'localhost'; // Nome do servidor MySQL
-  $database = 'caravana'; // Nome do banco de dados
-  $username = 'root'; // Nome de usuário do MySQL
-  $password = 'root'; // Senha do MySQL
-  $port = 8889;
+  // Usando as configurações do array $config
+  $host = $config['host'];
+  $username = $config['username'];
+  $password = $config['password'];
+  $database = $config['database'];
+  $port = $config['port'];
+
+  // Criando a conexão com o banco de dados
+  $conn = new mysqli($host, $username, $password, $database, $port);
+
+  // $host = 'localhost'; // Nome do servidor MySQL
+  // $database = 'caravana'; // Nome do banco de dados
+  // $username = 'root'; // Nome de usuário do MySQL
+  // $password = 'root'; // Senha do MySQL
+  // $port = 8889;
 
   $conn = new mysqli($host, $username, $password, $database, $port);
 
