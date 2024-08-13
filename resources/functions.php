@@ -85,14 +85,6 @@ function getDatabaseConnection()
   // Criando a conexão com o banco de dados
   $conn = new mysqli($host, $username, $password, $database, $port);
 
-  // $host = 'localhost'; // Nome do servidor MySQL
-  // $database = 'caravana'; // Nome do banco de dados
-  // $username = 'root'; // Nome de usuário do MySQL
-  // $password = 'root'; // Senha do MySQL
-  // $port = 8889;
-
-  $conn = new mysqli($host, $username, $password, $database, $port);
-
   if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
   }
