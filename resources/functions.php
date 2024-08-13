@@ -89,7 +89,7 @@ function getDatabaseConnection()
     die("Conexão falhou: " . $conn->connect_error);
   }
 
-  return $conn;
+  return $conn; //volta a conexao
 }
 
 function getWardsByUserId($user_id)
