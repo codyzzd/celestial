@@ -142,6 +142,9 @@ $user_role = checkUserRole($user_id);
         // Defina o user_id a partir do PHP
         var userId = "<?php echo $user_id; ?>";
 
+        // mascarar campos
+        $('#cod').mask('0000000000');
+
         // Adicionar stake
         $("#stake_add").submit(function (event) {
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente

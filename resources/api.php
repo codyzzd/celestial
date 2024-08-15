@@ -372,7 +372,7 @@ if ($indicador == 'ward_archive') {
   $ward_id = $_POST['id'] ?? '';
 
   // Preparar a query de atualização
-  $stmt = $conn->prepare("UPDATE wards SET is_deleted = TRUE WHERE id = ?");
+  $stmt = $conn->prepare("UPDATE wards SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?");
   if (!$stmt) {
     echo json_encode([
       'status' => 'error',
@@ -410,14 +410,15 @@ if ($indicador == 'passenger_add') {
   $document = $_POST['document'] ?? '';
   $obs = $_POST['obs'] ?? null; // Campo opcional
   $id_user = $_POST['user_id'] ?? ''; // Coleta o ID do usuário
+  $id_relationship = $_POST['id_relationship'] ?? ''; // Coleta o ID do usuário
 
   // Converter as datas
   $nasc_date = convertDateFormat($nasc_date);
   $fever_date = $fever_date ? convertDateFormat($fever_date) : null;
 
   // Preparar a query de inserção com UUID() diretamente
-  $stmt = $conn->prepare("INSERT INTO passengers (id, name, nasc_date, sex, id_ward, fever_date, id_document, document, obs, id_user) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssississs", $name, $nasc_date, $sex, $id_ward, $fever_date, $id_document, $document, $obs, $id_user);
+  $stmt = $conn->prepare("INSERT INTO passengers (id, name, nasc_date, sex, id_ward, fever_date, id_document, document, obs, created_by,id_relationship) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
+  $stmt->bind_param("ssississsi", $name, $nasc_date, $sex, $id_ward, $fever_date, $id_document, $document, $obs, $id_user, $id_relationship);
 
   // Executar a query
   if ($stmt->execute()) {
@@ -433,6 +434,155 @@ if ($indicador == 'passenger_add') {
   }
 
   $stmt->close(); // Fechar a declaração
+}
+
+if ($indicador == 'passenger_list') {
+  // Pegar dados do form
+  $user_id = $_POST['user_id'] ?? '';
+  $relation_slug = $_POST['relation'] ?? '';
+
+  // Verificar se o ID do usuário foi fornecido
+  if (empty($user_id)) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'ID do usuário é obrigatório.'
+    ]);
+    exit;
+  }
+
+  // Inicializar a variável $relation_id como nula
+  $relation_id = null;
+
+  // Se o slug de relação for fornecido, buscar o ID correspondente
+  if (!empty($relation_slug)) {
+    // Buscar o ID da relação a partir do slug
+    $stmt = $conn->prepare("SELECT id FROM relationship WHERE slug = ?");
+    $stmt->bind_param("s", $relation_slug);
+
+    if ($stmt->execute()) {
+      $result = $stmt->get_result();
+
+      if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $relation_id = $row['id']; // Atribuir o ID correspondente ao slug
+      } else {
+        echo json_encode([
+          'status' => 'error',
+          'msg' => 'Relação não encontrada.'
+        ]);
+        exit;
+      }
+    } else {
+      echo json_encode([
+        'status' => 'error',
+        'msg' => 'Erro ao buscar o ID da relação: ' . $stmt->error
+      ]);
+      exit;
+    }
+
+    $stmt->close(); // Fechar a declaração
+  } else {
+    $relation_id = null; // Nenhuma relação específica
+  }
+
+  // Construir a query para buscar passageiros com junção na tabela relationship
+  $query = "SELECT p.*,
+                 r.slug AS relation_slug,
+                 s.slug AS sex_slug
+          FROM passengers p
+          LEFT JOIN relationship r ON p.id_relationship = r.id
+          LEFT JOIN sexs s ON p.sex = s.id
+          WHERE p.created_by = ?";
+
+  // Adicionar a condição de relação, se $relation_id não for nulo
+  if ($relation_id !== null) {
+    $query .= " AND p.id_relationship = ?";
+  }
+
+  // Preparar a query para buscar passageiros
+  $stmt = $conn->prepare($query);
+
+  // Bind dos parâmetros, incluindo $relation_id se não for nulo
+  if ($relation_id !== null) {
+    $stmt->bind_param("ss", $user_id, $relation_id);
+  } else {
+    $stmt->bind_param("s", $user_id);
+  }
+
+  // Executar a query para buscar os passageiros
+  if ($stmt->execute()) {
+    $result = $stmt->get_result();
+    $passengers = [];
+
+    // Buscar os resultados e armazená-los no array $passengers
+    while ($row = $result->fetch_assoc()) {
+      $passengers[] = $row;
+    }
+
+    // Retornar os passageiros como JSON
+    echo json_encode($passengers);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao buscar os passageiros: ' . $stmt->error
+    ]);
+  }
+
+  $stmt->close(); // Fechar a declaração
+}
+
+if ($indicador == 'passenger_get') {
+  // Pegar dados do form
+  $passenger_id = $_GET['passenger_id'] ?? '';
+
+  // Verifica se o user_id é válido
+  if ($passenger_id <= 0) {
+    echo json_encode([
+      'error' => 'ID de passageiro inválido.'
+    ]);
+    exit;
+  }
+
+  // Prepara a consulta SQL
+  $sql = "SELECT * FROM passengers WHERE id = ?";
+
+  // Prepara a declaração
+  if ($stmt = $conn->prepare($sql)) {
+    // Liga os parâmetros
+    $stmt->bind_param("i", $passenger_id);
+
+    // Executa a declaração
+    $stmt->execute();
+
+    // Obtém o resultado
+    $result = $stmt->get_result();
+
+    // Verifica se há resultados
+    if ($result->num_rows > 0) {
+      // Cria um array para armazenar os dados
+      $passengers = [];
+
+      // Itera sobre os resultados e armazena no array
+      while ($row = $result->fetch_assoc()) {
+        $passengers[] = $row;
+      }
+
+      // Codifica o array em JSON e envia como resposta
+      echo json_encode($passengers);
+    } else {
+      // Se nenhum resultado, retorna uma mensagem de erro
+      echo json_encode([
+        'error' => 'Nenhum passageiro encontrado para o ID fornecido.'
+      ]);
+    }
+
+    // Fecha a declaração
+    $stmt->close();
+  } else {
+    // Erro ao preparar a declaração
+    echo json_encode(['error' => 'Erro ao preparar a declaração SQL.']);
+  }
+
 }
 
 

@@ -12,9 +12,9 @@ function checkUserLogin()
   return $_SESSION['user_id'];
 }
 
-function getIndicador()
+function getIndicador(): string
 {
-  return $_POST['indicador'] ?? '';
+  return $_POST['indicador'] ?? $_GET['indicador'] ?? '';
 }
 
 function generateSalt()
@@ -100,7 +100,7 @@ function getWardsByUserId($user_id)
   $name = '';
   $cod = '';
   $id = '';
-  $is_deleted = '';
+  $deleted_at = '';
 
   // Buscar o id_stake do usuário
   $stmt = $conn->prepare("SELECT id_stake FROM users WHERE id = ?");
@@ -116,10 +116,10 @@ function getWardsByUserId($user_id)
   }
 
   // Buscar as wards com o id_stake correspondente
-  $stmt = $conn->prepare("SELECT id, name, cod, is_deleted FROM wards WHERE id_stake = ? ORDER BY name");
+  $stmt = $conn->prepare("SELECT id, name, cod, deleted_at FROM wards WHERE id_stake = ? ORDER BY name");
   $stmt->bind_param("s", $id_stake);
   $stmt->execute();
-  $stmt->bind_result($id, $name, $cod, $is_deleted);
+  $stmt->bind_result($id, $name, $cod, $deleted_at);
 
   $wards = [];
   // Armazenar os resultados em um array
@@ -128,7 +128,7 @@ function getWardsByUserId($user_id)
       'id' => $id,
       'name' => $name,
       'cod' => $cod,
-      'is_deleted' => $is_deleted
+      'deleted_at' => $deleted_at
     ];
   }
 
@@ -206,6 +206,42 @@ function getSexs()
 
   // Retornar o array de documentos
   return $sexs;
+}
+
+function getRelations()
+{
+  // Estabelecer conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Preparar a consulta SQL para selecionar e ordenar os documentos por nome
+  $stmt = $conn->prepare("SELECT id, name, slug FROM relationship");
+
+  // Executar a consulta
+  $stmt->execute();
+
+  // Vincular os resultados às variáveis
+  $stmt->bind_result($id, $name, $slug);
+
+  // Inicializar um array para armazenar os documentos
+  $relations = [];
+
+  // Armazenar os resultados em um array
+  while ($stmt->fetch()) {
+    $relations[] = [
+      'id' => $id,
+      'name' => $name,
+      'slug' => $slug
+    ];
+  }
+
+  // Fechar a consulta
+  $stmt->close();
+
+  // Fechar a conexão com o banco de dados
+  $conn->close();
+
+  // Retornar o array de documentos
+  return $relations;
 }
 
 // Função para converter data do formato dd/mm/yyyy para YYYY-MM-DD

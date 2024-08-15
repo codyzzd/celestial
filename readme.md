@@ -15,7 +15,7 @@ Este é um WebApp desenvolvido para membros e líderes da **Igreja de Jesus Cris
 ### Para Membros
 
 - **Inscrição nas Caravanas:** Inscreva-se nas caravanas sem depender dos líderes.
-- **Administração Familiar:** Gerencie as inscrições de sua família com facilidade, com um número mínimo de cadastros.
+- **Administração Familiar:** Gerencie as inscrições de sua família com facilidade.
 - **Assistência a Membros Idosos:** Atue como procurador para membros idosos, auxiliando-os na utilização do sistema.
 
 ## Características Técnicas

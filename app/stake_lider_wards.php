@@ -234,9 +234,9 @@ $user_role = checkUserRole($user_id, 'stake_lider');
         </div>
 
         <!-- empty state -->
-        <div class="p-4  rounded-lg   flex flex-col  gap-2 w-full sm:max-w-md border-[2px] border-gray-300 border-dashed"
+        <div class="p-4  rounded-lg   flex flex-col   w-full sm:max-w-md border-[2px] border-gray-300 border-dashed"
              id="empty_state">
-          <i class="fa fa-circle-question text-3xl text-gray-500"></i>
+          <i class="fa fa-circle-question text-3xl text-gray-500 mb-2"></i>
 
           <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Cade as alas?</h5>
           <p class="text-gray-600 dark:text-gray-300 text-base">Vamos lá, não vai deixar as pedras fazerem o trabalho, vai? Comece a cadastrar suas alas e vamos juntos fortalecer o reino de Deus.</p>
@@ -258,6 +258,10 @@ $user_role = checkUserRole($user_id, 'stake_lider');
 
         // Defina o user_id a partir do PHP
         var userId = "<?php echo $user_id; ?>";
+
+        // Mascarar campo 'cod' dentro do formulário com id 'ward_add'
+        $('#ward_add #cod').mask('0000000000');
+        $('#ward_edit #cod').mask('0000000000');
 
         //pra poder ouvir os botoes gerados pela lista
         document.addEventListener('click', function (event) {
@@ -402,7 +406,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                 // Filtrar wards baseado no parâmetro opcional
                 if (notDeleted) {
                   wards = wards.filter(function (ward) {
-                    return ward.is_deleted === 0; // Considera apenas aqueles com is_deleted 0
+                    return ward.deleted_at === null; // Considera apenas aqueles com deleted_at vazio (NULL)
                   });
                 }
 
