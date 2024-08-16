@@ -411,14 +411,16 @@ if ($indicador == 'passenger_add') {
   $obs = $_POST['obs'] ?? null; // Campo opcional
   $id_user = $_POST['user_id'] ?? ''; // Coleta o ID do usuário
   $id_relationship = $_POST['id_relationship'] ?? ''; // Coleta o ID do usuário
+  $id_church = $_POST['id_church'] ?? '';
 
   // Converter as datas
   $nasc_date = convertDateFormat($nasc_date);
   // $fever_date = $fever_date ? convertDateFormat($fever_date) : null;
 
   // Preparar a query de inserção com UUID() diretamente
-  $stmt = $conn->prepare("INSERT INTO passengers (id, name, nasc_date, sex, id_ward, id_document, document, obs, created_by, id_relationship) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssississs", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_user, $id_relationship);
+  $stmt = $conn->prepare("INSERT INTO passengers (id, name, nasc_date, sex, id_ward, id_document, document, obs, created_by, id_relationship, id_church) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssisssisss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_user, $id_relationship, $id_church);
+
 
   // Executar a query
   if ($stmt->execute()) {
@@ -449,14 +451,15 @@ if ($indicador == 'passenger_edit') {
   $obs = $_POST['obs'] ?? null; // Campo opcional
   $id_user = $_POST['user_id'] ?? ''; // Coleta o ID do usuário
   $id_relationship = $_POST['id_relationship'] ?? ''; // Coleta o ID do relacionamento
+  $id_church = $_POST['id_church'] ?? ''; // Coleta o ID do usuário
 
   // Converter as datas
   $nasc_date = convertDateFormat($nasc_date);
   // $fever_date = $fever_date ? convertDateFormat($fever_date) : null;
 
   // Preparar a query de atualização
-  $stmt = $conn->prepare("UPDATE passengers SET name = ?, nasc_date = ?, sex = ?, id_ward = ?, id_document = ?, document = ?, obs = ?, id_relationship = ? WHERE id = ?");
-  $stmt->bind_param("ssississi", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_relationship, $id);
+  $stmt = $conn->prepare("UPDATE passengers SET name = ?, nasc_date = ?, sex = ?, id_ward = ?, id_document = ?, document = ?, obs = ?, id_relationship = ?, id_church = ? WHERE id = ?");
+  $stmt->bind_param("ssississss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_relationship, $id_church, $id);
 
   // Executar a query
   if ($stmt->execute()) {
@@ -663,8 +666,51 @@ if ($indicador == 'passenger_archive') {
   $stmt->close(); // Fechar a declaração
 }
 
+if ($indicador == 'ward_edit_user') {
 
+  // Pegar dados do form
+  $user_id = $_POST['user_id'] ?? '';
+  $id_ward = $_POST['id_ward'] ?? '';
 
+  // Validar os dados
+  if (empty($user_id) || empty($id_ward)) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Dados inválidos.'
+    ]);
+    exit();
+  }
+
+  // Preparar a consulta
+  $stmt = $conn->prepare("UPDATE users SET id_ward = ? WHERE id = ?");
+  if (!$stmt) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao preparar a consulta: ' . $conn->error
+    ]);
+    exit();
+  }
+
+  // Bind dos parâmetros
+  $stmt->bind_param("ss", $id_ward, $user_id);
+
+  // Executar a consulta
+  if ($stmt->execute()) {
+    echo json_encode([
+      'status' => 'loading',
+      'msg' => 'Ativando Ala...'
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao atualizar o banco de dados: ' . $stmt->error
+    ]);
+  }
+
+  // Fechar a declaração e a conexão
+  $stmt->close();
+
+}
 
 // Fechar a conexão
 $conn->close();

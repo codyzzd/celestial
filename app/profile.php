@@ -14,6 +14,56 @@ $user_id = checkUserLogin();
 
 // Guarda a role do usuário
 $user_role = checkUserRole($user_id);
+
+//iniciar consulta para obter dados para pagina
+$conn = getDatabaseConnection();
+
+// Prepare a SQL statement com placeholders
+$sql = "
+    SELECT
+        u.id,
+        u.name AS user_name,
+        s.name AS stake_name,
+        w.name AS ward_name,
+        r.name AS role_name
+    FROM
+        users u
+    LEFT JOIN
+        stakes s ON u.id_stake = s.id
+    LEFT JOIN
+        wards w ON u.id_ward = w.id
+    LEFT JOIN
+        roles r ON u.role = r.id
+";
+
+// Preparar a declaração SQL
+$stmt = $conn->prepare($sql);
+
+// Execute a consulta
+$stmt->execute();
+
+// Obtenha o resultado
+$result = $stmt->get_result();
+
+if ($row = $result->fetch_assoc()) {
+  // Atribuir os valores às variáveis, ou manter null se não houver resultado
+  $user_name_profile = $row["user_name"] ?? null;
+  $user_stake_profile = $row["stake_name"] ?? 'não selecionada';
+  $user_ward_profile = $row["ward_name"] ?? 'não selecionada';
+  $user_role_profile = $row["role_name"] ?? 'Membro';
+}
+
+// Criar o array associativo
+$profile = [
+  'name' => $user_name_profile,
+  'stake' => $user_stake_profile,
+  'ward' => $user_ward_profile,
+  'role' => $user_role_profile,
+];
+
+// Fechar a declaração e a conexão
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -64,7 +114,7 @@ $user_role = checkUserRole($user_id);
       <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
         <div class="flex-col gap-1">
           <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Perfil</h1>
-          <p class="text-gray-500">Aqui você pode ajustar configurações que influenciam o uso do app e seus acessos.</p>
+          <!-- <p class="text-gray-500">Aqui você pode ajustar configurações que influenciam o uso do app e seus acessos.</p> -->
         </div>
         <!-- <button type="button"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full md:w-fit">Criar</button> -->
@@ -74,27 +124,60 @@ $user_role = checkUserRole($user_id);
 
       <div class="flex flex-col gap-4">
 
-        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y">
-          <a href="profile_edit.php"
-             class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between">
-            <span><i class="fa fa-user-pen text-lg text-gray-500 fa-fw me-2"></i>
-              Editar Perfil</span>
-            <i class="fa fa-chevron-right text-lg text-gray-500"></i>
-          </a>
-          <a href="stake_select.php"
-             class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between">
-            <span><i class="fa fa-people-group text-lg text-gray-500 fa-fw me-2"></i>
-              Selecionar Estaca</span>
-            <i class="fa fa-chevron-right text-lg text-gray-500"></i>
-          </a>
+        <div id="profile_info"
+             class="flex flex-row gap-4">
+          <div class="relative inline-flex items-center justify-center w-16 h-16 overflow-hidden bg-gray-200 rounded-full dark:bg-gray-600">
+            <span class="font-medium text-gray-600 dark:text-gray-300">BG</span>
+          </div>
+          <div>
+            <p class="text-[10px] font-medium tracking-wider text-gray-600 uppercase">
+              <?= $profile['role'] ?>
+            </p>
+            <h2 class="font-semibold truncate text-xl">
+              <?= $profile['name'] ?>
+            </h2>
 
-          <a href="recomendation_edit.php"
-             class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between">
-            <span><i class="fa fa-id-card-clip text-lg text-gray-500 fa-fw me-2"></i>
-              Editar Recomendação</span>
-            <i class="fa fa-chevron-right text-lg text-gray-500"></i>
-          </a>
+            <!-- <p class="text-sm text-gray-500 truncate">0 Caravanas</p> -->
+            <p class="text-sm text-gray-500 truncate">
+              Estaca <?= $profile['stake'] ?>
+            </p>
+            <p class="text-sm text-gray-500 truncate">
+              Ala <?= $profile['ward'] ?>
+            </p>
 
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <h2 class=" text-lg font-semibold text-gray-900 dark:text-white">Configurações</h2>
+          <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y">
+            <!-- <a href="profile_edit.php"
+               class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between  ">
+              <span><i class="fa fa-user-pen text-lg text-gray-500 fa-fw me-2"></i>
+                Editar Perfil</span>
+              <i class="fa fa-chevron-right text-lg text-gray-500"></i>
+            </a> -->
+            <a href="stake_select.php"
+               class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between">
+              <span><i class="fa fa-people-group text-lg text-gray-500 fa-fw me-2"></i>
+                Selecionar Estaca</span>
+              <i class="fa fa-chevron-right text-lg text-gray-500"></i>
+            </a>
+            <a href="ward_select.php"
+               class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between">
+              <span><i class="fa fa-tents text-lg text-gray-500 fa-fw me-2"></i>
+                Selecionar Ala</span>
+              <i class="fa fa-chevron-right text-lg text-gray-500"></i>
+            </a>
+
+            <a href="recomendation_edit.php"
+               class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between cursor-not-allowed text-gray-400 bg-gray-200 pointer-events-none">
+              <span><i class="fa fa-id-card-clip text-lg text-gray-500 fa-fw me-2"></i>
+                Editar Recomendação</span>
+              <i class="fa fa-chevron-right text-lg text-gray-500"></i>
+            </a>
+
+          </div>
         </div>
 
         <a href="logout.php"

@@ -218,6 +218,18 @@ $relations = getRelations();
                   </ul>
                 </div>
                 <div class="col-span-2">
+                  <label for="church"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de Membro</label>
+                  <input type="text"
+                         id="id_church"
+                         name="id_church"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         placeholder="ex: 123-1234-1234"
+                         autocomplete="mrn"
+                         required />
+                </div>
+
+                <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900">Nome Completo</label>
                   <input type="text"
@@ -366,6 +378,7 @@ $relations = getRelations();
                 Editar Pessoa
               </h3>
               <button type="button"
+                      id="close_edit"
                       class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                       data-modal-hide="passenger_edit_modal">
                 <svg class="w-3 h-3"
@@ -410,6 +423,17 @@ $relations = getRelations();
                     <?php endforeach; ?>
 
                   </ul>
+                </div>
+                <div class="col-span-2">
+                  <label for="church"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de Membro</label>
+                  <input type="text"
+                         id="id_church"
+                         name="id_church"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         placeholder="ex: 123-1234-1234"
+                         autocomplete="mrn"
+                         required />
                 </div>
                 <div class="col-span-2">
                   <label for="name"
@@ -541,8 +565,10 @@ $relations = getRelations();
                         class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Arquivar</button>
                 <button type="button"
                         data-modal-hide="passenger_edit_modal"
+                        id="cancel"
                         class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
                 <button type="submit"
+                        id="submit"
                         class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-white text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   Salvar
                 </button>
@@ -571,6 +597,8 @@ $relations = getRelations();
         // mascarar campos
         $('#passenger_add #nasc_date').mask('00/00/0000');
         $('#passenger_edit #nasc_date').mask('00/00/0000');
+        $('#passenger_add #id_church').mask('000-0000-0000');
+        $('#passenger_edit #id_church').mask('000-0000-0000');
 
         // Adiciona um ouvinte de eventos para o documento
         document.addEventListener('click', function (event) {
@@ -620,8 +648,7 @@ $relations = getRelations();
                 $('#passenger_edit #document').val(passenger.document || '');
                 $('#passenger_edit #obs').val(passenger.obs || '');
                 $('#passenger_edit #id').val(passenger.id || '');
-
-
+                $('#passenger_edit #id_church').val(passenger.id_church || '');
 
                 // console.log('Dados dos passageiros:', passenger);
 
@@ -630,51 +657,6 @@ $relations = getRelations();
                 passengerEditModal.show();
               }
             });
-
-            // Verifica se o botão clicado é o de arquivamento
-            $(document).on('click', '#passenger_archive', function (event) {
-              event.preventDefault(); // Previne o comportamento padrão do botão
-
-              // Obtém o ID do passageiro que será arquivado
-              const form = $('#passenger_edit');
-              const passengerId = form.find('input[name="id"]').val();
-
-              // Cria um objeto com os dados a serem enviados
-              const formData = {
-                id: passengerId,
-                indicador: 'passenger_archive'
-              };
-
-              // Realiza a ação de arquivamento via AJAX
-              $.ajax({
-                url: apiPath,
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                  try {
-                    const jsonResponse = JSON.parse(response);
-                    if (jsonResponse.status === "success") {
-                      toast(jsonResponse.status, jsonResponse.msg);
-
-                      const passengerEditModal = new Modal(document.getElementById('passenger_edit_modal'));
-                      passengerEditModal.hide();
-
-                      updatePeopleList('', 'not_deleted');
-                    } else if (jsonResponse.status === "error") {
-                      toast(jsonResponse.status, jsonResponse.msg);
-                    }
-                  } catch (e) {
-                    console.error('Erro ao processar resposta:', e);
-                    toast('error', 'Erro ao processar a resposta do servidor.');
-                  }
-                },
-                error: function (xhr, status, error) {
-                  console.error('Erro AJAX:', error);
-                  toast('error', 'Erro ao enviar a solicitação: ' + error);
-                }
-              });
-            });
-
 
           }
 
@@ -689,7 +671,6 @@ $relations = getRelations();
 
         // Adicionar passenger
         $("#passenger_add").submit(function (event) {
-
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
 
           // Serializar os campos do formulário
@@ -728,6 +709,7 @@ $relations = getRelations();
         $("#passenger_edit").submit(function (event) {
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
 
+
           // Serializar os campos do formulário
           var formData = $(this).serialize() + "&user_id=" + encodeURIComponent(userId) + "&indicador=passenger_edit";
 
@@ -745,7 +727,8 @@ $relations = getRelations();
                   toast(jsonResponse.status, jsonResponse.msg);
                   // updatePassengersList(true); // Se necessário, descomente esta linha para atualizar a lista
                   // Fechar o modal diretamente
-                  $('[data-modal-hide="passenger_edit_modal"]').trigger('click');
+                  $("#close_edit").trigger('click');
+
                   // updatePeopleList();
                   updatePeopleList('', 'not_deleted');
                 } else if (jsonResponse.status === "error") {
@@ -761,6 +744,50 @@ $relations = getRelations();
           });
         });
 
+        // Verifica se o botão clicado é o de arquivamento
+        $(document).on('click', '#passenger_archive', function (event) {
+          event.preventDefault(); // Previne o comportamento padrão do botão
+          console.log("clicou no #passenger_archive")
+
+          // Obtém o ID do passageiro que será arquivado
+          const form = $('#passenger_edit');
+          const passengerId = form.find('input[name="id"]').val();
+
+          // Cria um objeto com os dados a serem enviados
+          const formData = {
+            id: passengerId,
+            indicador: 'passenger_archive'
+          };
+
+          // Realiza a ação de arquivamento via AJAX
+          $.ajax({
+            url: apiPath,
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+              try {
+                const jsonResponse = JSON.parse(response);
+                if (jsonResponse.status === "success") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+
+                  const passengerEditModal = new Modal(document.getElementById('passenger_edit_modal'));
+                  passengerEditModal.hide();
+
+                  updatePeopleList('', 'not_deleted');
+                } else if (jsonResponse.status === "error") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+                }
+              } catch (e) {
+                console.error('Erro ao processar resposta:', e);
+                toast('error', 'Erro ao processar a resposta do servidor.');
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error('Erro AJAX:', error);
+              toast('error', 'Erro ao enviar a solicitação: ' + error);
+            }
+          });
+        });
 
         // Função para atualizar a lista de pessoas
         function updatePeopleList(relation = '', status = 'all') {
@@ -860,10 +887,6 @@ $relations = getRelations();
         }
 
         updatePeopleList('', 'not_deleted');
-
-
-
-
       });
     </script>
   </body>
