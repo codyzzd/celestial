@@ -266,9 +266,10 @@ if (!empty($id_stake)) {
                 var jsonResponse = JSON.parse(response); // Tentar fazer o parsing do JSON
 
                 // Verificar o status da resposta e mostrar o toast apropriado
-                if (jsonResponse.status === "success") {
-                  $("#stake_edit")[0].reset(); // Reseta o formulário
+                if (jsonResponse.status === "loading") {
+                  // $("#stake_edit")[0].reset(); // Reseta o formulário
                   toast(jsonResponse.status, jsonResponse.msg);
+                  // console.log(jsonResponse.status);
                   // Após 2 segundos (2000 milissegundos), recarregar a página
                   setTimeout(function () {
                     location.reload(); // Recarrega a página

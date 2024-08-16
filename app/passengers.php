@@ -343,7 +343,7 @@ $relations = getRelations();
                         class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
                 <button type="submit"
                         class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-white text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  Adicionar Ala
+                  Adicionar
                 </button>
               </div>
             </form>
@@ -363,7 +363,7 @@ $relations = getRelations();
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5  rounded-t dark:border-gray-600 border-b">
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Adicionar Pessoa
+                Editar Pessoa
               </h3>
               <button type="button"
                       class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -386,7 +386,6 @@ $relations = getRelations();
             <form class=""
                   id="passenger_edit">
               <div class="grid gap-4 mb-4 grid-cols-2 p-4">
-
                 <div class="col-span-2">
                   <label for="inline-radio-group"
                          class="block mb-2 text-sm font-medium text-gray-900">Relação</label>
@@ -404,7 +403,6 @@ $relations = getRelations();
                                  required>
                           <label for="horizontal-list-edit-radio-<?php echo $relation['slug']; ?>"
                                  class="w-full py-3 ms-2 text-sm font-medium text-gray-900">
-
                             <?php echo $relation['name']; ?>
                           </label>
                         </div>
@@ -529,6 +527,9 @@ $relations = getRelations();
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
                 </div>
+                <input type="hidden"
+                       id="id"
+                       name="id" />
 
               </div>
 
@@ -539,11 +540,11 @@ $relations = getRelations();
                         type="button"
                         class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Arquivar</button>
                 <button type="button"
-                        data-modal-toggle="passenger_edit_modal"
+                        data-modal-hide="passenger_edit_modal"
                         class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
                 <button type="submit"
                         class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-white text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  Salvar Pessoa
+                  Salvar
                 </button>
               </div>
             </form>
@@ -571,89 +572,6 @@ $relations = getRelations();
         $('#passenger_add #nasc_date').mask('00/00/0000');
         $('#passenger_edit #nasc_date').mask('00/00/0000');
 
-        // Função para buscar dados do passageiro
-        // async function fetchPassengerData(passengerId) {
-        //   try {
-        //     const response = await $.ajax({
-        //       url: apiPath,
-        //       type: 'GET',
-        //       data: {
-        //         indicador: 'passenger_get',
-        //         passenger_id: passengerId
-        //       },
-        //       dataType: 'json' // Espera-se que a resposta seja JSON
-        //     });
-
-        //     // Retorna o resultado da resposta
-        //     return response;
-        //   } catch (error) {
-        //     console.error('Erro ao buscar dados dos passageiros:', error);
-        //     return null; // Retorna null ou algum valor padrão em caso de erro
-        //   }
-        // }
-
-        // Função assíncrona que lida com os dados do passageiro
-        // async function handlePassengerData(passengerId) {
-        //   try {
-        //     const passengerData = await fetchPassengerData(passengerId);
-
-        //     // Assumindo que passengerData é um array
-        //     if (passengerData.length > 0) {
-        //       const passenger = passengerData[0]; // Acessa o primeiro elemento do array
-
-        //       // Selecionando o rádio button correspondente à relação
-        //       const relationRadio = $(`input[name="id_relationship"][value="${passenger.id_relationship}"]`);
-        //       relationRadio.prop('checked', true);
-
-        //       $('#passenger_edit #name').val(passenger.name || '');
-
-        //       // Verifica se a propriedade 'nasc_date' existe antes de formatar
-        //       const birthDate = passenger.nasc_date ? passenger.nasc_date : '';
-
-        //       if (birthDate) {
-        //         const [year, month, day] = birthDate.split('-');
-        //         const formattedDate = `${day}/${month}/${year}`;
-        //         $('#passenger_edit #nasc_date').val(formattedDate);
-        //       }
-
-        //       // Selecionando o rádio button correspondente à relação
-        //       const sexRadio = $(`input[name="sex"][value="${passenger.sex}"]`);
-        //       sexRadio.prop('checked', true);
-
-        //       // Selecionando a opção do select correspondente à ala
-        //       $('#passenger_edit #id_ward').val(passenger.id_ward || '');
-
-        //       $('#passenger_edit #id_document').val(passenger.id_document || '');
-
-        //       $('#passenger_edit #document').val(passenger.document || '');
-        //       $('#passenger_edit #obs').val(passenger.obs || '');
-
-        //       // console.log('Dados dos passageiros:', passenger);
-        //     } else {
-        //       console.log('Não foi possível obter os dados dos passageiros.');
-        //     }
-        //   } catch (error) {
-        //     console.error('Erro ao lidar com os dados dos passageiros:', error);
-        //   }
-        // }
-
-
-        // // Função para exibir o modal de edição do passageiro
-        // async function showPassengerEditModal(target) {
-        //   if (target) {
-        //     // Obtém o ID do passageiro dos data-attributes
-        //     const passengerId = target.getAttribute('data-id');
-
-        //     // Chama a função handlePassengerData e aguarda a conclusão
-        //     await handlePassengerData(passengerId);
-
-        //     // Inicializa e exibe o modal após os dados terem sido carregados
-        //     const passengerEditModal = new Modal(document.getElementById('passenger_edit_modal'));
-        //     passengerEditModal.show();
-        //   }
-        // }
-
-
         // Adiciona um ouvinte de eventos para o documento
         document.addEventListener('click', function (event) {
           // Verifica se o elemento clicado, ou algum dos seus pais, é o botão para mostrar o modal
@@ -663,11 +581,13 @@ $relations = getRelations();
             const passengerId = showModalTarget.getAttribute('data-id');
 
             $.ajax({
+              type: "POST",
               url: apiPath,
               data: {
                 passenger_id: passengerId,
                 indicador: 'passenger_get'
               },
+
               success: function (response) {
                 // Assumindo que passengerData é um array
                 const passenger = JSON.parse(response)[0];
@@ -699,6 +619,9 @@ $relations = getRelations();
 
                 $('#passenger_edit #document').val(passenger.document || '');
                 $('#passenger_edit #obs').val(passenger.obs || '');
+                $('#passenger_edit #id').val(passenger.id || '');
+
+
 
                 // console.log('Dados dos passageiros:', passenger);
 
@@ -706,6 +629,50 @@ $relations = getRelations();
                 const passengerEditModal = new Modal(document.getElementById('passenger_edit_modal'));
                 passengerEditModal.show();
               }
+            });
+
+            // Verifica se o botão clicado é o de arquivamento
+            $(document).on('click', '#passenger_archive', function (event) {
+              event.preventDefault(); // Previne o comportamento padrão do botão
+
+              // Obtém o ID do passageiro que será arquivado
+              const form = $('#passenger_edit');
+              const passengerId = form.find('input[name="id"]').val();
+
+              // Cria um objeto com os dados a serem enviados
+              const formData = {
+                id: passengerId,
+                indicador: 'passenger_archive'
+              };
+
+              // Realiza a ação de arquivamento via AJAX
+              $.ajax({
+                url: apiPath,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                  try {
+                    const jsonResponse = JSON.parse(response);
+                    if (jsonResponse.status === "success") {
+                      toast(jsonResponse.status, jsonResponse.msg);
+
+                      const passengerEditModal = new Modal(document.getElementById('passenger_edit_modal'));
+                      passengerEditModal.hide();
+
+                      updatePeopleList('', 'not_deleted');
+                    } else if (jsonResponse.status === "error") {
+                      toast(jsonResponse.status, jsonResponse.msg);
+                    }
+                  } catch (e) {
+                    console.error('Erro ao processar resposta:', e);
+                    toast('error', 'Erro ao processar a resposta do servidor.');
+                  }
+                },
+                error: function (xhr, status, error) {
+                  console.error('Erro AJAX:', error);
+                  toast('error', 'Erro ao enviar a solicitação: ' + error);
+                }
+              });
             });
 
 
@@ -743,7 +710,7 @@ $relations = getRelations();
                   // updatePassengersList(true); // Se necessário, descomente esta linha para atualizar a lista
                   // Fechar o modal diretamente
                   $('[data-modal-hide="passenger_add_modal"]').trigger('click');
-                  updatePeopleList();
+                  updatePeopleList('', 'not_deleted');
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
@@ -762,7 +729,7 @@ $relations = getRelations();
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
 
           // Serializar os campos do formulário
-          var formData = $(this).serialize() + "&user_id=" + encodeURIComponent(userId) + "&indicador=passenger_add";
+          var formData = $(this).serialize() + "&user_id=" + encodeURIComponent(userId) + "&indicador=passenger_edit";
 
           $.ajax({
             type: "POST",
@@ -774,12 +741,13 @@ $relations = getRelations();
 
                 // Verificar o status da resposta e mostrar o toast apropriado
                 if (jsonResponse.status === "success") {
-                  $("#passenger_add")[0].reset(); // Reseta o formulário
+                  $("#passenger_edit")[0].reset(); // Reseta o formulário
                   toast(jsonResponse.status, jsonResponse.msg);
                   // updatePassengersList(true); // Se necessário, descomente esta linha para atualizar a lista
                   // Fechar o modal diretamente
-                  $('[data-modal-hide="passenger_add_modal"]').trigger('click');
-                  updatePeopleList();
+                  $('[data-modal-hide="passenger_edit_modal"]').trigger('click');
+                  // updatePeopleList();
+                  updatePeopleList('', 'not_deleted');
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
@@ -795,12 +763,13 @@ $relations = getRelations();
 
 
         // Função para atualizar a lista de pessoas
-        function updatePeopleList(relation = '') {
+        function updatePeopleList(relation = '', status = 'all') {
 
           // Criar o objeto data com os parâmetros padrão
           let data = {
             user_id: userId,
-            indicador: "passenger_list" // Indicador para buscar as pessoas
+            indicador: "passenger_list", // Indicador para buscar as pessoas
+            status: status // Incluir o status diretamente no objeto data
           };
 
           // Se a variável relation for fornecida, adicioná-la ao objeto data
@@ -890,7 +859,7 @@ $relations = getRelations();
           });
         }
 
-        updatePeopleList();
+        updatePeopleList('', 'not_deleted');
 
 
 
