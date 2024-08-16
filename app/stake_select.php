@@ -20,13 +20,25 @@ $user_role = checkUserRole($user_id);
 // conectando no banco
 // require_once ROOT_PATH . '/resources/dbcon.php';
 
-
 // Consultar o banco de dados para verificar se o id_stake do usuário está vazio
 $stmt = $conn->prepare("SELECT id_stake FROM users WHERE id = ?");
-$stmt->bind_param('i', $user_id); // 'i' indica que o parâmetro é um inteiro
+
+if (!$stmt) {
+  // Tratar erro ao preparar a consulta
+  die("Falha na preparação da consulta: " . $conn->error);
+}
+
+$stmt->bind_param('s', $user_id); // 'i' indica que o parâmetro é um inteiro
 $stmt->execute();
+
 $result = $stmt->get_result();
-$id_stake = $result->fetch_assoc()['id_stake'];
+if ($result === false) {
+  // Tratar erro ao obter o resultado
+  die("Falha ao obter o resultado: " . $stmt->error);
+}
+
+$id_stake = $result->fetch_assoc()['id_stake'] ?? null;
+$stmt->close(); // Fechar a declaração
 
 // Definir uma variável para controle do alerta
 $showAlert = empty($id_stake);
@@ -35,11 +47,23 @@ $showAlert = empty($id_stake);
 $stake_name = '';
 if (!empty($id_stake)) {
   $stmt = $conn->prepare("SELECT cod, name FROM stakes WHERE id = ?");
-  $stmt->bind_param('i', $id_stake);
+  if (!$stmt) {
+    // Tratar erro ao preparar a consulta
+    die("Falha na preparação da consulta: " . $conn->error);
+  }
+
+  $stmt->bind_param('s', $id_stake);
   $stmt->execute();
+
   $result = $stmt->get_result();
+  if ($result === false) {
+    // Tratar erro ao obter o resultado
+    die("Falha ao obter o resultado: " . $stmt->error);
+  }
+
   $stake = $result->fetch_assoc();
   $stake_name = $stake ? $stake['name'] . ' - ' . $stake['cod'] : '';
+  $stmt->close(); // Fechar a declaração
 }
 ?>
 
