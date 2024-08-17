@@ -30,7 +30,7 @@ $user_role = checkUserRole($user_id);
     require_once ROOT_PATH . '/resources/head_fontawesome.php';
     ?>
     <link rel="manifest"
-          href="/manifest.json">
+          href="manifest.json">
   </head>
 
   <body class="bg-gray-100">
