@@ -1,9 +1,9 @@
 {
-  "name": "Nome do App",
+  "name": "Caravana Celestial",
   "short_name": "App",
   "icons": [
     {
-      "src": "caminho/para/icone.png",
+      "src": "appicon.png",
       "sizes": "192x192",
       "type": "image/png"
     }
