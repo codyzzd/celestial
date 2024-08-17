@@ -387,7 +387,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
           $.ajax({
             type: "POST",
             url: apiPath,
-            cache: false, // Desativa o cache
+
             data: {
               user_id: userId,
               indicador: "ward_list" // Indicador para buscar as wards

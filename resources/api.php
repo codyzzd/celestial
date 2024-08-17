@@ -712,5 +712,244 @@ if ($indicador == 'ward_edit_user') {
 
 }
 
+if ($indicador == 'vehicle_add') {
+  // user_id
+  // name
+  // obs
+  // capacity
+  // stake_id
+
+  // Verifica se o array $_POST não está vazio
+  if (!empty($_POST)) {
+    // Itera sobre cada item no array $_POST
+    foreach ($_POST as $key => $value) {
+      // Remove possíveis tags HTML e espaços em branco
+      ${$key} = $value;
+    }
+  }
+
+  // Preparar a query de inserção com UUID() diretamente
+  $stmt = $conn->prepare("INSERT INTO vehicles (id, name, capacity,obs,id_stake) VALUES (UUID(), ?, ?, ?,?)");
+  $stmt->bind_param("siss", $name, $capacity, $obs, $stake_id);
+
+  // Executar a query
+  if ($stmt->execute()) {
+    echo json_encode([
+      'status' => 'success',
+      'msg' => 'Veículo adicionado com sucesso!'
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao adicionar o veículo: ' . $stmt->error
+    ]);
+  }
+
+  $stmt->close(); // Fechar a declaração
+}
+
+if ($indicador == 'vehicle_list') {
+  // Inicializar variáveis
+  $id_stake = null;
+  $status = 'all'; // Valor padrão
+
+  // Verifica se o array $_POST não está vazio
+  if (!empty($_POST)) {
+    // Itera sobre cada item no array $_POST
+    foreach ($_POST as $key => $value) {
+      // Remove possíveis tags HTML e espaços em branco
+      ${$key} = $value;
+    }
+  }
+
+
+  try {
+    // Verificar se id_stake foi recebido
+    if (isset($id_stake)) {
+      // Construir a consulta SQL base
+      $sql = "SELECT * FROM vehicles WHERE id_stake = ?";
+
+      // Adicionar condição para registros não excluídos se necessário
+      if ($status === 'not_deleted') {
+        $sql .= " AND deleted_at IS NULL";
+      }
+
+      // Preparar a consulta SQL
+      $stmt = $conn->prepare($sql);
+
+      // Verificar se a preparação foi bem-sucedida
+      if ($stmt === false) {
+        throw new Exception('Erro ao preparar a consulta: ' . $conn->error);
+      }
+
+      // Vincular o parâmetro e executar a consulta
+      $stmt->bind_param("s", $id_stake);
+      $stmt->execute();
+
+      // Obter os resultados
+      $result = $stmt->get_result();
+      $vehicles = [];
+
+      // Iterar sobre os resultados e armazenar em um array
+      while ($row = $result->fetch_assoc()) {
+        $vehicles[] = $row;
+      }
+
+      // Fechar a declaração
+      $stmt->close();
+
+      // Retornar os resultados como JSON
+      echo json_encode($vehicles);
+
+    } else {
+      // Retornar uma mensagem de erro se id_stake não estiver definido
+      echo json_encode(['status' => 'error', 'msg' => 'ID Stake não fornecido.']);
+    }
+
+  } catch (Exception $e) {
+    // Tratar erros e exibir uma mensagem adequada
+    echo json_encode(['status' => 'error', 'msg' => 'Erro ao executar a consulta: ' . $e->getMessage()]);
+
+  }
+  // O fechamento da conexão com o banco de dados deve ser feito no final do arquivo.
+}
+
+if ($indicador == 'vehicle_get') {
+  // Pegar dados do form
+  $vehicle_id = $_POST['vehicle_id'] ?? '';
+
+  // Verifica se o vehicle_id é válido
+  if (empty($vehicle_id)) {
+    echo json_encode([
+      'error' => 'ID de veículo inválido.'
+    ]);
+    exit;
+  }
+
+  // Prepara a consulta SQL
+  $sql = "SELECT * FROM vehicles WHERE id = ?";
+
+  // Prepara a declaração
+  if ($stmt = $conn->prepare($sql)) {
+    // Liga os parâmetros (assumindo que vehicle_id é um UUID, que é uma string)
+    $stmt->bind_param("s", $vehicle_id);
+
+    // Executa a declaração
+    $stmt->execute();
+
+    // Obtém o resultado
+    $result = $stmt->get_result();
+
+    // Verifica se há resultados
+    if ($result->num_rows > 0) {
+      // Pega os dados do veículo
+      $vehicle = $result->fetch_assoc();
+
+      // Codifica o array em JSON e envia como resposta
+      echo json_encode($vehicle);
+    } else {
+      // Se nenhum resultado, retorna uma mensagem de erro
+      echo json_encode([
+        'error' => 'Nenhum veículo encontrado para o ID fornecido.'
+      ]);
+    }
+
+    // Fecha a declaração
+    $stmt->close();
+  } else {
+    // Erro ao preparar a declaração
+    echo json_encode(['error' => 'Erro ao preparar a declaração SQL.']);
+  }
+}
+
+if ($indicador == 'vehicle_edit') {
+  // user_id
+  // name
+  // obs
+  // capacity
+  // stake_id
+  // id do veiculo
+
+  // Verifica se o array $_POST não está vazio
+  if (!empty($_POST)) {
+    // Itera sobre cada item no array $_POST
+    foreach ($_POST as $key => $value) {
+      // Remove possíveis tags HTML e espaços em branco
+      ${$key} = $value;
+    }
+  }
+
+  // Preparar a query de atualização
+  $stmt = $conn->prepare("UPDATE vehicles SET name = ?, obs = ?, capacity = ? WHERE id = ?");
+  $stmt->bind_param("ssis", $name, $obs, $capacity, $id);
+
+  // Executar a query
+  if ($stmt->execute()) {
+    echo json_encode([
+      'status' => 'success',
+      'msg' => 'Veículo atualizado com sucesso!'
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao atualizar a pessoa: ' . $stmt->error
+    ]);
+  }
+
+  $stmt->close(); // Fechar a declaração
+}
+
+if ($indicador == 'archive_something') {
+  // Pegar dados do formulário
+  $bd = $_POST['bd'] ?? '';
+  $id = $_POST['id'] ?? '';
+
+  // Definir as tabelas permitidas e as mensagens de sucesso
+  $tables_config = [
+    'vehicles' => 'Veículo arquivado com sucesso!',
+    'passengers' => 'Pessoa arquivada com sucesso!',
+    // Adicionar mais tabelas conforme necessário
+  ];
+
+  // Verificar se a tabela é permitida
+  if (!array_key_exists($bd, $tables_config)) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Tabela inválida.'
+    ]);
+    exit;
+  }
+
+  // Preparar a query de atualização
+  $stmt = $conn->prepare("UPDATE $bd SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?");
+  if (!$stmt) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao preparar a query: ' . $conn->error
+    ]);
+    exit;
+  }
+
+  $stmt->bind_param("s", $id);
+
+  // Obter a mensagem de sucesso
+  $success_msg = $tables_config[$bd];
+
+  // Executar a query e retornar o resultado
+  if ($stmt->execute()) {
+    echo json_encode([
+      'status' => 'success',
+      'msg' => $success_msg
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao atualizar o banco de dados: ' . $stmt->error
+    ]);
+  }
+
+  $stmt->close(); // Fechar a declaração
+}
+
 // Fechar a conexão
 $conn->close();

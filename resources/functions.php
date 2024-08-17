@@ -244,6 +244,53 @@ function getRelations()
   return $relations;
 }
 
+function getStake($user_id)
+{
+  // Inicializar a variável para armazenar o id_stake
+  $id_stake = null;
+
+  // Estabelecer conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  try {
+    // Preparar a consulta SQL
+    $stmt = $conn->prepare("SELECT id_stake FROM users WHERE id = ?");
+
+    // Verificar se a preparação foi bem-sucedida
+    if ($stmt === false) {
+      throw new Exception('Erro ao preparar a consulta: ' . $conn->error);
+    }
+
+    // Vincular o parâmetro e executar a consulta
+    $stmt->bind_param("s", $user_id);
+    $stmt->execute();
+
+    // Buscar o resultado da consulta
+    $stmt->bind_result($id_stake);
+    if (!$stmt->fetch()) {
+      // Se não encontrar o id_stake para o user_id fornecido
+      $id_stake = null;
+    }
+
+    // Fechar a declaração
+    $stmt->close();
+
+  } catch (Exception $e) {
+    // Tratar erros e exibir uma mensagem adequada (opcional)
+    error_log('Erro: ' . $e->getMessage());
+    // Garantir que $id_stake permaneça null em caso de erro
+    $id_stake = null;
+  } finally {
+    // Fechar a conexão com o banco de dados
+    if (isset($conn) && $conn instanceof mysqli) {
+      $conn->close();
+    }
+  }
+
+  // Retornar o id_stake
+  return $id_stake;
+}
+
 // Função para converter data do formato dd/mm/yyyy para YYYY-MM-DD
 function convertDateFormat($date)
 {

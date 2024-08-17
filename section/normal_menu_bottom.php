@@ -16,7 +16,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
     <!-- Link para panel.php -->
     <a href="panel.php"
        class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-      <i class="text-gray-500 mb-1 group-hover:text-blue-600 fa fa-place-of-worship text-xl"></i>
+      <i class="text-gray-500 mb-1 group-hover:text-blue-600 fa fa-gauge-high text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
         Painel
       </span>
@@ -25,7 +25,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
     <!-- Link para travels.php -->
     <a href="travels.php"
        class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-      <i class="text-gray-500 mb-1 group-hover:text-blue-600 fa fa-bus text-xl"></i>
+      <i class="text-gray-500 mb-1 group-hover:text-blue-600 fa fa-place-of-worship text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
         Caravanas
       </span>

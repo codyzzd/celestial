@@ -747,7 +747,7 @@ $relations = getRelations();
         // Verifica se o botão clicado é o de arquivamento
         $(document).on('click', '#passenger_archive', function (event) {
           event.preventDefault(); // Previne o comportamento padrão do botão
-          console.log("clicou no #passenger_archive")
+          // console.log("clicou no #passenger_archive")
 
           // Obtém o ID do passageiro que será arquivado
           const form = $('#passenger_edit');
@@ -807,7 +807,7 @@ $relations = getRelations();
           $.ajax({
             type: "POST",
             url: apiPath,
-            cache: false, // Desativa o cache
+
             data: data, // Passa o objeto data no request
             success: function (response) {
               try {
