@@ -45,7 +45,7 @@ $user_role = checkUserRole($user_id);
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
     <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
 
-    <section class="max-w-screen-lg container mx-auto p-4 pb-20">
+    <section class="max-w-lg container mx-auto p-4 pb-20">
 
       <!-- header -->
       <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
@@ -86,7 +86,7 @@ $user_role = checkUserRole($user_id);
           </div> -->
         </div>
 
-        <div class="p-4 bg-white rounded-lg shadow  flex flex-col  gap-2 w-full sm:max-w-md relative-container">
+        <div class="p-4 bg-white rounded-lg shadow  flex flex-col  gap-2 w-full relative-container">
           <form class="grid gap-4 grid-cols-2"
                 id="stake_add">
 

@@ -367,38 +367,6 @@ if ($indicador == "ward_list") {
   }
 }
 
-if ($indicador == 'ward_archive') {
-  // Pegar dados do formulário
-  $ward_id = $_POST['id'] ?? '';
-
-  // Preparar a query de atualização
-  $stmt = $conn->prepare("UPDATE wards SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?");
-  if (!$stmt) {
-    echo json_encode([
-      'status' => 'error',
-      'msg' => 'Erro ao preparar a query: ' . $conn->error
-    ]);
-    exit;
-  }
-
-  $stmt->bind_param("s", $ward_id);
-
-  // Executar a query
-  if ($stmt->execute()) {
-    echo json_encode([
-      'status' => 'success',
-      'msg' => 'Ala arquivada com sucesso!'
-    ]);
-  } else {
-    echo json_encode([
-      'status' => 'error',
-      'msg' => 'Erro ao atualizar o banco de dados: ' . $stmt->error
-    ]);
-  }
-
-  $stmt->close(); // Fechar a declaração
-}
-
 if ($indicador == 'passenger_add') {
   // Pegar dados do form
   $name = $_POST['name'] ?? '';
@@ -632,38 +600,6 @@ if ($indicador == 'passenger_get') {
     echo json_encode(['error' => 'Erro ao preparar a declaração SQL.']);
   }
 
-}
-
-if ($indicador == 'passenger_archive') {
-  // Pegar dados do formulário
-  $passenger_id = $_POST['id'] ?? '';
-
-  // Preparar a query de atualização
-  $stmt = $conn->prepare("UPDATE passengers SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?");
-  if (!$stmt) {
-    echo json_encode([
-      'status' => 'error',
-      'msg' => 'Erro ao preparar a query: ' . $conn->error
-    ]);
-    exit;
-  }
-
-  $stmt->bind_param("s", $passenger_id);
-
-  // Executar a query
-  if ($stmt->execute()) {
-    echo json_encode([
-      'status' => 'success',
-      'msg' => 'Pessoa arquivada com sucesso!'
-    ]);
-  } else {
-    echo json_encode([
-      'status' => 'error',
-      'msg' => 'Erro ao atualizar o banco de dados: ' . $stmt->error
-    ]);
-  }
-
-  $stmt->close(); // Fechar a declaração
 }
 
 if ($indicador == 'ward_edit_user') {
@@ -908,6 +844,7 @@ if ($indicador == 'archive_something') {
   $tables_config = [
     'vehicles' => 'Veículo arquivado com sucesso!',
     'passengers' => 'Pessoa arquivada com sucesso!',
+    'wards' => 'Ala arquivada com sucesso!',
     // Adicionar mais tabelas conforme necessário
   ];
 

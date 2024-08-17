@@ -1,0 +1,15 @@
+{
+  "name": "Nome do App",
+  "short_name": "App",
+  "icons": [
+    {
+      "src": "caminho/para/icone.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "display": "standalone"
+}
