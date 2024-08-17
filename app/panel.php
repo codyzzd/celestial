@@ -86,6 +86,33 @@ $user_role = checkUserRole($user_id);
             alert('Para adicionar à tela inicial, use a opção "Adicionar à tela inicial" no menu do navegador.');
           });
         </script>
+        <script>
+          let deferredPrompt;
+
+          window.addEventListener('beforeinstallprompt', (e) => {
+            // Previne o navegador de mostrar o prompt automaticamente
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Mostra o banner personalizado
+            document.querySelector('#install-banner').style.display = 'block';
+
+            document.querySelector('#install-button').addEventListener('click', () => {
+              // Esconde o banner
+              document.querySelector('#install-banner').style.display = 'none';
+              // Mostra o prompt de instalação
+              deferredPrompt.prompt();
+              deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                  console.log('Usuário aceitou o prompt de instalação');
+                } else {
+                  console.log('Usuário rejeitou o prompt de instalação');
+                }
+                deferredPrompt = null;
+              });
+            });
+          });
+        </script>
 
       </div>
     </section>
