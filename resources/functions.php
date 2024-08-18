@@ -1,15 +1,66 @@
 <?php
 function checkUserLogin()
 {
-  // Verifique se o usuário está logado
-  if (!isset($_SESSION['user_id'])) {
-    // Se não estiver logado, redirecionar para a página de login
+  // Inicie a sessão se ainda não estiver iniciada
+  if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+  }
+
+  // Verifique se o usuário está logado com base na variável de sessão
+  if (isset($_SESSION['user_id'])) {
+    return $_SESSION['user_id'];
+  }
+
+  // Verifique o token de lembrete se a sessão não estiver configurada
+  if (isset($_COOKIE['caravana_remember_token'])) {
+    $token = $_COOKIE['caravana_remember_token'];
+
+    // Conectar ao banco de dados
+    $conn = getDatabaseConnection(); // Assuma que você tem uma função para obter a conexão
+
+    // Prepare a consulta para obter o ID do usuário com base no token
+    $sql = "SELECT id FROM users WHERE remember_token = ?";
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+      die('Erro na preparação da consulta SQL: ' . $conn->error);
+    }
+
+    // Vincular o token e executar a consulta
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+      // Se o token for encontrado, obtenha o ID do usuário
+      $stmt->bind_result($user_id);
+      $stmt->fetch();
+
+      // Defina a variável de sessão
+      $_SESSION['user_id'] = $user_id;
+
+      // Opcional: Regenerar o token para segurança
+      $new_token = bin2hex(random_bytes(16));
+      $update_stmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+      $update_stmt->bind_param("si", $new_token, $user_id);
+      $update_stmt->execute();
+      setcookie('caravana_remember_token', $new_token, time() + (86400 * 30), "/");
+
+      // Fechar declarações
+      $update_stmt->close();
+    } else {
+      // Se o token não for válido, redirecionar para a página de login
+      header("Location: login.php");
+      exit();
+    }
+
+    $stmt->close();
+    $conn->close();
+  } else {
+    // Se não houver token de lembrete e não estiver na sessão, redirecionar para a página de login
     header("Location: login.php");
     exit();
   }
-
-  // Retorna o ID do usuário se estiver logado
-  return $_SESSION['user_id'];
 }
 
 function getIndicador(): string

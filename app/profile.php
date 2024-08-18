@@ -34,11 +34,14 @@ $sql = "
         wards w ON u.id_ward = w.id
     LEFT JOIN
         roles r ON u.role = r.id
+    WHERE
+        u.id = ?
 ";
 
 // Preparar a declaração SQL
 $stmt = $conn->prepare($sql);
-
+$stmt->bind_param("i", $user_id);
+// echo $user_id;
 // Execute a consulta
 $stmt->execute();
 
@@ -72,7 +75,6 @@ $conn->close();
   <head>
     <meta charset="utf-8" />
 
-
     <?php
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
@@ -84,27 +86,7 @@ $conn->close();
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
     <title>Perfil - Caravana Celestial</title>
-    <style>
-      .relative-container {
-        position: relative;
-      }
 
-      #stake {
-        width: 100%;
-        /* Garante que o input ocupa toda a largura do contêiner */
-      }
-
-      #dropdown {
-        position: absolute;
-        /*top: 100%;*/
-        /* Posiciona o dropdown logo abaixo do input */
-        left: 0;
-        width: 100%;
-        /* Garante que o dropdown tenha a mesma largura do input */
-        box-sizing: border-box;
-        /* Inclui padding e bordas na largura total */
-      }
-    </style>
   </head>
 
   <body class="bg-gray-100">
@@ -134,19 +116,13 @@ $conn->close();
             <span class="font-medium text-gray-600 dark:text-gray-300">BG</span>
           </div>
           <div>
-            <p class="text-[10px] font-medium tracking-wider text-gray-600 uppercase">
-              <?= $profile['role'] ?>
+            <p class="text-[10px] font-medium tracking-wider text-gray-600 uppercase"><?= $profile['role'] ?>
             </p>
-            <h2 class="font-semibold truncate text-xl">
-              <?= $profile['name'] ?>
+            <h2 class="font-semibold truncate text-xl"><?= $profile['name'] ?>
             </h2>
-
-            <!-- <p class="text-sm text-gray-500 truncate">0 Caravanas</p> -->
-            <p class="text-sm text-gray-500 truncate">
-              Estaca <?= $profile['stake'] ?>
+            <p class="text-sm text-gray-500 truncate">Estaca <?= $profile['stake'] ?>
             </p>
-            <p class="text-sm text-gray-500 truncate">
-              Ala <?= $profile['ward'] ?>
+            <p class="text-sm text-gray-500 truncate">Ala <?= $profile['ward'] ?>
             </p>
 
           </div>

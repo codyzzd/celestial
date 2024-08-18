@@ -20,7 +20,6 @@ $user_role = checkUserRole($user_id);
 
   <head>
     <meta charset="utf-8" />
- 
 
     <?php
     require_once ROOT_PATH . '/resources/functions.php';

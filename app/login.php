@@ -1,9 +1,38 @@
 <?php
-//pega caminho da pasta
+// Pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
-//$apiPath = ROOT_PATH . '/resources/api.php';
+// $apiPath = ROOT_PATH . '/resources/api.php';
 $apiPath = "../resources/api.php";
-session_start(); // Inicia ou continua a sessão atual
+session_start(); // Inicia ou continua a sessão
+
+// Inclui as funções necessárias
+require_once ROOT_PATH . '/resources/functions.php';
+
+// Conectar ao banco de dados
+$conn = getDatabaseConnection();
+
+// Verifica se o cookie de token está definido
+if (isset($_COOKIE['caravana_remember_token'])) {
+  $token = $_COOKIE['caravana_remember_token'];
+
+  // Preparar a consulta para verificar se o token é válido
+  $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = ?");
+  $stmt->bind_param("s", $token);
+  $stmt->execute();
+  $stmt->store_result();
+
+  if ($stmt->num_rows > 0) {
+    // Token válido, obtém o ID do usuário
+    $stmt->bind_result($user_id);
+    $stmt->fetch();
+    $_SESSION['user_id'] = $user_id; // Define a variável de sessão
+
+    // Redireciona para a página do painel
+    header("Location: panel.php");
+    exit();
+  }
+  $stmt->close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +91,21 @@ session_start(); // Inicia ou continua a sessão atual
                    autocomplete="current-password"
                    required />
           </div>
-
+          <div class="flex justify-between">
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <input id="remember_token"
+                       type="checkbox"
+                       name="remember_token"
+                       value="remember_token"
+                       class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
+              </div>
+              <label for="remember_token"
+                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Manter Logado</label>
+            </div>
+            <a href="#"
+               class="text-sm text-purple-700 hover:underline dark:text-purple-500">Esqueci a senha</a>
+          </div>
           <button type="submit"
                   class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full ">Entrar</button>
 

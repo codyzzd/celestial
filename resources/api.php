@@ -89,45 +89,70 @@ if ($indicador == 'user_login') {
   $password = $_POST['password'] ?? '';
 
   // Converter o e-mail para minúsculas antes de qualquer operação
-  $email = toLowerCase($email);
+  $email = strtolower($email);
+
+  // Verificar se o email é válido e sanitizá-lo
+  $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
   // Verificar se o email existe no banco de dados
-  $stmt = $conn->prepare("SELECT id, password, salt FROM users WHERE email = ?");
-  $stmt->bind_param("s", $email);
-  $stmt->execute();
-  $stmt->store_result();
+  if ($stmt = $conn->prepare("SELECT id, password, salt FROM users WHERE email = ?")) {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
 
-  if ($stmt->num_rows > 0) {
-    // Email existe, vamos verificar a senha
-    $stmt->bind_result($id, $stored_password, $stored_salt);
-    $stmt->fetch();
+    if ($stmt->num_rows > 0) {
+      // Email existe, vamos verificar a senha
+      $stmt->bind_result($id, $stored_password, $stored_salt);
+      $stmt->fetch();
 
-    // Verificar a senha fornecida usando a função verifyPassword
-    if (verifyPassword($password, $stored_password, $stored_salt)) {
-      session_start(); // Iniciar a sessão
-      $_SESSION['user_id'] = $id; // Definir a variável de sessão
+      // Verificar a senha fornecida usando a função verifyPassword
+      if (verifyPassword($password, $stored_password, $stored_salt)) {
+        session_start(); // Iniciar a sessão
+        session_regenerate_id(true); // Regenerar o ID da sessão por segurança
+        $_SESSION['user_id'] = $id; // Definir a variável de sessão
 
-      echo json_encode([
-        'status' => 'loading',
-        'msg' => 'Login realizado com sucesso! Entrando...',
-        'user_id' => $id
-      ]);
+        // Verifique se o usuário quer permanecer logado
+        if (isset($_POST['remember_token']) && $_POST['remember_token'] === 'remember_token') {
+          // Crie um token seguro
+          $token = bin2hex(random_bytes(16));
+
+          // Salve o token no banco de dados associado ao usuário
+          $stmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+          $stmt->bind_param("si", $token, $id);
+          $stmt->execute();
+
+          // Crie um cookie que expira em, por exemplo, 30 dias
+          setcookie('caravana_remember_token', $token, time() + (86400 * 30), "/");
+        }
+
+        echo json_encode([
+          'status' => 'loading',
+          'msg' => 'Login realizado com sucesso! Entrando...',
+          'user_id' => $id
+        ]);
+      } else {
+        // Senha incorreta
+        echo json_encode([
+          'status' => 'error',
+          'msg' => 'Email ou senha incorretos!'
+        ]);
+      }
     } else {
-      // Senha incorreta
+      // Email não encontrado ou senha incorreta
       echo json_encode([
         'status' => 'error',
         'msg' => 'Email ou senha incorretos!'
       ]);
     }
+
+    $stmt->close(); // Fechar a declaração
   } else {
-    // Email não encontrado ou senha incorreta
+    // Falha ao preparar a declaração
     echo json_encode([
       'status' => 'error',
-      'msg' => 'Email ou senha incorretos!'
+      'msg' => 'Erro no servidor. Por favor, tente novamente mais tarde.'
     ]);
   }
-
-  $stmt->close(); // Fechar a declaração
 }
 
 if ($indicador == 'stake_add') {
