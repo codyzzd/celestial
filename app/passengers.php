@@ -58,7 +58,7 @@ $relations = getRelations();
     <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
 
     <section class="max-w-lg container mx-auto p-4 pb-20">
-      <div class="fixed end-4 bottom-20 group">
+      <div class="fixed end-4 bottom-20 group md:hidden">
 
         <?php
         $showButton = false;
@@ -86,15 +86,15 @@ $relations = getRelations();
       </div>
 
       <!-- header -->
-      <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
+      <div class="flex flex-col mb-4 gap-4">
         <div class="flex-col gap-1">
           <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Família e Amigos</h1>
           <p class="text-gray-500">Administre os passageiros da sua família e amigos de forma simples e eficiente.</p>
         </div>
-        <!-- <button type="button"
-                data-modal-target="criar-passageiro"
-                data-modal-toggle="criar-passageiro"
-                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full md:w-fit">Adicionar Passageiro</button> -->
+        <button type="button"
+                data-modal-toggle="passenger_add_modal"
+                data-modal-target="passenger_add_modal"
+                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full hidden md:block">Adicionar Passageiro</button>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -161,7 +161,7 @@ $relations = getRelations();
            tabindex="-1"
            aria-hidden="true"
            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 w-full max-w-lg max-h-full">
           <!-- Modal content -->
           <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->

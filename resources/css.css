@@ -1,11 +1,19 @@
 /* Tema claro (padrão) */
-body {
+/* body {
   background-color: white;
   color: black;
-}
+} */
 
 /* Tema escuro */
-.dark body {
+/* .dark body {
   background-color: black;
   color: white;
+} */
+
+.appshare {
+  height: 150px;
+  background-image: url("../app/i/appshare.png");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
