@@ -44,7 +44,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
     <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
 
     <section class="max-w-lg container mx-auto p-4 pb-20">
-      <div class="fixed end-4 bottom-20 group">
+      <div class="fixed end-4 bottom-20 group md:hidden">
 
         <button type="button"
                 id="vehicle_add_modal_fob"
@@ -58,15 +58,15 @@ $user_role = checkUserRole($user_id, 'stake_lider');
       </div>
 
       <!-- header -->
-      <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
+      <div class="flex flex-col mb-4 gap-4">
         <div class="flex-col gap-1">
           <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Veículos</h1>
           <p class="text-gray-500">Gerencie os veículos necessários para criar e organizar suas caravanas.</p>
         </div>
-        <!-- <button type="button"
-                data-modal-target="criar-passageiro"
-                data-modal-toggle="criar-passageiro"
-                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full md:w-fit">Adicionar Passageiro</button> -->
+        <button type="button"
+                data-modal-toggle="vehicle_add_modal"
+                data-modal-target="vehicle_add_modal"
+                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full hidden md:block">Adicionar Veículo</button>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -82,7 +82,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
         <!-- </div> -->
 
         <!-- empty state de veiculos -->
-        <div class="p-4 rounded-lg flex flex-col w-full sm:max-w-md border-[2px] border-gray-300 border-dashed"
+        <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed"
              id="empty_state">
           <i class="fa fa-car-side text-3xl text-gray-500 mb-2"></i>
 
@@ -489,11 +489,14 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                   data-modal-toggle="vehicle_edit_modal"
                   data-id="${vehicle.id}"
                   class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex items-center justify-between">
-                  <span class="text-left truncate me-2">
-                  <span class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded ">${vehicle.capacity}</span>
-                  ${vehicle.name}
-                  </span>
-                  <i class="fa fa-chevron-right text-lg text-gray-500"></i>
+
+
+                  <span class="text-left truncate  justify-between w-full"> ${vehicle.name}   </span>
+
+                  <div class="flex flex-row gap-2 items-center">
+                  <span class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded w-10 h-fit">${vehicle.capacity}</span>
+                  <i class="fa fa-chevron-right text-lg text-gray-500"></i></div>
+
                   </button>
                   `;
                   vehicleList.append(vehicleItem);

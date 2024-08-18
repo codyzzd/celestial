@@ -136,7 +136,7 @@ $relations = getRelations();
 
         // Exibe o estado vazio se não houver wards ou se todas as wards estiverem com deleted_at preenchido
         if (!$showAla): ?>
-          <div class="p-4 rounded-lg flex flex-col w-full sm:max-w-md border-[2px] border-gray-300 border-dashed"
+          <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed"
                id="empty_state_ala">
             <i class="fa fa-tents text-3xl text-gray-500 mb-2"></i>
 
@@ -146,7 +146,7 @@ $relations = getRelations();
         <?php endif; ?>
 
         <!-- empty state de pessoas -->
-        <div class="p-4 rounded-lg flex flex-col w-full sm:max-w-md border-[2px] border-gray-300 border-dashed"
+        <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed"
              id="empty_state">
           <i class="fa fa-people-roof text-3xl text-gray-500 mb-2"></i>
 

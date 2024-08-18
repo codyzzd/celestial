@@ -46,7 +46,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
     <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
 
     <section class="max-w-lg container mx-auto p-4 pb-20">
-      <div class="fixed end-4 bottom-20 group">
+      <div class="fixed end-4 bottom-20 group md:hidden">
 
         <button type="button"
                 data-modal-toggle="ward_add_modal"
@@ -59,13 +59,15 @@ $user_role = checkUserRole($user_id, 'stake_lider');
       </div>
 
       <!-- header -->
-      <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
+      <div class="flex flex-col mb-4 gap-4 ">
         <div class="flex-col gap-1">
           <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Alas da Estaca</h1>
           <p class="text-gray-500">Adicione novas alas e edite para melhorar a organização.</p>
         </div>
-        <!-- <button type="button"
-                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full md:w-fit">Criar</button> -->
+        <button type="button"
+                data-modal-toggle="ward_add_modal"
+                data-modal-target="ward_add_modal"
+                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full hidden md:block">Adicionar Ala</button>
       </div>
 
       <!-- modal add -->
@@ -234,7 +236,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
         </div>
 
         <!-- empty state -->
-        <div class="p-4  rounded-lg   flex flex-col   w-full sm:max-w-md border-[2px] border-gray-300 border-dashed"
+        <div class="p-4  rounded-lg   flex flex-col   w-full  border-[2px] border-gray-300 border-dashed"
              id="empty_state">
           <i class="fa fa-circle-question text-3xl text-gray-500 mb-2"></i>
 

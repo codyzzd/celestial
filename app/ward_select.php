@@ -71,7 +71,7 @@ $conn->close();
           <p class="text-gray-500">Determine qual ala você pertence para poder acessar demais funcionalidades de lider de ala.</p>
         </div>
         <!-- <button type="button"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full md:w-fit">Criar</button> -->
+                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full md:w-fit">Criar</button> -->
       </div>
 
       <?php if ($showAlert): ?>
@@ -97,7 +97,7 @@ $conn->close();
                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ala atual</label>
               <select id="id_ward"
                       name="id_ward"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                       required>
                 <option value=""
                         <?php echo empty($id_ward) ? 'selected' : ''; ?>>Selecione...</option>
@@ -111,7 +111,7 @@ $conn->close();
             </div>
 
             <button type="submit"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full col-span-2">Ativar Ala</button>
+                    class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full col-span-2">Ativar Ala</button>
           </form>
         </div>
 
