@@ -68,7 +68,7 @@ $user_role = checkUserRole($user_id);
 
           <div class="p-5">
             <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Leve o céu no seu bolso?”</h5>
-            <p class="text-gray-600 dark:text-gray-300 text-base">Salve o "App da Caravana" como atalho a partir desta tela e tenha as bênçãos do Senhor sempre à mão!</p>
+            <p class="text-gray-600 dark:text-gray-300 text-base">Salve o "App da Caravana" como atalho <strong>a partir desta tela</strong> e tenha as bênçãos do Senhor sempre à mão!</p>
             <!-- <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quer ter o céu ao alcance de um toque?</h5>
 
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Salve o "App da Caravana" como atalho e tenha as bênçãos do Senhor sempre à mão!</p> -->

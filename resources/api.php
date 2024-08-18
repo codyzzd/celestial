@@ -122,7 +122,8 @@ if ($indicador == 'user_login') {
           $stmt->execute();
 
           // Crie um cookie que expira em, por exemplo, 30 dias
-          setcookie('caravana_remember_token', $token, time() + (86400 * 30), "/");
+          // setcookie('caravana_remember_token', $token, time() + (86400 * 30), "/");
+          setcookie('caravana_remember_token', $token, time() + (86400 * 365 * 50), "/");
         }
 
         echo json_encode([

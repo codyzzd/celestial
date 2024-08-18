@@ -98,10 +98,11 @@ if (isset($_COOKIE['caravana_remember_token'])) {
                        type="checkbox"
                        name="remember_token"
                        value="remember_token"
+                       checked
                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
               </div>
               <label for="remember_token"
-                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Manter Logado</label>
+                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Permancer logado</label>
             </div>
             <a href="#"
                class="text-sm text-purple-700 hover:underline dark:text-purple-500">Esqueci a senha</a>
