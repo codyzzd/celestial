@@ -10,12 +10,12 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
 ?>
 
 <!-- nav bottom -->
-<div class="fixed bottom-0 left-0 z-10 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+<div class="fixed bottom-0 left-0 z-10 w-full h-20 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
   <div class="grid h-full max-w-lg <?php echo $grid_cols; ?> mx-auto font-medium">
 
     <!-- Link para panel.php -->
     <a href="panel.php"
-       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group pb-4">
       <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-gauge-high text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-500">
         Painel
@@ -24,7 +24,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
 
     <!-- Link para travels.php -->
     <a href="travels.php"
-       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group pb-4">
       <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-place-of-worship text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-500">
         Caravanas
@@ -33,7 +33,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
 
     <!-- Link para passengers.php -->
     <a href="passengers.php"
-       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group pb-4">
       <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-users text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-500">
         Pessoas
@@ -43,7 +43,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
     <?php if ($user_role === 'stake_lider' || $user_role === 'ward_lider'): ?>
       <!-- Link dinâmico para a página de liderança -->
       <a href="<?php echo $lider_page; ?>"
-         class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+         class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group pb-4">
         <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-briefcase text-xl"></i>
         <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-500">
           <?php echo $lider_text; ?>
@@ -53,7 +53,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
 
     <!-- Link para profile.php -->
     <a href="profile.php"
-       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+       class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group pb-4">
       <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-circle-user text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-500">
         Perfil

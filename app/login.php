@@ -11,17 +11,18 @@ session_start(); // Inicia ou continua a sessão atual
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1" />
-    <title>Caravana</title>
 
     <?php
+    require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
     require_once ROOT_PATH . '/resources/head_flowbite.php';
     require_once ROOT_PATH . '/resources/head_fontawesome.php';
     require_once ROOT_PATH . '/resources/head_jquery.php';
     ?>
-
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0<?php if (isMobile())
+            echo ', user-scalable=no'; ?>">
+    <title>Caravana</title>
   </head>
 
   <body class="bg-gray-100">
@@ -33,7 +34,7 @@ session_start(); // Inicia ou continua a sessão atual
     <section class="flex flex-col h-dvh p-4 items-center justify-end md:justify-center">
 
       <!-- caixa -->
-      <div class="p-4 bg-white rounded-lg shadow  flex flex-col gap-4 w-full sm:max-w-md">
+      <div class="p-4 bg-white rounded-lg shadow  flex flex-col gap-4 w-full sm:max-w-md rounded-xl mb-4">
         <form class="flex flex-col gap-4"
               id="login"
               autocomplete="on">

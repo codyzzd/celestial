@@ -300,3 +300,9 @@ function convertDateFormat($date)
   }
   return null;
 }
+
+function isMobile()
+{
+  $userAgent = $_SERVER['HTTP_USER_AGENT'];
+  return preg_match('/iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i', $userAgent);
+}
