@@ -597,8 +597,8 @@ $relations = getRelations();
         // mascarar campos
         $('#passenger_add #nasc_date').mask('00/00/0000');
         $('#passenger_edit #nasc_date').mask('00/00/0000');
-        $('#passenger_add #id_church').mask('000-0000-0000');
-        $('#passenger_edit #id_church').mask('000-0000-0000');
+        $('#passenger_add #id_church').mask('AAA-AAAA-AAAA');
+        $('#passenger_edit #id_church').mask('AAA-AAAA-AAAA');
 
         // Adiciona um ouvinte de eventos para o documento
         document.addEventListener('click', function (event) {
