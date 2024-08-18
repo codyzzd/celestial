@@ -226,6 +226,7 @@ $relations = getRelations();
                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                          placeholder="ex: 123-1234-1234"
                          autocomplete="mrn"
+                         style="text-transform: uppercase;"
                          required />
                 </div>
 
@@ -433,6 +434,7 @@ $relations = getRelations();
                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                          placeholder="ex: 123-1234-1234"
                          autocomplete="mrn"
+                         style="text-transform: uppercase;"
                          required />
                 </div>
                 <div class="col-span-2">
