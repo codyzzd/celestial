@@ -34,7 +34,7 @@ session_start(); // Inicia ou continua a sessão atual
     <section class="flex flex-col h-dvh p-4 items-center justify-end md:justify-center">
 
       <!-- caixa -->
-      <div class="p-4 bg-white rounded-lg shadow  flex flex-col gap-4 w-full sm:max-w-md rounded-xl mb-4">
+      <div class="p-8 bg-white shadow  flex flex-col gap-4 w-full sm:max-w-md rounded-[40px] mb-4">
         <form class="flex flex-col gap-4"
               id="login"
               autocomplete="on">
