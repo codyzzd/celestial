@@ -44,7 +44,7 @@ session_start(); // Inicia ou continua a sessão atual
             <input type="email"
                    id="email"
                    name="email"
-                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                    placeholder="ex: bruno@email.com"
                    autocomplete="email"
                    required />
@@ -56,18 +56,18 @@ session_start(); // Inicia ou continua a sessão atual
             <input type="password"
                    id="password"
                    name="password"
-                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                    placeholder="•••••••••"
                    autocomplete="current-password"
                    required />
           </div>
 
           <button type="submit"
-                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full ">Entrar</button>
+                  class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full ">Entrar</button>
 
           <p class="text-sm font-light text-gray-500 dark:text-gray-400">
             Não tem conta ainda? <a href="signup.php"
-               class="font-medium text-blue-600 hover:underline dark:text-primary-500">Criar Conta</a>
+               class="font-medium text-purple-600 hover:underline dark:text-primary-500">Criar Conta</a>
           </p>
 
         </form>
