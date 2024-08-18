@@ -122,6 +122,7 @@ session_start(); // Inicia ou continua a sessão atual
         });
       });
     </script>
+    <!-- test -->
   </body>
 
 </html>
