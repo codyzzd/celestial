@@ -72,16 +72,20 @@ if (!empty($id_stake)) {
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1" />
-    <title>Caravana</title>
+
 
     <?php
+    require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
     require_once ROOT_PATH . '/resources/head_flowbite.php';
     require_once ROOT_PATH . '/resources/head_fontawesome.php';
     require_once ROOT_PATH . '/resources/head_jquery.php';
     ?>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0<?php if (isMobile())
+            echo ', user-scalable=no'; ?>">
+    <title>Ativar Estaca - Caravana Celestial</title>
+
     <style>
       .relative-container {
         position: relative;
