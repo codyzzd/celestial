@@ -85,7 +85,8 @@ if (!empty($id_stake)) {
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
     <title>Ativar Estaca - Caravana Celestial</title>
-
+    <link rel="manifest"
+          href="manifest.json">
     <style>
       .relative-container {
         position: relative;

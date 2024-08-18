@@ -86,7 +86,8 @@ $conn->close();
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
     <title>Perfil - Caravana Celestial</title>
-
+    <link rel="manifest"
+          href="manifest.json">
   </head>
 
   <body class="bg-gray-100">

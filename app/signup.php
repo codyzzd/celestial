@@ -22,7 +22,8 @@ $apiPath = "../resources/api.php";
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
     <title>Criar Conta - Caravana Celestial</title>
-
+    <link rel="manifest"
+          href="manifest.json">
   </head>
 
   <body class="bg-gray-100">

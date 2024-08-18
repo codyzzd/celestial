@@ -37,7 +37,8 @@ $user_role = checkUserRole($user_id, 'stake_lider');
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
     <title>Veículos - Caravana Celestial</title>
-
+    <link rel="manifest"
+          href="manifest.json">
   </head>
 
   <body class="bg-gray-100">
