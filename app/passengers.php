@@ -39,7 +39,6 @@ $relations = getRelations();
   <head>
     <meta charset="utf-8" />
 
-
     <?php
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
@@ -62,7 +61,7 @@ $relations = getRelations();
     <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
 
     <section class="max-w-lg container mx-auto p-4 pb-20">
-      <div class="fixed end-4 bottom-20 group md:hidden">
+      <div class="fixed end-4 bottom-20 lg:bottom-24 group md:hidden">
 
         <?php
         $showButton = false;

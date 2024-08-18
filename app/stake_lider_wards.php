@@ -50,7 +50,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
     <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
 
     <section class="max-w-lg container mx-auto p-4 pb-20">
-      <div class="fixed end-4 bottom-20 group md:hidden">
+      <div class="fixed end-4 bottom-20 lg:bottom-24 group md:hidden">
 
         <button type="button"
                 data-modal-toggle="ward_add_modal"
