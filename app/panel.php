@@ -43,8 +43,8 @@ $user_role = checkUserRole($user_id);
       <!-- header -->
       <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
         <div class="flex-col gap-1">
-          <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Resumo</h1>
-          <p class="text-gray-500">Veja sua frequência ao templo e reservas nas caravanas.</p>
+          <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Painel</h1>
+          <p class="text-gray-500">Acompanhe suas estatísticas de frequência, confira o ranking de outros membros e planeje suas futuras caravanas com facilidade.</p>
         </div>
         <!-- <button type="button"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full md:w-fit">Criar</button> -->
@@ -73,11 +73,11 @@ $user_role = checkUserRole($user_id);
 
       </div>
 
-      <div id="install-banner"
+      <!-- <div id="install-banner"
            style="display: none;">
         <p>Para uma melhor experiência, adicione nosso app à sua tela inicial!</p>
         <button id="install-button">Adicionar à Tela Inicial</button>
-      </div>
+      </div> -->
     </section>
 
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
@@ -87,14 +87,14 @@ $user_role = checkUserRole($user_id);
     ?>
 
     <script>
-      // Mostra o banner se o navegador suporta PWA
-      if (window.matchMedia('(display-mode: standalone)').matches === false) {
-        document.querySelector('#install-banner').style.display = 'block';
-      }
+      // // Mostra o banner se o navegador suporta PWA
+      // if (window.matchMedia('(display-mode: standalone)').matches === false) {
+      //   document.querySelector('#install-banner').style.display = 'block';
+      // }
 
-      document.querySelector('#install-button').addEventListener('click', () => {
-        alert('Para adicionar à tela inicial, use a opção "Adicionar à tela inicial" no menu do navegador.');
-      });
+      // document.querySelector('#install-button').addEventListener('click', () => {
+      //   alert('Para adicionar à tela inicial, use a opção "Adicionar à tela inicial" no menu do navegador.');
+      // });
     </script>
 
   </body>

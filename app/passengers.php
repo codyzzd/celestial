@@ -78,7 +78,7 @@ $relations = getRelations();
                   id="passenger_add_modal_fob"
                   data-modal-toggle="passenger_add_modal"
                   data-modal-target="passenger_add_modal"
-                  class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
+                  class="flex items-center justify-center text-white bg-purple-700 rounded-full w-14 h-14 hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 focus:outline-none dark:focus:ring-purple-800">
             <i class="fa fa-plus transition-transform text-2xl"></i>
             <span class="sr-only">Open actions menu</span>
           </button>
@@ -94,7 +94,7 @@ $relations = getRelations();
         <!-- <button type="button"
                 data-modal-target="criar-passageiro"
                 data-modal-toggle="criar-passageiro"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full md:w-fit">Adicionar Passageiro</button> -->
+                class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full md:w-fit">Adicionar Passageiro</button> -->
       </div>
 
       <div class="flex flex-col gap-4">
@@ -204,7 +204,7 @@ $relations = getRelations();
                                  type="radio"
                                  value="<?php echo $relation['id']; ?>"
                                  name="id_relationship"
-                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                 class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 focus:ring-2"
                                  required>
                           <label for="horizontal-list-radio-<?php echo $relation['slug']; ?>"
                                  class="w-full py-3 ms-2 text-sm font-medium text-gray-900">
@@ -223,7 +223,7 @@ $relations = getRelations();
                   <input type="text"
                          id="id_church"
                          name="id_church"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                          placeholder="ex: 123-1234-1234"
                          autocomplete="mrn"
                          required />
@@ -235,7 +235,7 @@ $relations = getRelations();
                   <input type="text"
                          id="name"
                          name="name"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          placeholder="ex: Bruno da Silva Gonçalves"
                          required
                          autocomplete="off">
@@ -247,7 +247,7 @@ $relations = getRelations();
                   <input type="text"
                          id="nasc_date"
                          name="nasc_date"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          placeholder="dd/mm/aaaa"
                          required
                          autocomplete="off">
@@ -270,7 +270,7 @@ $relations = getRelations();
                                  type="radio"
                                  value="<?php echo $sex['id']; ?>"
                                  name="sex"
-                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                 class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 focus:ring-2"
                                  required>
                           <label for="horizontal-list-radio-<?php echo $sex['slug']; ?>"
                                  class="w-full py-3 ms-2 text-sm font-medium text-gray-900">
@@ -289,7 +289,7 @@ $relations = getRelations();
                          class="block mb-2 text-sm font-medium text-gray-900">Qual ala pertence?</label>
                   <select id="id_ward"
                           name="id_ward"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                           required>
                     <option value=""
                             selected>Selecione...</option>
@@ -304,7 +304,7 @@ $relations = getRelations();
                          class="block mb-2 text-sm font-medium text-gray-900">Tipo de Documento</label>
                   <select id="id_document"
                           name="id_document"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                           required>
                     <option value=""
                             selected>Selecione...</option>
@@ -320,7 +320,7 @@ $relations = getRelations();
                   <input type="text"
                          id="document"
                          name="document"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          required
                          autocomplete="off">
                 </div>
@@ -331,10 +331,10 @@ $relations = getRelations();
                   <input type="text"
                          id="fever_date"
                          name="fever_date"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          placeholder="dd/mm/aaaa"
                          autocomplete="off">
-                         <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">We’ll never share your details. Read our <a href="#" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Privacy Policy</a>.</p>
+                         <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">We’ll never share your details. Read our <a href="#" class="font-medium text-purple-600 hover:underline dark:text-purple-500">Privacy Policy</a>.</p>
                 </div> -->
 
                 <div class="col-span-2">
@@ -343,7 +343,7 @@ $relations = getRelations();
                   <textarea id="obs"
                             name="obs"
                             rows="4"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
 
               </div>
@@ -352,9 +352,9 @@ $relations = getRelations();
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
                 <button type="button"
                         data-modal-toggle="passenger_add_modal"
-                        class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
+                        class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
                 <button type="submit"
-                        class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-white text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-white text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
                   Adicionar
                 </button>
               </div>
@@ -412,7 +412,7 @@ $relations = getRelations();
                                  type="radio"
                                  value="<?php echo $relation['id']; ?>"
                                  name="id_relationship"
-                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                 class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 focus:ring-2"
                                  required>
                           <label for="horizontal-list-edit-radio-<?php echo $relation['slug']; ?>"
                                  class="w-full py-3 ms-2 text-sm font-medium text-gray-900">
@@ -430,7 +430,7 @@ $relations = getRelations();
                   <input type="text"
                          id="id_church"
                          name="id_church"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                          placeholder="ex: 123-1234-1234"
                          autocomplete="mrn"
                          required />
@@ -441,7 +441,7 @@ $relations = getRelations();
                   <input type="text"
                          id="name"
                          name="name"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          placeholder="ex: Bruno da Silva Gonçalves"
                          required
                          autocomplete="off">
@@ -453,7 +453,7 @@ $relations = getRelations();
                   <input type="text"
                          id="nasc_date"
                          name="nasc_date"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          placeholder="dd/mm/aaaa"
                          required
                          autocomplete="off">
@@ -476,7 +476,7 @@ $relations = getRelations();
                                  type="radio"
                                  value="<?php echo $sex['id']; ?>"
                                  name="sex"
-                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                 class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 focus:ring-2"
                                  required>
                           <label for="horizontal-list-edit-radio-<?php echo $sex['slug']; ?>"
                                  class="w-full py-3 ms-2 text-sm font-medium text-gray-900">
@@ -495,7 +495,7 @@ $relations = getRelations();
                          class="block mb-2 text-sm font-medium text-gray-900">Qual ala pertence?</label>
                   <select id="id_ward"
                           name="id_ward"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                           required>
                     <option value=""
                             selected>Selecione...</option>
@@ -510,7 +510,7 @@ $relations = getRelations();
                          class="block mb-2 text-sm font-medium text-gray-900">Tipo de Documento</label>
                   <select id="id_document"
                           name="id_document"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                           required>
                     <option value=""
                             selected>Selecione...</option>
@@ -526,7 +526,7 @@ $relations = getRelations();
                   <input type="text"
                          id="document"
                          name="document"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          required
                          autocomplete="off">
                 </div>
@@ -537,10 +537,10 @@ $relations = getRelations();
                   <input type="text"
                          id="fever_date"
                          name="fever_date"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
                          placeholder="dd/mm/aaaa"
                          autocomplete="off">
-                         <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">We’ll never share your details. Read our <a href="#" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Privacy Policy</a>.</p>
+                         <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">We’ll never share your details. Read our <a href="#" class="font-medium text-purple-600 hover:underline dark:text-purple-500">Privacy Policy</a>.</p>
                 </div> -->
 
                 <div class="col-span-2">
@@ -549,7 +549,7 @@ $relations = getRelations();
                   <textarea id="obs"
                             name="obs"
                             rows="4"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
                 <input type="hidden"
                        id="id"
@@ -566,10 +566,10 @@ $relations = getRelations();
                 <button type="button"
                         data-modal-hide="passenger_edit_modal"
                         id="cancel"
-                        class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
+                        class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
                 <button type="submit"
                         id="submit"
-                        class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-white text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-white text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
                   Salvar
                 </button>
               </div>
@@ -840,7 +840,7 @@ $relations = getRelations();
                   data-modal-target="passenger_edit_modal"
                   data-modal-toggle="passenger_edit_modal"
                   data-id="${person.id}"
-                  class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 flex justify-between">
+                  class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
             <span class="text-left truncate me-2">
               <i class="fa ${iconClass} text-lg ${textColorClass} fa-fw me-2"></i>
               ${person.name}
