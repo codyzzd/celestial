@@ -99,12 +99,21 @@ if (isset($_COOKIE['caravana_remember_token'])) {
                        name="remember_token"
                        value="remember_token"
                        checked
+                       data-tooltip-target="tooltip-remember-token"
                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
               </div>
               <label for="remember_token"
+                     data-tooltip-target="tooltip-remember-token"
                      class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Permancer logado</label>
+              <div id="tooltip-remember-token"
+                   role="tooltip"
+                   class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Ao deixar ativado, você permanecerá logado neste dispositivo ao menos que você de SAIR na tela de perfil.
+                <div class="tooltip-arrow"
+                     data-popper-arrow></div>
+              </div>
             </div>
-            <a href="#"
+            <a href="reset_password.php"
                class="text-sm text-purple-700 hover:underline dark:text-purple-500">Esqueci a senha</a>
           </div>
           <button type="submit"

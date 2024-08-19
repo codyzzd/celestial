@@ -156,6 +156,60 @@ if ($indicador == 'user_login') {
   }
 }
 
+if ($indicador == 'user_resetpw') {
+  // Pegar o e-mail do formulário
+  $email = $_POST['email'] ?? '';
+
+  // Sanitizar e validar o e-mail
+  $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'E-mail inválido!'
+    ]);
+    exit();
+  }
+
+  // Verificar se o e-mail existe no banco de dados
+  $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->store_result();
+
+  if ($stmt->num_rows > 0) {
+    // E-mail encontrado, gerar um token de redefinição
+    $token = bin2hex(random_bytes(16));
+    $expires = date("Y-m-d H:i:s", strtotime('+1 hour')); // Token expira em 1 hora
+
+    // Atualizar o token e a expiração no banco de dados
+    $stmt = $conn->prepare("UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE email = ?");
+    $stmt->bind_param("sss", $token, $expires, $email);
+    $stmt->execute();
+
+    // Enviar e-mail com link de redefinição
+    $resetLink = "https://caravanacelestial.com.br/app/reset_password.php?token=$token";
+    $subject = "Redefinição de Senha";
+    $message = "Clique no link abaixo para redefinir sua senha:\n\n$resetLink";
+    $headers = "From: noreply@caravanacelestial.com.br";
+
+    mail($email, $subject, $message, $headers);
+
+    echo json_encode([
+      'status' => 'success',
+      'msg' => 'Um link para redefinir sua senha foi enviado para o seu e-mail.'
+    ]);
+  } else {
+    // E-mail não encontrado
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'E-mail não encontrado!'
+    ]);
+  }
+
+  $stmt->close();
+  $conn->close();
+}
+
 if ($indicador == 'stake_add') {
   // Pegar dados do form
   $user_id = $_POST['user_id'] ?? '';
@@ -860,6 +914,126 @@ if ($indicador == 'vehicle_edit') {
 
   $stmt->close(); // Fechar a declaração
 }
+
+if ($indicador == 'caravan_add') {
+  // pega valores
+// user_id
+// stake_id
+//name
+//start_date
+//start_time
+//return_date
+//return_time
+//obs
+
+  // Verifica se o array $_POST não está vazio
+  if (!empty($_POST)) {
+    // Itera sobre cada item no array $_POST
+    foreach ($_POST as $key => $value) {
+      // Remove possíveis tags HTML e espaços em branco
+      ${$key} = $value;
+    }
+  }
+
+  // Verifica se o array $_POST não está vazio
+  if (!empty($_POST)) {
+    // Converte as datas (caso seja necessário)
+    $start_date = $start_date ? convertDateFormat($start_date) : null;
+    $return_date = $return_date ? convertDateFormat($return_date) : null;
+
+    // Prepara a consulta para inserção na tabela caravans com UUID()
+    $stmt = $conn->prepare("
+        INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs)
+        VALUES (UUID(),  ?, ?, ?, ?, ?, ?, ?)
+      ");
+
+    // Associa os parâmetros
+    $stmt->bind_param("sssssss", $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs);
+
+    // Executa a consulta
+    if ($stmt->execute()) {
+      echo json_encode([
+        'status' => 'success',
+        'msg' => 'Caravana adicionada com sucesso!'
+      ]);
+    } else {
+      echo json_encode([
+        'status' => 'error',
+        'msg' => 'Erro ao adicionar a caravana: ' . $stmt->error
+      ]);
+    }
+
+    // Fecha a declaração e a conexão com o banco de dados
+    $stmt->close();
+
+  }
+}
+
+if ($indicador == 'caravan_list') {
+  // Inicializar variável
+  $stake_id = null;
+
+  // Verifica se o array $_POST não está vazio
+  if (!empty($_POST)) {
+    // Itera sobre cada item no array $_POST
+    foreach ($_POST as $key => $value) {
+      // Remove possíveis tags HTML e espaços em branco
+      ${$key} = trim($value);
+    }
+  }
+
+  try {
+    // Verificar se stake_id foi recebido
+    if (isset($stake_id) && !empty($stake_id)) {
+      // Construir a consulta SQL base para a tabela caravans
+      $sql = "SELECT * FROM caravans WHERE id_stake = ? order by start_date desc";
+
+      // Adicionar condição para registros não excluídos (soft delete)
+      // if ($status === 'not_deleted') {
+      //   $sql .= " AND deleted_at IS NULL";
+      // }
+
+      // Preparar a consulta SQL
+      $stmt = $conn->prepare($sql);
+
+      // Verificar se a preparação foi bem-sucedida
+      if ($stmt === false) {
+        throw new Exception('Erro ao preparar a consulta: ' . $conn->error);
+      }
+
+      // Vincular o parâmetro e executar a consulta
+      $stmt->bind_param("s", $stake_id);
+      $stmt->execute();
+
+      // Obter os resultados
+      $result = $stmt->get_result();
+      $caravans = [];
+
+      // Iterar sobre os resultados e armazenar em um array
+      while ($row = $result->fetch_assoc()) {
+        $caravans[] = $row;
+      }
+
+      // Fechar a declaração
+      $stmt->close();
+
+      // Retornar os resultados como JSON
+      echo json_encode($caravans);
+
+    } else {
+      // Retornar uma mensagem de erro se stake_id não estiver definido
+      echo json_encode(['status' => 'error', 'msg' => 'ID Stake não fornecido.']);
+    }
+
+  } catch (Exception $e) {
+    // Tratar erros e exibir uma mensagem adequada
+    echo json_encode(['status' => 'error', 'msg' => 'Erro ao executar a consulta: ' . $e->getMessage()]);
+
+  }
+}
+
+
+
 
 if ($indicador == 'archive_something') {
   // Pegar dados do formulário

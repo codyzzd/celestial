@@ -149,7 +149,7 @@ $relations = getRelations();
         <?php endif; ?>
 
         <!-- empty state de pessoas -->
-        <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed"
+        <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed hidden"
              id="empty_state">
           <i class="fa fa-people-roof text-3xl text-gray-500 mb-2"></i>
 

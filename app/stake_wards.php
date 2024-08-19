@@ -27,7 +27,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
   <head>
     <meta charset="utf-8" />
 
-
     <?php
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
@@ -240,7 +239,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
         </div>
 
         <!-- empty state -->
-        <div class="p-4  rounded-lg   flex flex-col   w-full  border-[2px] border-gray-300 border-dashed"
+        <div class="p-4  rounded-lg   flex flex-col   w-full  border-[2px] border-gray-300 border-dashed hidden"
              id="empty_state">
           <i class="fa fa-circle-question text-3xl text-gray-500 mb-2"></i>
 

@@ -140,7 +140,7 @@ $conn->close();
             Se sua ala não estiver listada, informe aos líderes da estaca para garantir o registro correto.
           </div>
           <!--  <div class="flex">
-             <a href="stake_lider_wards.php"
+             <a href="stake_wards.php"
                class="text-white bg-yellow-800 hover:bg-yellow-900 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-xs px-3 py-1.5 me-2 text-center inline-flex items-center dark:bg-yellow-300 dark:text-gray-800 dark:hover:bg-yellow-400 dark:focus:ring-yellow-800">
               Cadastrar Ala
             </a>

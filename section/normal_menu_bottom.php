@@ -3,8 +3,8 @@
 $grid_cols = ($user_role === 'stake_lider' || $user_role === 'ward_lider') ? 'grid-cols-5' : 'grid-cols-4';
 
 // Determinar o URL e o texto para a página de liderança com base na role
-$lider_page = ($user_role === 'stake_lider') ? 'stake_lider.php' :
-  ($user_role === 'ward_lider' ? 'ward_lider.php' : '');
+$lider_page = ($user_role === 'stake_lider') ? 'stake.php' :
+  ($user_role === 'ward_lider' ? 'ward.php' : '');
 $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
   ($user_role === 'ward_lider' ? 'Ala' : '');
 ?>
@@ -25,7 +25,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
     <!-- Link para travels.php -->
     <a href="travels.php"
        class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group pb-4 lg:pb-0">
-      <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-place-of-worship text-xl"></i>
+      <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-signs-post text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-500">
         Caravanas
       </span>

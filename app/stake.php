@@ -22,7 +22,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
   <head>
     <meta charset="utf-8" />
 
-
     <?php
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
@@ -60,13 +59,13 @@ $user_role = checkUserRole($user_id, 'stake_lider');
       <div class="flex flex-col gap-4">
         <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y">
 
-          <a href="stake_lider_wards.php"
+          <a href="stake_wards.php"
              class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
             <span><i class="fa fa-tents text-lg text-gray-500 fa-fw me-2"></i>
               Alas</span>
             <i class="fa fa-chevron-right text-lg text-gray-500"></i>
           </a>
-          <a href="travels.php"
+          <a href="stake_travels.php"
              class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
             <span><i class="fa fa-place-of-worship text-lg text-gray-500 fa-fw me-2"></i>
               Caravanas</span>

@@ -1,4 +1,5 @@
 <?php
+
 function checkUserLogin()
 {
   // Inicie a sessão se ainda não estiver iniciada
@@ -120,6 +121,39 @@ function checkUserRole($user_id, $role = null)
 
   // Retorna o slug da role
   return $role_slug;
+}
+
+function checkStake($user_id)
+{
+  // Obtém a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Prepara a consulta para buscar o id_stake do usuário
+  $stmt = $conn->prepare("SELECT id_stake FROM users WHERE id = ?");
+  $stmt->bind_param("i", $user_id);
+
+  // Executa a consulta
+  $stmt->execute();
+
+  // Armazena o resultado
+  $stmt->bind_result($id_stake);
+  $stmt->fetch();
+
+  // Fecha a declaração
+  $stmt->close();
+
+  // Fecha a conexão com o banco de dados
+  $conn->close();
+
+  // Verifica se o id_stake é NULL
+  if ($id_stake === null) {
+    // Redireciona para stake_select.php se id_stake for NULL
+    header("Location: stake_select.php");
+    exit();
+  }
+
+  // Retorna o valor do id_stake
+  return $id_stake;
 }
 
 function getDatabaseConnection()
