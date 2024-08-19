@@ -76,6 +76,7 @@ $conn->close();
     <meta charset="utf-8" />
 
     <?php
+    require_once ROOT_PATH . '/resources/favicon.png';
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
     require_once ROOT_PATH . '/resources/head_flowbite.php';
@@ -141,13 +142,13 @@ $conn->close();
             <a href="stake_select.php"
                class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
               <span><i class="fa fa-people-group text-lg text-gray-500 fa-fw me-2"></i>
-                Selecionar Estaca</span>
+                Ativar Estaca</span>
               <i class="fa fa-chevron-right text-lg text-gray-500"></i>
             </a>
             <a href="ward_select.php"
                class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
               <span><i class="fa fa-tents text-lg text-gray-500 fa-fw me-2"></i>
-                Selecionar Ala</span>
+                Ativar Ala</span>
               <i class="fa fa-chevron-right text-lg text-gray-500"></i>
             </a>
 

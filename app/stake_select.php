@@ -75,6 +75,7 @@ if (!empty($id_stake)) {
 
 
     <?php
+    require_once ROOT_PATH . '/resources/favicon.png';
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
     require_once ROOT_PATH . '/resources/head_flowbite.php';

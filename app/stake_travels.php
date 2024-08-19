@@ -31,6 +31,7 @@ $user_stake = checkStake($user_id);
     <meta charset="utf-8" />
 
     <?php
+    require_once ROOT_PATH . '/resources/favicon.png';
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
     require_once ROOT_PATH . '/resources/head_flowbite.php';
@@ -573,7 +574,7 @@ $user_stake = checkStake($user_id);
                 <button type="button" data-modal-target="caravan_edit_modal" data-modal-toggle="caravan_edit_modal" data-id="${caravan.id}"
                   class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between items-center">
                   <div class="text-left w-full">
-                    <p class="mb-2 truncate text-sm">${caravan.name}</p>
+                    <p class="truncate text-sm">${caravan.name}</p>
                     <div class="flex justify-between items-center">
                       <div class="flex-1 text-left">
                         <p class="text-xl">${formattedStartTime}</p>

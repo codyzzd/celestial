@@ -46,6 +46,7 @@ $conn->close();
     <meta charset="utf-8" />
 
     <?php
+    require_once ROOT_PATH . '/resources/favicon.png';
     require_once ROOT_PATH . '/resources/functions.php';
     require_once ROOT_PATH . '/resources/head_tailwind.php';
     require_once ROOT_PATH . '/resources/head_flowbite.php';
