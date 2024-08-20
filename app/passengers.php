@@ -193,7 +193,7 @@ $relations = getRelations();
             <!-- Modal body -->
             <form class=""
                   id="passenger_add">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
+              <div class="grid gap-4 grid-cols-2 p-4">
 
                 <div class="col-span-2">
                   <label for="inline-radio-group"
@@ -403,7 +403,7 @@ $relations = getRelations();
             <!-- Modal body -->
             <form class=""
                   id="passenger_edit">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
+              <div class="grid gap-4 grid-cols-2 p-4">
                 <div class="col-span-2">
                   <label for="inline-radio-group"
                          class="block mb-2 text-sm font-medium text-gray-900">Relação</label>

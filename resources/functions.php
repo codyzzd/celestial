@@ -376,15 +376,58 @@ function getStake($user_id)
   return $id_stake;
 }
 
-// Função para converter data do formato dd/mm/yyyy para YYYY-MM-DD
-function convertDateFormat($date)
+function formatDateOrTime($value, $type)
 {
-  $dateArray = explode('/', $date);
-  if (count($dateArray) == 3) {
-    return sprintf('%04d-%02d-%02d', $dateArray[2], $dateArray[1], $dateArray[0]);
+  switch ($type) {
+    case 'date_BR_EN':
+      // Função para converter data do formato dd/mm/yyyy para YYYY-MM-DD
+      $dateArray = explode('/', $value);
+      if (count($dateArray) == 3) {
+        return sprintf('%04d-%02d-%02d', $dateArray[2], $dateArray[1], $dateArray[0]);
+      }
+      return null;
+
+    case 'date_EN_dMY':
+      // Define o padrão de formatação da data
+      $formatter = new IntlDateFormatter(
+        'pt_BR',
+        IntlDateFormatter::FULL,
+        IntlDateFormatter::NONE,
+        null,
+        null,
+        'dd MMM yyyy'
+      );
+
+      // Converte a string de data para um timestamp
+      $timestamp = strtotime($value);
+
+      // Formata a data
+      $formattedDate = $formatter->format($timestamp);
+
+      // Converte o mês para minúsculas
+      return strtolower($formattedDate);
+
+    case 'time_Hi':
+      // Formata a hora como "HH:mm" (ex: "10:00")
+      $timestamp = strtotime($value);
+      return date('H:i', $timestamp);
+
+    default:
+      return null;
   }
-  return null;
 }
+
+
+// Função para converter data do formato dd/mm/yyyy para YYYY-MM-DD
+// function convertDateFormat($date)
+// {
+//   $dateArray = explode('/', $date);
+//   if (count($dateArray) == 3) {
+//     return sprintf('%04d-%02d-%02d', $dateArray[2], $dateArray[1], $dateArray[0]);
+//   }
+//   return null;
+// }
+
 
 function isMobile()
 {
@@ -431,4 +474,42 @@ function getVehicles($user_stake)
 
   // Retornar o array de veículos
   return $vehicles;
+}
+
+function getCaravans($user_id)
+{
+  // Conectar ao banco de dados
+  $conn = getDatabaseConnection();
+
+  // Passo 1: Obter o id_stake do usuário
+  $stmt = $conn->prepare("SELECT id_stake FROM users WHERE id = ?");
+  $stmt->bind_param("s", $user_id);
+  $stmt->execute();
+  $stmt->bind_result($id_stake);
+  $stmt->fetch();
+  $stmt->close();
+
+  // Verificar se encontrou o id_stake
+  if (!$id_stake) {
+    return []; // Retorna array vazio se não encontrar id_stake
+  }
+
+  // Passo 2: Buscar as caravanas onde id_stake corresponde e a data de partida é no futuro ou hoje
+  $today = date('Y-m-d');
+  $stmt = $conn->prepare("SELECT * FROM caravans WHERE id_stake = ? AND start_date >= ?");
+  $stmt->bind_param("ss", $id_stake, $today);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  // Passo 3: Armazenar os resultados em um array
+  $caravans = [];
+  while ($row = $result->fetch_assoc()) {
+    $caravans[] = $row;
+  }
+
+  // Fechar a conexão
+  $stmt->close();
+  $conn->close();
+
+  return $caravans;
 }

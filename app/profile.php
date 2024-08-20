@@ -54,6 +54,16 @@ if ($row = $result->fetch_assoc()) {
   $user_stake_profile = $row["stake_name"] ?? 'não selecionada';
   $user_ward_profile = $row["ward_name"] ?? 'não selecionada';
   $user_role_profile = $row["role_name"] ?? 'Membro';
+
+  // Extrair a primeira letra do primeiro nome e a primeira letra da última palavra
+  if ($user_name_profile) {
+    $name_parts = explode(' ', trim($user_name_profile));
+    $first_letter = strtoupper($name_parts[0][0]);  // Primeira letra do primeiro nome
+    $last_letter = isset($name_parts[1]) ? strtoupper(end($name_parts)[0]) : '';  // Primeira letra da última palavra, se houver
+    $name_avatar = $first_letter . $last_letter;
+  } else {
+    $name_avatar = null;
+  }
 }
 
 // Criar o array associativo
@@ -62,6 +72,7 @@ $profile = [
   'stake' => $user_stake_profile,
   'ward' => $user_ward_profile,
   'role' => $user_role_profile,
+  'avatar' => $name_avatar,
 ];
 
 // Fechar a declaração e a conexão
@@ -113,20 +124,17 @@ $conn->close();
       <div class="flex flex-col gap-4">
 
         <div id="profile_info"
-             class="flex flex-row gap-4">
-          <div class="relative inline-flex items-center justify-center w-16 h-16 overflow-hidden bg-gray-200 rounded-full dark:bg-gray-600">
-            <span class="font-medium text-gray-600 dark:text-gray-300">BG</span>
+             class="flex flex-row gap-4 w-full">
+          <div id="avatar"
+               class="relative inline-flex items-center justify-center w-16 h-16 overflow-hidden bg-gray-200 rounded-full dark:bg-gray-600 flex-shrink-0">
+            <span class="font-medium text-gray-600 dark:text-gray-300"><?= $profile['avatar'] ?></span>
           </div>
-          <div>
-            <p class="text-[10px] font-medium tracking-wider text-gray-600 uppercase"><?= $profile['role'] ?>
-            </p>
-            <h2 class="font-semibold truncate text-xl"><?= $profile['name'] ?>
-            </h2>
-            <p class="text-sm text-gray-500 truncate">Estaca <?= $profile['stake'] ?>
-            </p>
-            <p class="text-sm text-gray-500 truncate">Ala <?= $profile['ward'] ?>
-            </p>
-
+          <div id="profile_detail"
+               class="flex-1 flex flex-col justify-center truncate">
+            <p class="text-xs font-medium tracking-wider text-gray-600 uppercase truncate"><?= $profile['role'] ?></p>
+            <h2 class="font-semibold text-xl truncate"><?= $profile['name'] ?></h2>
+            <p class="text-sm text-gray-500 truncate">Estaca <?= $profile['stake'] ?></p>
+            <p class="text-sm text-gray-500 truncate">Ala <?= $profile['ward'] ?></p>
           </div>
         </div>
 

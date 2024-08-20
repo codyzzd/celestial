@@ -44,7 +44,7 @@ $vehicles = getVehicles($user_stake);
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
-    <title>Alas - Caravana Celestial</title>
+    <title>Caravanas - Caravana Celestial</title>
     <link rel="manifest"
           href="manifest.json">
   </head>
@@ -114,7 +114,7 @@ $vehicles = getVehicles($user_stake);
             <!-- Modal body -->
             <form class=""
                   id="caravan_add">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
+              <div class="grid gap-4 grid-cols-2 p-4">
 
                 <div class="col-span-2">
                   <label for="name"
@@ -317,7 +317,7 @@ $vehicles = getVehicles($user_stake);
             <!-- Modal body -->
             <form class=""
                   id="caravan_edit">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
+              <div class="grid gap-4 grid-cols-2 p-4">
                 <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome da Ala</label>
@@ -692,7 +692,8 @@ $vehicles = getVehicles($user_stake);
                   function formatDate(dateString) {
                     const options = { day: '2-digit', month: 'short', year: 'numeric' };
                     const date = new Date(dateString);
-                    return date.toLocaleDateString('pt-BR', options).replace(/de /, '').replace('.', '');
+                    // Remove qualquer "de " que pode aparecer, remove também os pontos e espaços extras
+                    return date.toLocaleDateString('pt-BR', options).replace(/de\s/g, '').replace(/\./g, '').trim();
                   }
 
                   function formatTime(timeString) {
@@ -772,7 +773,7 @@ $vehicles = getVehicles($user_stake);
           // Atualizar texto de paginação
           const startEntry = (page - 1) * itemsPerPage + 1;
           const endEntry = Math.min(page * itemsPerPage, totalItems);
-          const paginationText = `Mostrando <span class="font-semibold text-gray-900 ">${startEntry}</span> até <span class="font-semibold text-gray-900 ">${endEntry}</span> de <span class="font-semibold text-gray-900 ">${totalItems}</span> Caravanas`;
+          const paginationText = `Mostrando <span class="font-semibold text-gray-900 ">${startEntry}</span> - <span class="font-semibold text-gray-900 ">${endEntry}</span> de <span class="font-semibold text-gray-900 ">${totalItems}</span> Caravanas`;
 
           $('#pagination_text').html(paginationText);
 

@@ -39,6 +39,8 @@ $user_role = checkUserRole($user_id, 'stake_lider');
     <title>Veículos - Caravana Celestial</title>
     <link rel="manifest"
           href="manifest.json">
+    <link rel="stylesheet"
+          href="../resources/css.css">
   </head>
 
   <body class="bg-gray-100">
@@ -129,7 +131,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
             <!-- Modal body -->
             <form class=""
                   id="vehicle_add">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
+              <div class="grid gap-4 grid-cols-2 p-4">
 
                 <div class="col-span-2">
                   <label for="name"
@@ -142,17 +144,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                          placeholder="ex: Itaipu Travel Double Deck 60"
                          autocomplete="off">
                 </div>
-                <div class="col-span-2">
-                  <label for="capacity"
-                         class="block mb-2 text-sm font-medium text-gray-900">Capacidade</label>
-                  <input type="text"
-                         id="capacity"
-                         name="capacity"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                         required
-                         placeholder="60"
-                         autocomplete="off">
-                </div>
 
                 <div class="col-span-2">
                   <label for="obs"
@@ -160,8 +151,38 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                   <textarea id="obs"
                             name="obs"
                             rows="4"
+                            placeholder="ex: Bancos 50 a 60 são reservados para idosos e pessoas com necessidades especiais."
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
+
+                <div class="col-span-2 flex space-x-4">
+                  <button type="button"
+                          id="add-row"
+                          class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">+ Fila</button>
+                  <button type="button"
+                          id="add-hr"
+                          class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">+ Separador</button>
+
+                </div>
+                <div class="col-span-2">
+                  <label for="seat-layout"
+                         class="block mb-2 text-sm font-medium text-gray-900">Configuração do Layout dos Assentos</label>
+                  <div id="seat-layout"
+                       class="bus-layout">
+                    <!-- Fileiras serão adicionadas dinamicamente aqui -->
+                  </div>
+                </div>
+
+                <!-- Campo oculto para armazenar o layout dos assentos em JSON -->
+                <input type="hidden"
+                       id="seat_map"
+                       name="seat_map"
+                       value="">
+
+                <input type="hidden"
+                       id="capacity"
+                       name="capacity"
+                       value="">
 
               </div>
 
@@ -173,101 +194,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                 <button type="submit"
                         class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-white text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
                   Adicionar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- modal edit -->
-      <div id="vehicle_edit_modal"
-           data-modal-placement="bottom-center"
-           tabindex="-1"
-           aria-hidden="true"
-           class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-lg max-h-full">
-          <!-- Modal content -->
-          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5  rounded-t dark:border-gray-600 border-b">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Editar Veículo
-              </h3>
-              <button type="button"
-                      id="close_edit"
-                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                      data-modal-hide="vehicle_edit_modal">
-                <svg class="w-3 h-3"
-                     aria-hidden="true"
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 14 14">
-                  <path stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                </svg>
-                <span class="sr-only">Fechar Modal</span>
-              </button>
-            </div>
-            <!-- Modal body -->
-            <form class=""
-                  id="vehicle_edit">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
-
-                <div class="col-span-2">
-                  <label for="name"
-                         class="block mb-2 text-sm font-medium text-gray-900">Nome</label>
-                  <input type="text"
-                         id="name"
-                         name="name"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                         required
-                         placeholder="ex: Itaipu Travel Double Deck 60"
-                         autocomplete="off">
-                </div>
-                <div class="col-span-2">
-                  <label for="capacity"
-                         class="block mb-2 text-sm font-medium text-gray-900">Capacidade</label>
-                  <input type="text"
-                         id="capacity"
-                         name="capacity"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                         required
-                         placeholder="60"
-                         autocomplete="off">
-                </div>
-
-                <div class="col-span-2">
-                  <label for="obs"
-                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
-                  <textarea id="obs"
-                            name="obs"
-                            rows="4"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
-                </div>
-                <input type="hidden"
-                       id="id"
-                       name="id" />
-
-              </div>
-
-              <!-- Modal footer -->
-              <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
-                <button data-modal-hide="vehicle_edit_modal"
-                        id="vehicle_archive"
-                        type="button"
-                        class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Arquivar</button>
-                <button type="button"
-                        data-modal-hide="vehicle_edit_modal"
-                        id="cancel"
-                        class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
-                <button type="submit"
-                        id="submit"
-                        class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-white text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
-                  Salvar
                 </button>
               </div>
             </form>
@@ -322,7 +248,15 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                 $('#vehicle_edit #obs').val(vehicle.obs || '');
                 $('#vehicle_edit #id').val(vehicle.id || '');
 
-                // Inicializa e exibe o modal após os dados terem sido carregados
+                // Verifique se `vehicle.seat_map` é uma string JSON e faça o parse se necessário
+                let seatMap = vehicle.seat_map;
+                if (typeof seatMap === 'string') {
+                  seatMap = JSON.parse(seatMap);
+                }
+
+                // Carrega o mapa dos assentos usando a propriedade correta
+                loadSeatMap(seatMap || []);
+
                 const passengerEditModal = new Modal(document.getElementById('vehicle_edit_modal'));
                 passengerEditModal.show();
               }
@@ -365,6 +299,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                   // Fechar o modal diretamente
                   $('[data-modal-hide="vehicle_add_modal"]').trigger('click');
                   // updatePeopleList('', 'not_deleted');
+                  updateVehicleList('not_deleted');
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
@@ -488,20 +423,14 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                 // Adicionar novos vehicle_items aos containers com base na relação
                 vehiclejson.forEach(function (vehicle) {
                   var vehicleItem = `
-                  <button type="button"
-                  data-modal-target="vehicle_edit_modal"
-                  data-modal-toggle="vehicle_edit_modal"
-                  data-id="${vehicle.id}"
+                  <a href="vehicle.php?id=${vehicle.id}"
                   class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex items-center justify-between">
-
-
-                  <span class="text-left truncate  justify-between w-full"> ${vehicle.name}   </span>
-
+                  <span class="text-left truncate  justify-between w-full"> ${vehicle.name}</span>
                   <div class="flex flex-row gap-2 items-center">
-                  <span class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded w-10 h-fit">${vehicle.capacity}</span>
+                  <span class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded w-10 h-fit text-center">${vehicle.capacity}</span>
                   <i class="fa fa-chevron-right text-lg text-gray-500"></i></div>
 
-                  </button>
+                  </a>
                   `;
                   vehicleList.append(vehicleItem);
                 });
@@ -523,6 +452,119 @@ $user_role = checkUserRole($user_id, 'stake_lider');
               toast('error', 'Erro ao enviar a solicitação: ' + error);
             }
           });
+        }
+
+
+
+
+        // Identifique o formulário atual MAPA VEICULO
+        const isAddForm = $('#vehicle_add').length > 0;
+        const isEditForm = $('#vehicle_edit').length > 0;
+
+
+
+        // Usando delegação de eventos para lidar com botões dentro de modais ou conteúdos carregados dinamicamente
+        $(document).on('click', '#add-row', function () {
+          addSeatRow();
+          updateSeatMapInput();
+        });
+
+        $(document).on('click', '#add-hr', function () {
+          addSeparator();
+          updateSeatMapInput();
+        });
+
+        function addSeatRow() {
+          let row = $('<div>').addClass('seat-row');
+
+          for (let i = 0; i < 4; i++) { // 4 bancos por linha
+            let seat = $('<div>').addClass('seat empty').attr('data-seat', '');
+
+            seat.on('click', function () {
+              if ($(this).hasClass('empty')) {
+                let seatNumber = prompt("Digite o número do assento ou deixe em branco para espaço vazio:");
+                if (seatNumber && !isSeatNumberDuplicate(seatNumber)) {
+                  $(this).removeClass('empty').text(seatNumber).attr('data-seat', seatNumber);
+                } else if (seatNumber) {
+                  alert("Este número de assento já foi usado! Escolha outro número.");
+                }
+              } else {
+                $(this).addClass('empty').text('').attr('data-seat', '');
+              }
+              updateSeatMapInput();
+            });
+
+            row.append(seat);
+          }
+
+          let removeBtn = $('<button>').text('X').addClass('remove-btn');
+          removeBtn.on('click', function () {
+            $(this).parent().remove();
+            updateSeatMapInput();
+          });
+
+          row.append(removeBtn);
+          $('#seat-layout').append(row);
+        }
+
+        function addSeparator() {
+          let separatorRow = $('<div>').addClass('separator-row');
+
+          let separator = $('<div>').addClass('separator flex-1').text('separator');
+
+          let removeBtn = $('<button>').text('X').addClass('remove-btn');
+          removeBtn.on('click', function () {
+            $(this).parent().remove();
+            updateSeatMapInput();
+          });
+
+          separatorRow.append(separator).append(removeBtn);
+          $('#seat-layout').append(separatorRow);
+        }
+
+        function updateSeatMapInput() {
+          let seatMap = [];
+          let totalCapacity = 0; // Variável para contar a capacidade total
+
+          $('#seat-layout').children().each(function () {
+            if ($(this).hasClass('separator-row')) {
+              seatMap.push("separator");
+            } else if ($(this).hasClass('seat-row')) {
+              let rowData = [];
+              let rowCapacity = 0; // Variável para contar a capacidade da linha
+
+              $(this).find('.seat').each(function () {
+                let seatNumber = $(this).attr('data-seat');
+                rowData.push(seatNumber ? seatNumber : "space");
+
+                if (seatNumber) { // Conta apenas os assentos numerados
+                  rowCapacity++;
+                }
+              });
+
+              seatMap.push(rowData);
+              totalCapacity += rowCapacity; // Adiciona a capacidade da linha ao total
+            }
+          });
+
+          // Atualiza o valor dos campos de entrada
+          $('#seat_map').val(JSON.stringify(seatMap));
+          if ($('#capacity').length) {
+            $('#capacity').val(totalCapacity); // Atualiza o campo de capacidade
+          }
+
+          // console.log('Updated seat map:', $('#seat_map').val()); // Verificar o valor atualizado
+          // console.log('Total capacity:', totalCapacity); // Verificar a capacidade total
+        }
+
+        function isSeatNumberDuplicate(seatNumber) {
+          let allSeats = $('.seat');
+          for (let seat of allSeats) {
+            if ($(seat).attr('data-seat') === seatNumber) {
+              return true;
+            }
+          }
+          return false;
         }
 
         updateVehicleList('not_deleted');

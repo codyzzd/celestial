@@ -23,7 +23,7 @@ $lider_text = ($user_role === 'stake_lider') ? 'Estaca' :
     </a>
 
     <!-- Link para travels.php -->
-    <a href="travels.php"
+    <a href="caravans.php"
        class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group pb-4 lg:pb-0">
       <i class="text-gray-500 mb-1 group-hover:text-purple-600 fa fa-signs-post text-xl"></i>
       <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-500">

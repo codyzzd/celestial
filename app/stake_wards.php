@@ -108,7 +108,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
             <!-- Modal body -->
             <form class=""
                   id="ward_add">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
+              <div class="grid gap-4 grid-cols-2 p-4">
 
                 <div class="col-span-2">
                   <label for="name"
@@ -186,7 +186,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
             <!-- Modal body -->
             <form class=""
                   id="ward_edit">
-              <div class="grid gap-4 mb-4 grid-cols-2 p-4">
+              <div class="grid gap-4 grid-cols-2 p-4">
                 <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome da Ala</label>

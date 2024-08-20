@@ -462,7 +462,8 @@ if ($indicador == 'passenger_add') {
   $id_church = $_POST['id_church'] ?? '';
 
   // Converter as datas
-  $nasc_date = convertDateFormat($nasc_date);
+  // $nasc_date = convertDateFormat($nasc_date);
+  $nasc_date = formatDateOrTime($nasc_date, 'date_BR_EN');
   // $fever_date = $fever_date ? convertDateFormat($fever_date) : null;
 
   // Preparar a query de inserção com UUID() diretamente
@@ -502,7 +503,8 @@ if ($indicador == 'passenger_edit') {
   $id_church = $_POST['id_church'] ?? ''; // Coleta o ID do usuário
 
   // Converter as datas
-  $nasc_date = convertDateFormat($nasc_date);
+  // $nasc_date = convertDateFormat($nasc_date);
+  $nasc_date = formatDateOrTime($nasc_date, 'date_BR_EN');
   // $fever_date = $fever_date ? convertDateFormat($fever_date) : null;
 
   // Preparar a query de atualização
@@ -734,6 +736,7 @@ if ($indicador == 'vehicle_add') {
   // obs
   // capacity
   // stake_id
+  // seat_map
 
   // Verifica se o array $_POST não está vazio
   if (!empty($_POST)) {
@@ -745,8 +748,8 @@ if ($indicador == 'vehicle_add') {
   }
 
   // Preparar a query de inserção com UUID() diretamente
-  $stmt = $conn->prepare("INSERT INTO vehicles (id, name, capacity,obs,id_stake) VALUES (UUID(), ?, ?, ?,?)");
-  $stmt->bind_param("siss", $name, $capacity, $obs, $stake_id);
+  $stmt = $conn->prepare("INSERT INTO vehicles (id, name, capacity,obs,id_stake,seat_map) VALUES (UUID(), ?, ?, ?,?,?)");
+  $stmt->bind_param("sisss", $name, $capacity, $obs, $stake_id, $seat_map);
 
   // Executar a query
   if ($stmt->execute()) {
@@ -934,8 +937,8 @@ if ($indicador == 'caravan_add') {
 
   try {
     // Converte as datas (caso seja necessário)
-    $start_date = $start_date ? convertDateFormat($start_date) : null;
-    $return_date = $return_date ? convertDateFormat($return_date) : null;
+    $start_date = $start_date ? formatDateOrTime($start_date, 'date_BR_EN') : null;
+    $return_date = $return_date ? formatDateOrTime($return_date, 'date_BR_EN') : null;
 
     // Prepara a consulta para inserção na tabela caravans com UUID()
     $stmt = $conn->prepare("
