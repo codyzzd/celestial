@@ -20,6 +20,9 @@ $user_role = checkUserRole($user_id, 'stake_lider');
 // Guarda o id da estaca
 $user_stake = checkStake($user_id);
 
+//get vehicles
+$vehicles = getVehicles($user_stake);
+
 // Obter as wards associadas ao usuário
 // $wards =  getWardsByUserId($user_id);
 ?>
@@ -120,7 +123,7 @@ $user_stake = checkStake($user_id);
                          id="name"
                          name="name"
                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-                         placeholder="ex: Agosto 15 2024"
+                         placeholder="ex: Templo Curitiba"
                          required
                          autocomplete="off" />
                 </div>
@@ -170,6 +173,7 @@ $user_stake = checkStake($user_id);
                          autocomplete="off">
 
                 </div>
+
                 <div class="col-span-2">
                   <label for="obs"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
@@ -177,6 +181,90 @@ $user_stake = checkStake($user_id);
                             name="obs"
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
+                </div>
+                <div class="col-span-2">
+                  <label for="vehicles"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar Veículo</label>
+                  <select id="vehicles"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <!-- <option selected>Selecione...</option> -->
+                    <?php foreach ($vehicles as $vehicle): ?>
+                      <option value="<?php echo htmlspecialchars($vehicle['id']); ?>"
+                              data-capacity="<?php echo htmlspecialchars($vehicle['capacity']); ?>">
+                        <?php echo htmlspecialchars($vehicle['name']); ?>
+                      </option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="col-span-2">
+                  <button type="button"
+                          id="addVehicle"
+                          class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">Adicionar Veículo</button>
+                </div>
+                <div class="col-span-2">
+
+                  <div class="relative overflow-x-auto">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-900 uppercase dark:text-gray-400">
+                        <tr>
+                          <th scope="col"
+                              class="p-2">
+                            Lista de Veículo
+                          </th>
+
+                          <th scope="col"
+                              class="p-2">
+
+                          </th>
+                          <th scope="col"
+                              class="p-2">
+
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="vehicleTableBody">
+                        <!-- <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                          <th scope="row"
+                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            Itaipu Travel Double Deck
+                          </th>
+
+                          <td class="px-6 py-4">
+                            60
+                          </td>
+                          <td class="px-6 py-4">
+                            <a href="#"
+                               class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                          </td>
+                        </tr>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                          <th scope="row"
+                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            Itaipu Travel Double Deck
+                          </th>
+
+                          <td class="px-6 py-4">
+                            54
+                          </td>
+                          <td class="px-6 py-4">
+                            <a href="#"
+                               class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                          </td>
+                        </tr> -->
+
+                      </tbody>
+                      <tfoot>
+                        <tr class="font-semibold text-gray-900 dark:text-white">
+                          <th scope="row"
+                              class="p-2 text-base">Total</th>
+                          <td class="p-2"
+                              id="totalCapacity">0</td>
+                          <td class="p-2"></td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+
                 </div>
 
               </div>
@@ -377,6 +465,60 @@ $user_stake = checkStake($user_id);
         $('#caravan_add #return_time').mask('00:00');
         $('#caravan_edit #return_date').mask('00/00/0000');
         $('#caravan_edit #return_time').mask('00:00');
+
+        const select = document.getElementById('vehicles'); // Defina a variável select aqui
+        // Handle the add vehicle button click
+        document.getElementById('addVehicle').addEventListener('click', function () {
+          const selectedOption = select.options[select.selectedIndex];
+          const vehicleId = selectedOption.value;
+          const vehicleName = selectedOption.textContent;
+          const vehicleCapacity = selectedOption.dataset.capacity;
+
+          // if (vehicleId && !document.querySelector(`tr[data-id="${vehicleId}"]`)) {
+          if (vehicleId) {
+            const tableBody = document.getElementById('vehicleTableBody');
+            const row = document.createElement('tr');
+            row.dataset.id = vehicleId;
+            row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50');
+            row.innerHTML = `
+        <th scope="row" class="p-2 font-medium text-gray-900 w-full">${vehicleName}</th>
+        <td class="p-2">${vehicleCapacity}</td>
+        <td class="p-2">
+          <a href="#" class="font-medium text-blue-600 hover:underline remove-vehicle">
+            <i class="fa fa-close text-lg fa-fw me-2 text-red-700"></i>
+          </a>
+        </td>
+      `;
+            tableBody.appendChild(row);
+            updateTotalCapacity();
+          }
+        });
+
+        // Handle removal of vehicle rows
+        document.getElementById('vehicleTableBody').addEventListener('click', function (event) {
+          if (event.target.classList.contains('remove-vehicle') || event.target.closest('.remove-vehicle')) {
+            event.preventDefault();
+            const row = event.target.closest('tr');
+            row.remove();
+            updateTotalCapacity();
+          }
+        });
+
+        // Update total capacity
+        function updateTotalCapacity() {
+          const rows = document.querySelectorAll('#vehicleTableBody tr');
+          let totalCapacity = 0;
+          rows.forEach(row => {
+            const capacityText = row.querySelector('td').textContent.trim();
+            const capacity = parseInt(capacityText);
+            if (!isNaN(capacity)) {
+              totalCapacity += capacity;
+            }
+          });
+          // Atualizar o totalCapacity no <tfoot>
+          document.getElementById('totalCapacity').textContent = totalCapacity;
+        }
+
 
         // Adiciona o evento de clique ao botão usando jQuery
         $('#pagination-prev').on('click', function () {
@@ -622,7 +764,7 @@ $user_stake = checkStake($user_id);
           updateItemsPerPage();
         });
 
-        // updateItemsPerPage();
+
 
         function updatePaginationControls(page, totalItems) {
           const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -664,11 +806,21 @@ $user_stake = checkStake($user_id);
         $("#caravan_add").submit(function (event) {
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
 
+          // Colete os IDs dos veículos da tabela
+          var vehicleIds = [];
+          $('#vehicleTableBody tr').each(function () {
+            var vehicleId = $(this).data('id'); // Pegue o id do veículo
+            if (vehicleId) {
+              vehicleIds.push(vehicleId);
+            }
+          });
+
           // Serializar os campos do formulário e adicionar as variáveis user_id e stake_id
           var formData = $(this).serialize() +
             "&user_id=" + encodeURIComponent(userId) +
             "&indicador=caravan_add" +
-            "&stake_id=" + encodeURIComponent(userStake);
+            "&stake_id=" + encodeURIComponent(userStake) +
+            "&vehicle_ids=" + encodeURIComponent(JSON.stringify(vehicleIds)); // Adicione os IDs dos veículos
 
           $.ajax({
             type: "POST",
@@ -681,6 +833,7 @@ $user_stake = checkStake($user_id);
                 // Verificar o status da resposta e mostrar o toast apropriado
                 if (jsonResponse.status === "success") {
                   $("#caravan_add")[0].reset(); // Reseta o formulário
+                  $("#vehicleTableBody").empty(); // Limpa o conteúdo do tbody
                   toast(jsonResponse.status, jsonResponse.msg);
                   updateCaravansList(true);
                   $('[data-modal-hide="caravan_add_modal"]').click();//fechar modal

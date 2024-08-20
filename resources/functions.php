@@ -391,3 +391,44 @@ function isMobile()
   $userAgent = $_SERVER['HTTP_USER_AGENT'];
   return preg_match('/iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i', $userAgent);
 }
+
+function getVehicles($user_stake)
+{
+  // Estabelecer conexão com o banco de dados
+  $conn = getDatabaseConnection(); // Supondo que getDatabaseConnection() retorne um objeto mysqli
+
+  // Preparar a consulta SQL
+  $stmt = $conn->prepare("SELECT id, capacity, name FROM vehicles WHERE id_stake = ?");
+
+  // Verifica se a preparação da consulta foi bem-sucedida
+  if ($stmt === false) {
+    die('Erro ao preparar a consulta: ' . $conn->error);
+  }
+
+  // Vincular o parâmetro
+  $stmt->bind_param("s", $user_stake);
+
+  // Executar a consulta
+  $stmt->execute();
+
+  // Obtém o resultado
+  $result = $stmt->get_result();
+
+  // Verifica se encontrou algum resultado
+  $vehicles = [];
+  if ($result->num_rows > 0) {
+    // Loop para pegar cada veículo
+    while ($row = $result->fetch_assoc()) {
+      $vehicles[] = $row; // Adiciona cada veículo ao array
+    }
+  }
+
+  // Fecha a declaração
+  $stmt->close();
+
+  // Fecha a conexão com o banco de dados
+  $conn->close();
+
+  // Retornar o array de veículos
+  return $vehicles;
+}

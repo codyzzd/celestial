@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MySql" database="MySql" id="MySql-293" >
+	<schema name="u821249804_caravana" >
+		<table name="caravan_vehicles" row_count="0" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_caravan" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_vehicle" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<index name="pk_caravan_vehicles" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="caravan_id" unique="NORMAL" >
+				<column name="id_caravan" />
+			</index>
+			<index name="vehicle_id" unique="NORMAL" >
+				<column name="id_vehicle" />
+			</index>
+			<fk name="caravan_vehicles_ibfk_1" to_schema="u821249804_caravana" to_table="caravans" options="" >
+				<fk_column name="id_caravan" pk="id" />
+			</fk>
+			<fk name="caravan_vehicles_ibfk_2" to_schema="u821249804_caravana" to_table="vehicles" options="" >
+				<fk_column name="id_vehicle" pk="id" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci]]></options>
+		</table>
+		<table name="caravans" row_count="0" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="start_date" type="DATE" jt="91" mandatory="y" />
+			<column name="start_time" type="TIME" jt="92" mandatory="y" />
+			<column name="return_date" type="DATE" jt="91" mandatory="y" />
+			<column name="return_time" type="TIME" jt="92" mandatory="y" />
+			<column name="obs" type="TEXT" jt="-1" />
+			<column name="id_stake" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="created_at" type="TIMESTAMP" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+			</column>
+			<column name="updated_at" type="TIMESTAMP" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+				<column_options><![CDATA[ON UPDATE current_timestamp]]></column_options>
+			</column>
+			<column name="deleted_at" type="TIMESTAMP" jt="93" />
+			<index name="pk_caravans" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_caravans_id_stake" unique="NORMAL" >
+				<column name="id_stake" />
+			</index>
+			<fk name="caravans_ibfk_1" to_schema="u821249804_caravana" to_table="stakes" options="" >
+				<fk_column name="id_stake" pk="id" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci]]></options>
+		</table>
+		<table name="documents" row_count="5" spec="" >
+			<column name="id" type="INT" length="11" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<index name="pk_documents" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
+		<table name="passengers" row_count="2" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_ward" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_church" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="nasc_date" type="DATE" jt="91" mandatory="y" />
+			<column name="sex" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="id_document" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="document" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="obs" type="MEDIUMTEXT" jt="-1" />
+			<column name="id_relationship" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="created_by" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+				<column_options><![CDATA[ON UPDATE current_timestamp]]></column_options>
+			</column>
+			<column name="deleted_at" type="DATETIME" jt="93" />
+			<index name="pk_passengers" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_id_document" unique="NORMAL" >
+				<column name="id_document" />
+			</index>
+			<index name="idx_sex" unique="NORMAL" >
+				<column name="sex" />
+			</index>
+			<index name="idx_user" unique="NORMAL" >
+				<column name="created_by" />
+			</index>
+			<index name="idx_ward" unique="NORMAL" >
+				<column name="id_ward" />
+			</index>
+			<index name="idx_relationship" unique="NORMAL" options="USING BTREE" >
+				<column name="id_relationship" />
+			</index>
+			<fk name="passengers_ibfk_1" to_schema="u821249804_caravana" to_table="documents" options="" >
+				<fk_column name="id_document" pk="id" />
+			</fk>
+			<fk name="passengers_ibfk_2" to_schema="u821249804_caravana" to_table="sexs" options="" >
+				<fk_column name="sex" pk="id" />
+			</fk>
+			<fk name="passengers_ibfk_3" to_schema="u821249804_caravana" to_table="users" options="" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+			<fk name="passengers_ibfk_4" to_schema="u821249804_caravana" to_table="wards" options="" >
+				<fk_column name="id_ward" pk="id" />
+			</fk>
+			<fk name="passengers_ibfk_5" to_schema="u821249804_caravana" to_table="relationship" options="" >
+				<fk_column name="id_relationship" pk="id" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
+		<table name="relationship" row_count="2" spec="" >
+			<column name="id" type="INT" length="11" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="slug" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<index name="pk_relationship" unique="PRIMARY_KEY" options="USING BTREE" >
+				<column name="id" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC]]></options>
+		</table>
+		<table name="roles" row_count="2" spec="" >
+			<column name="id" type="INT" length="11" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="slug" type="VARCHAR" length="50" jt="12" mandatory="y" />
+			<index name="pk_roles" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
+		<table name="seats" row_count="0" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_vehicle" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_caravan" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="seat_number" type="INT" length="11" jt="4" mandatory="y" />
+			<index name="pk_seats" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="id_vehicle" unique="NORMAL" >
+				<column name="id_vehicle" />
+			</index>
+			<index name="idx_id_caravan" unique="NORMAL" >
+				<column name="id_caravan" />
+			</index>
+			<fk name="seats_ibfk_1" to_schema="u821249804_caravana" to_table="vehicles" options="" >
+				<fk_column name="id_vehicle" pk="id" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci]]></options>
+		</table>
+		<table name="sexs" row_count="2" spec="" >
+			<column name="id" type="INT" length="11" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="name" type="VARCHAR" length="50" jt="12" />
+			<column name="slug" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_sexs" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
+		<table name="stakes" row_count="3" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="cod" type="VARCHAR" length="10" jt="12" mandatory="y" />
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+			</column>
+			<index name="pk_stakes" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unique_cod" unique="UNIQUE_KEY" >
+				<column name="cod" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
+		<table name="users" row_count="3" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_stake" type="VARCHAR" length="36" jt="12" />
+			<column name="id_ward" type="VARCHAR" length="36" jt="12" />
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="email" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="password" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="salt" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="role" type="INT" length="11" jt="4" />
+			<column name="created_at" type="TIMESTAMP" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+			</column>
+			<column name="updated_at" type="TIMESTAMP" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+				<column_options><![CDATA[ON UPDATE current_timestamp]]></column_options>
+			</column>
+			<column name="remember_token" type="VARCHAR" length="32" jt="12" />
+			<column name="reset_token" type="VARCHAR" length="32" jt="12" />
+			<column name="reset_token_expires" type="DATETIME" jt="93" />
+			<index name="pk_users" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="email" unique="UNIQUE_KEY" >
+				<column name="email" />
+			</index>
+			<index name="idx_id_stake" unique="NORMAL" >
+				<column name="id_stake" />
+			</index>
+			<index name="idx_role" unique="NORMAL" >
+				<column name="role" />
+			</index>
+			<index name="idx_id_ward" unique="NORMAL" >
+				<column name="id_ward" />
+			</index>
+			<fk name="users_ibfk_1" to_schema="u821249804_caravana" to_table="stakes" options="" >
+				<fk_column name="id_stake" pk="id" />
+			</fk>
+			<fk name="users_ibfk_2" to_schema="u821249804_caravana" to_table="roles" options="" >
+				<fk_column name="role" pk="id" />
+			</fk>
+			<fk name="users_ibfk_3" to_schema="u821249804_caravana" to_table="wards" options="" >
+				<fk_column name="id_ward" pk="id" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
+		<table name="vehicles" row_count="0" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_stake" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="obs" type="TEXT" jt="-1" />
+			<column name="photo" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="capacity" type="INT" length="11" jt="4" />
+			<column name="created_at" type="TIMESTAMP" jt="93" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+			</column>
+			<column name="updated_at" type="TIMESTAMP" jt="93" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+				<column_options><![CDATA[ON UPDATE current_timestamp]]></column_options>
+			</column>
+			<column name="deleted_at" type="TIMESTAMP" jt="93" />
+			<index name="pk_vehicles" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_id_stake" unique="NORMAL" >
+				<column name="id_stake" />
+			</index>
+			<fk name="vehicles_ibfk_1" to_schema="u821249804_caravana" to_table="stakes" options="" >
+				<fk_column name="id_stake" pk="id" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci]]></options>
+		</table>
+		<table name="wards" row_count="2" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_stake" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="cod" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="created_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+			</column>
+			<column name="updated_at" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+				<column_options><![CDATA[ON UPDATE current_timestamp]]></column_options>
+			</column>
+			<column name="deleted_at" type="DATETIME" jt="93" />
+			<index name="pk_wards" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unique_cod" unique="UNIQUE_KEY" >
+				<column name="cod" />
+			</index>
+			<index name="idx_id_stake" unique="NORMAL" options="USING BTREE" >
+				<column name="id_stake" />
+			</index>
+			<fk name="wards_ibfk_1" to_schema="u821249804_caravana" to_table="stakes" options="" >
+				<fk_column name="id_stake" pk="id" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
+	</schema>
+	<layout name="Main Layout" id="Layout-1354" show_column_type="y" show_relation="columns" >
+		<entity schema="u821249804_caravana" name="caravan_vehicles" color="C7F4BE" x="884" y="646" />
+		<entity schema="u821249804_caravana" name="caravans" color="C7F4BE" x="612" y="493" />
+		<entity schema="u821249804_caravana" name="documents" color="BED3F4" x="323" y="442" />
+		<entity schema="u821249804_caravana" name="passengers" color="BED3F4" x="51" y="442" />
+		<entity schema="u821249804_caravana" name="relationship" color="BED3F4" x="323" y="561" />
+		<entity schema="u821249804_caravana" name="roles" color="E6CCFF" x="340" y="85" />
+		<entity schema="u821249804_caravana" name="seats" color="C7F4BE" x="850" y="493" />
+		<entity schema="u821249804_caravana" name="sexs" color="BED3F4" x="323" y="680" />
+		<entity schema="u821249804_caravana" name="stakes" color="BED3F4" x="918" y="85" />
+		<entity schema="u821249804_caravana" name="users" color="E6CCFF" x="51" y="85" />
+		<entity schema="u821249804_caravana" name="vehicles" color="C7F4BE" x="1156" y="510" />
+		<entity schema="u821249804_caravana" name="wards" color="BED3F4" x="629" y="85" />
+		<group name="church" color="FFCCB3" >
+			<entity schema="u821249804_caravana" name="wards" />
+			<entity schema="u821249804_caravana" name="stakes" />
+		</group>
+		<group name="users" color="E6CCFF" >
+			<entity schema="u821249804_caravana" name="roles" />
+			<entity schema="u821249804_caravana" name="users" />
+		</group>
+		<group name="caravans" color="EEF7EC" >
+			<entity schema="u821249804_caravana" name="caravan_vehicles" />
+			<entity schema="u821249804_caravana" name="vehicles" />
+			<entity schema="u821249804_caravana" name="seats" />
+			<entity schema="u821249804_caravana" name="caravans" />
+		</group>
+		<group name="passengers" color="ECF0F7" >
+			<entity schema="u821249804_caravana" name="passengers" />
+			<entity schema="u821249804_caravana" name="documents" />
+			<entity schema="u821249804_caravana" name="relationship" />
+			<entity schema="u821249804_caravana" name="sexs" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-1454" show_column_type="y" show_relation="columns" >
+		<entity schema="u821249804_caravana" name="caravan_vehicles" color="C7F4BE" x="1173" y="51" />
+		<entity schema="u821249804_caravana" name="caravans" color="C7F4BE" x="1462" y="238" />
+		<entity schema="u821249804_caravana" name="documents" color="BED3F4" x="306" y="408" />
+		<entity schema="u821249804_caravana" name="passengers" color="BED3F4" x="306" y="51" />
+		<entity schema="u821249804_caravana" name="relationship" color="BED3F4" x="51" y="408" />
+		<entity schema="u821249804_caravana" name="roles" color="BED3F4" x="884" y="374" />
+		<entity schema="u821249804_caravana" name="seats" color="C7F4BE" x="1462" y="51" />
+		<entity schema="u821249804_caravana" name="sexs" color="BED3F4" x="68" y="170" />
+		<entity schema="u821249804_caravana" name="stakes" color="BED3F4" x="884" y="51" />
+		<entity schema="u821249804_caravana" name="users" color="BED3F4" x="595" y="51" />
+		<entity schema="u821249804_caravana" name="vehicles" color="C7F4BE" x="1173" y="238" />
+		<entity schema="u821249804_caravana" name="wards" color="BED3F4" x="595" y="408" />
+		<script name="SQL Editor" id="Editor-a74" language="SQL" >
+			<string><![CDATA[SELECT
+	id, id_ward, id_church, name, nasc_date, sex, id_document, document, obs, id_relationship, created_by, created_at, 
+	updated_at, deleted_at
+FROM
+	u821249804_caravana.passengers s;]]></string>
+		</script>
+		<script name="SQL_Editor" id="Editor-20c9" language="SQL" >
+			<string><![CDATA[ SELECT
+        u.id,
+        u.name AS user_name,
+        s.name AS stake_name,
+        w.name AS ward_name,
+        r.name AS role_name
+    FROM
+        users u
+    LEFT JOIN
+        stakes s ON u.id_stake = s.id
+    LEFT JOIN
+        wards w ON u.id_ward = w.id
+    LEFT JOIN
+        roles r ON u.role = r.id
+    WHERE
+        u.id = 'c44e28b4-5bfd-11ef-a0e4-794c148044d5']]></string>
+		</script>
+		<browser id="Browse-1a22" name="Relational Data Explorer" confirm_updates="y" >
+			<browse_table schema="u821249804_caravana" entity="users" x="34" y="20" width="490" height="290" >
+				<browse_table schema="u821249804_caravana" entity="stakes" fk="users_ibfk_1" x="564" y="20" width="500" height="350" record_view="y" />
+			</browse_table>
+			<browse_table schema="u821249804_caravana" entity="stakes" x="640" y="18" width="643" height="321" />
+		</browser>
+	</layout>
+</project>

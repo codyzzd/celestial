@@ -916,57 +916,79 @@ if ($indicador == 'vehicle_edit') {
 }
 
 if ($indicador == 'caravan_add') {
-  // pega valores
-// user_id
-// stake_id
-//name
-//start_date
-//start_time
-//return_date
-//return_time
-//obs
-
-  // Verifica se o array $_POST não está vazio
+  // Pega valores do POST
   if (!empty($_POST)) {
-    // Itera sobre cada item no array $_POST
     foreach ($_POST as $key => $value) {
       // Remove possíveis tags HTML e espaços em branco
       ${$key} = $value;
     }
   }
 
-  // Verifica se o array $_POST não está vazio
-  if (!empty($_POST)) {
+  // Gerar um novo UUID no banco de dados
+  $uuid_stmt = $conn->query("SELECT UUID() AS new_id");
+  $uuid_row = $uuid_stmt->fetch_assoc();
+  $uuid = $uuid_row['new_id'];
+
+  // Inicia a transação
+  $conn->begin_transaction();
+
+  try {
     // Converte as datas (caso seja necessário)
     $start_date = $start_date ? convertDateFormat($start_date) : null;
     $return_date = $return_date ? convertDateFormat($return_date) : null;
 
     // Prepara a consulta para inserção na tabela caravans com UUID()
     $stmt = $conn->prepare("
-        INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs)
-        VALUES (UUID(),  ?, ?, ?, ?, ?, ?, ?)
-      ");
+      INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
 
     // Associa os parâmetros
-    $stmt->bind_param("sssssss", $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs);
+    $stmt->bind_param("ssssssss", $uuid, $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs);
 
-    // Executa a consulta
+    // Executa a consulta para inserir a caravana
     if ($stmt->execute()) {
-      echo json_encode([
-        'status' => 'success',
-        'msg' => 'Caravana adicionada com sucesso!'
-      ]);
+      // Verifica se há IDs de veículos e se não está vazio
+      if (!empty($_POST['vehicle_ids'])) {
+        $vehicleIds = json_decode($_POST['vehicle_ids'], true);
+
+        if (!empty($vehicleIds)) {
+          // Prepara a inserção na tabela caravan_vehicle
+          $stmt = $conn->prepare("INSERT INTO caravan_vehicles (id, id_caravan, id_vehicle) VALUES (UUID(), ?, ?)");
+
+          foreach ($vehicleIds as $vehicleId) {
+            $stmt->bind_param("ss", $uuid, $vehicleId);
+            $stmt->execute();
+          }
+
+          // Confirma a transação se tudo deu certo
+          $conn->commit();
+
+          echo json_encode([
+            'status' => 'success',
+            'msg' => 'Caravana e veículos adicionados com sucesso!'
+          ]);
+        } else {
+          throw new Exception('Nenhum veículo selecionado.');
+        }
+      } else {
+        throw new Exception('Nenhum veículo selecionado.');
+      }
     } else {
-      echo json_encode([
-        'status' => 'error',
-        'msg' => 'Erro ao adicionar a caravana: ' . $stmt->error
-      ]);
+      throw new Exception('Erro ao adicionar a caravana: ' . $stmt->error);
     }
+  } catch (Exception $e) {
+    // Algo deu errado, desfaz a transação
+    $conn->rollback();
 
-    // Fecha a declaração e a conexão com o banco de dados
-    $stmt->close();
-
+    echo json_encode([
+      'status' => 'error',
+      'msg' => $e->getMessage()
+    ]);
   }
+
+  // Fecha a declaração e a conexão com o banco de dados
+  $stmt->close();
 }
 
 if ($indicador == 'caravan_list') {
