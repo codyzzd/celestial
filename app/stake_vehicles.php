@@ -77,15 +77,19 @@ $user_role = checkUserRole($user_id, 'stake_lider');
 
       <div class="flex flex-col gap-4">
 
-        <!-- <div class="flex flex-col gap-2"
-             id="vehicle_list"> -->
-        <!-- <h2 class=" text-lg font-semibold text-gray-900 dark:text-white">Família</h2> -->
+        <div class="flex items-center p-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800"
+             role="alert">
+          <i class="fa fa-exclamation-triangle text-lg fa-fw me-3"></i>
+          <span class="sr-only">Info</span>
+          <div>
+            Após um veículo ser adicionado a uma caravana, você não poderá mais editar as informações dele.
+          </div>
+        </div>
 
         <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y"
              id="vehicle_list_items">
 
         </div>
-        <!-- </div> -->
 
         <!-- empty state de veiculos -->
         <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed hidden"
@@ -221,7 +225,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
 
         // mascarar campos
         $('#vehicle_add #capacity').mask('00');
-        $('#vehicle_edit #capacity').mask('00');
+        // $('#vehicle_edit #capacity').mask('00');
 
         // Adiciona um ouvinte de eventos para o documento
         document.addEventListener('click', function (event) {
@@ -351,52 +355,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
           });
         });
 
-        // Verifica se o botão clicado é o de arquivamento
-        $(document).on('click', '#vehicle_archive', function (event) {
-          event.preventDefault(); // Previne o comportamento padrão do botão
-          // console.log("clicou no #passenger_archive")
-
-          // Obtém o ID do passageiro que será arquivado
-          const form = $('#vehicle_edit');
-          const vehicleId = form.find('input[name="id"]').val();
-
-          // Cria um objeto com os dados a serem enviados
-          const formData = {
-            id: vehicleId,
-            indicador: 'archive_something',
-            bd: 'vehicles'
-          };
-
-          // Realiza a ação de arquivamento via AJAX
-          $.ajax({
-            url: apiPath,
-            type: 'POST',
-            data: formData,
-            success: function (response) {
-              try {
-                const jsonResponse = JSON.parse(response);
-                if (jsonResponse.status === "success") {
-                  toast(jsonResponse.status, jsonResponse.msg);
-
-                  const passengerEditModal = new Modal(document.getElementById('vehicle_edit_modal'));
-                  passengerEditModal.hide();
-
-                  updateVehicleList('not_deleted');
-                } else if (jsonResponse.status === "error") {
-                  toast(jsonResponse.status, jsonResponse.msg);
-                }
-              } catch (e) {
-                console.error('Erro ao processar resposta:', e);
-                toast('error', 'Erro ao processar a resposta do servidor.');
-              }
-            },
-            error: function (xhr, status, error) {
-              console.error('Erro AJAX:', error);
-              toast('error', 'Erro ao enviar a solicitação: ' + error);
-            }
-          });
-        });
-
+        
         // Função para atualizar a lista de veículos
         function updateVehicleList(status = 'all') {
           // Criar o objeto data com os parâmetros padrão
@@ -423,7 +382,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                 // Adicionar novos vehicle_items aos containers com base na relação
                 vehiclejson.forEach(function (vehicle) {
                   var vehicleItem = `
-                  <a href="vehicle.php?id=${vehicle.id}"
+                  <a href="stake_vehicle.php?id=${vehicle.id}"
                   class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex items-center justify-between">
                   <span class="text-left truncate  justify-between w-full"> ${vehicle.name}</span>
                   <div class="flex flex-row gap-2 items-center">
@@ -459,7 +418,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
 
         // Identifique o formulário atual MAPA VEICULO
         const isAddForm = $('#vehicle_add').length > 0;
-        const isEditForm = $('#vehicle_edit').length > 0;
+        // const isEditForm = $('#vehicle_edit').length > 0;
 
 
 
@@ -497,7 +456,11 @@ $user_role = checkUserRole($user_id, 'stake_lider');
             row.append(seat);
           }
 
-          let removeBtn = $('<button>').text('X').addClass('remove-btn');
+          let removeBtn = $(`
+          <button class="w-10 h-10 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm ">
+    <i class="fa fa-times text-xl"></i>
+</button>
+  `);
           removeBtn.on('click', function () {
             $(this).parent().remove();
             updateSeatMapInput();
@@ -512,7 +475,11 @@ $user_role = checkUserRole($user_id, 'stake_lider');
 
           let separator = $('<div>').addClass('separator flex-1').text('separator');
 
-          let removeBtn = $('<button>').text('X').addClass('remove-btn');
+          let removeBtn = $(`
+          <button class="w-10 h-10 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm ">
+    <i class="fa fa-times text-xl"></i>
+</button>
+  `);
           removeBtn.on('click', function () {
             $(this).parent().remove();
             updateSeatMapInput();

@@ -44,10 +44,16 @@
   border-radius: 5px;
 }
 
-.remove-btn {
+.readonly-seat {
+  pointer-events: none; /* Impede qualquer interação com o elemento */
+  background-color: #e0e0e0; /* Cor para indicar que o assento está desabilitado */
+  color: #9e9e9e; /* Cor do texto para assentos desabilitados */
+}
+
+/* .remove-btn {
   width: 40px;
   height: 40px;
-  background-color: #e57373;
+  background-color: #010101;
   color: white;
   border: none;
   border-radius: 5px;
@@ -56,4 +62,4 @@
 
 .remove-btn:hover {
   background-color: #f44336;
-}
+} */

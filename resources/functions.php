@@ -412,6 +412,14 @@ function formatDateOrTime($value, $type)
       $timestamp = strtotime($value);
       return date('H:i', $timestamp);
 
+    case 'date_EN_BR':
+      // Converte a data do formato YYYY-MM-DD para dd/mm/yyyy
+      $dateArray = explode('-', $value);
+      if (count($dateArray) == 3) {
+        return sprintf('%02d/%02d/%04d', $dateArray[2], $dateArray[1], $dateArray[0]);
+      }
+      return null;
+
     default:
       return null;
   }
@@ -512,4 +520,151 @@ function getCaravans($user_id)
   $conn->close();
 
   return $caravans;
+}
+
+function getCaravan($caravan_id)
+{
+  $conn = getDatabaseConnection();
+
+  // Prepare a consulta SQL para selecionar todos os dados da tabela caravans baseado no caravan_id
+  $sql = "SELECT * FROM caravans WHERE id = ?";
+
+  // Preparar a declaração SQL
+  if ($stmt = $conn->prepare($sql)) {
+    // Bind do parâmetro $caravan_id
+    $stmt->bind_param("s", $caravan_id); // "s" significa que o parâmetro é uma string
+
+    // Executar a declaração
+    $stmt->execute();
+
+    // Obter o resultado
+    $result = $stmt->get_result();
+
+    // Verificar se algum dado foi encontrado
+    if ($result->num_rows > 0) {
+      // Retornar os dados como um array associativo
+      $caravanData = $result->fetch_assoc();
+    } else {
+      $caravanData = null; // Nenhum dado encontrado
+    }
+
+    // Fechar a declaração
+    $stmt->close();
+  } else {
+    // Em caso de erro na preparação da consulta
+    $caravanData = null;
+  }
+
+  // Fechar a conexão
+  $conn->close();
+
+  return $caravanData;
+}
+
+function getVehicle($vehicle_id)
+{
+  $conn = getDatabaseConnection();
+
+  // Construir a consulta SQL com LEFT JOIN e CASE
+  $sql = "
+        SELECT v.*,
+               CASE
+                 WHEN cv.id_vehicle IS NOT NULL THEN 'yes'
+                 ELSE 'no'
+               END AS used
+        FROM vehicles v
+        LEFT JOIN caravan_vehicles cv ON v.id = cv.id_vehicle
+        WHERE v.id = ?
+    ";
+
+  try {
+    // Preparar a consulta SQL
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+      throw new Exception('Erro ao preparar a consulta: ' . $conn->error);
+    }
+
+    // Vincular o parâmetro e executar a consulta
+    $stmt->bind_param("s", $vehicle_id);
+    $stmt->execute();
+
+    // Obter os resultados
+    $result = $stmt->get_result();
+
+    // Verificar se algum veículo foi encontrado
+    if ($result->num_rows > 0) {
+      // Buscar o veículo e armazenar em um array
+      $vehicle = $result->fetch_assoc();
+
+      // Fechar a declaração
+      $stmt->close();
+
+      // Retornar os dados do veículo
+      return $vehicle;
+    } else {
+      // Se nenhum veículo for encontrado, redirecionar para vehicles.php
+      $_SESSION['error_message'] = 'Nenhum veículo encontrado com o ID fornecido.';
+      header('Location: vehicles.php');
+      exit();
+    }
+  } catch (Exception $e) {
+    // Tratar erros e redirecionar para vehicles.php com mensagem de erro
+    $_SESSION['error_message'] = 'Erro ao executar a consulta: ' . $e->getMessage();
+    header('Location: vehicles.php');
+    exit();
+  }
+}
+
+function getVehiclesUsed($caravan_id)
+{
+  // Obtém a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Prepara a consulta SQL para buscar os veículos associados à caravana
+  $sql = "
+      SELECT v.id, v.name, v.capacity
+      FROM caravan_vehicles cv
+      JOIN vehicles v ON cv.id_vehicle = v.id
+      WHERE cv.id_caravan = ?
+  ";
+
+  // Prepara a declaração SQL
+  $stmt = $conn->prepare($sql);
+
+  // Verifica se a preparação foi bem-sucedida
+  if ($stmt === false) {
+    die('Erro ao preparar a consulta: ' . $conn->error);
+  }
+
+  // Liga o parâmetro caravan_id à consulta
+  $stmt->bind_param('s', $caravan_id);
+
+  // Executa a consulta
+  $stmt->execute();
+
+  // Armazena o resultado
+  $stmt->store_result();
+
+  // Verifica se houve resultados
+  $vehicles = array();
+  if ($stmt->num_rows > 0) {
+    // Liga as variáveis de saída aos campos da consulta
+    $stmt->bind_result($id, $name, $capacity);
+
+    // Busca os resultados
+    while ($stmt->fetch()) {
+      $vehicles[] = [
+        'id' => $id,
+        'name' => $name,
+        'capacity' => $capacity,
+      ];
+    }
+  }
+
+  // Fecha a declaração e a conexão
+  $stmt->close();
+  $conn->close();
+
+  // Retorna o array de veículos (pode estar vazio)
+  return $vehicles;
 }

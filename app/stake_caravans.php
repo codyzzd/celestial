@@ -152,7 +152,7 @@ $vehicles = getVehicles($user_stake);
                 </div>
                 <div class="">
                   <label for="return_date"
-                         class="block mb-2 text-sm font-medium text-gray-900">Data de Partida</label>
+                         class="block mb-2 text-sm font-medium text-gray-900">Data de Retorno</label>
                   <input type="text"
                          id="return_date"
                          name="return_date"
@@ -163,7 +163,7 @@ $vehicles = getVehicles($user_stake);
                 </div>
                 <div class="">
                   <label for="return_time"
-                         class="block mb-2 text-sm font-medium text-gray-900">Horário de Partida</label>
+                         class="block mb-2 text-sm font-medium text-gray-900">Horário de Retorno</label>
                   <input type="text"
                          id="return_time"
                          name="return_time"
@@ -182,19 +182,23 @@ $vehicles = getVehicles($user_stake);
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
-                <div class="col-span-2">
-                  <label for="vehicles"
-                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar Veículo</label>
-                  <select id="vehicles"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <!-- <option selected>Selecione...</option> -->
-                    <?php foreach ($vehicles as $vehicle): ?>
-                      <option value="<?php echo htmlspecialchars($vehicle['id']); ?>"
-                              data-capacity="<?php echo htmlspecialchars($vehicle['capacity']); ?>">
-                        <?php echo htmlspecialchars($vehicle['name']); ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
+                <div class="col-span-2 flex flex-row gap-3 items-end justify-end">
+                  <div class="w-full">
+                    <label for="vehicles"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar Veículo</label>
+                    <select id="vehicles"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <!-- <option selected>Selecione...</option> -->
+                      <?php foreach ($vehicles as $vehicle): ?>
+                        <option value="<?php echo htmlspecialchars($vehicle['id']); ?>"
+                                data-capacity="<?php echo htmlspecialchars($vehicle['capacity']); ?>">
+                          <?php echo htmlspecialchars($vehicle['name']); ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <a href="stake_vehicles.php"
+                     class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-fit h-fit text-center">Gestão de Veículo</a>
                 </div>
                 <div class="col-span-2">
                   <button type="button"
@@ -223,34 +227,6 @@ $vehicles = getVehicles($user_stake);
                         </tr>
                       </thead>
                       <tbody id="vehicleTableBody">
-                        <!-- <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                          <th scope="row"
-                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Itaipu Travel Double Deck
-                          </th>
-
-                          <td class="px-6 py-4">
-                            60
-                          </td>
-                          <td class="px-6 py-4">
-                            <a href="#"
-                               class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
-                          </td>
-                        </tr>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                          <th scope="row"
-                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Itaipu Travel Double Deck
-                          </th>
-
-                          <td class="px-6 py-4">
-                            54
-                          </td>
-                          <td class="px-6 py-4">
-                            <a href="#"
-                               class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
-                          </td>
-                        </tr> -->
 
                       </tbody>
                       <tfoot>
@@ -278,85 +254,6 @@ $vehicles = getVehicles($user_stake);
                         class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-white text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
                   Adicionar
                 </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- modal edit -->
-      <div id="ward_edit_modal"
-           tabindex="-1"
-           aria-hidden="true"
-           class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-lg max-h-full">
-          <!-- Modal content -->
-          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                Editar Ala
-              </h3>
-              <button type="button"
-                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                      data-modal-hide="ward_edit_modal">
-                <svg class="w-3 h-3"
-                     aria-hidden="true"
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 14 14">
-                  <path stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                </svg>
-                <span class="sr-only">Close modal</span>
-              </button>
-            </div>
-            <!-- Modal body -->
-            <form class=""
-                  id="caravan_edit">
-              <div class="grid gap-4 grid-cols-2 p-4">
-                <div class="col-span-2">
-                  <label for="name"
-                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome da Ala</label>
-                  <input type="text"
-                         id="name"
-                         name="name"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-                         placeholder="ex: Cascavel"
-                         required
-                         autocomplete="off" />
-                </div>
-                <div class="col-span-2">
-                  <label for="cod"
-                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código da Ala</label>
-                  <input type="text"
-                         id="cod"
-                         name="cod"
-                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-                         placeholder="ex: 12345678"
-                         required
-                         autocomplete="off" />
-
-                  <input type="hidden"
-                         id="id"
-                         name="id" />
-                </div>
-              </div>
-              <!-- Modal footer -->
-              <div class="flex items-center justify-end gap-3 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button data-modal-hide="ward_edit_modal"
-                        id="ward_archive"
-                        type="button"
-                        class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Arquivar</button>
-                <button data-modal-hide="ward_edit_modal"
-                        type="button"
-                        class="py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
-                <button type="submit"
-                        class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">Salvar</button>
-
               </div>
             </form>
           </div>
@@ -458,13 +355,9 @@ $vehicles = getVehicles($user_stake);
         // Mascarar campo 'cod' dentro do formulário com id 'ward_add'
         $('#caravan_add #start_date').mask('00/00/0000');
         $('#caravan_add #start_time').mask('00:00');
-        $('#caravan_edit #start_date').mask('00/00/0000');
-        $('#caravan_edit #start_time').mask('00:00');
-
         $('#caravan_add #return_date').mask('00/00/0000');
         $('#caravan_add #return_time').mask('00:00');
-        $('#caravan_edit #return_date').mask('00/00/0000');
-        $('#caravan_edit #return_time').mask('00:00');
+
 
         const select = document.getElementById('vehicles'); // Defina a variável select aqui
         // Handle the add vehicle button click
@@ -530,129 +423,6 @@ $vehicles = getVehicles($user_stake);
           changePage(currentPage + 1);
         });
 
-        //pra poder ouvir os botoes gerados pela lista
-        document.addEventListener('click', function (event) {
-          // Verifica se o elemento clicado, ou algum dos seus pais, é o botão com data-modal-hide
-          let target = event.target.closest('[data-modal-hide="ward_edit_modal"]');
-
-          if (target) {
-            // Inicializa e exibe o modal
-            const wardEditModal = new Modal(document.getElementById('ward_edit_modal'));
-
-            // Obtém os valores dos data-attributes
-            const wardName = target.getAttribute('data-name');
-            const wardCod = target.getAttribute('data-cod');
-            const wardId = target.getAttribute('data-id');
-
-            // Seleciona os inputs dentro do form com ID "ward_edit"
-            const form = document.getElementById('ward_edit');
-            const inputName = form.querySelector('input[name="name"]');
-            const inputCod = form.querySelector('input[name="cod"]');
-            const inputId = form.querySelector('input[name="id"]');
-
-            // Define os valores dos inputs
-            inputName.value = wardName;
-            inputCod.value = wardCod;
-            inputId.value = wardId;
-
-            wardEditModal.show();
-          }
-
-          // Verifica se o elemento clicado, ou algum dos seus pais, é o botão com data-modal-hide
-          let target2 = event.target.closest('[data-modal-hide="ward_edit_modal"]');
-
-          if (target2) {
-            // Inicializa e exibe o modal
-            const wardEditModal = new Modal(document.getElementById('ward_edit_modal'));
-            wardEditModal.hide();
-          }
-
-          // Verifica se o botão clicado é o de arquivamento
-          if (event.target.id === 'ward_archive') {
-            // Obtém o ID da ward que será arquivada
-            const form = document.getElementById('ward_edit');
-            const wardId = form.querySelector('input[name="id"]').value;
-
-            // Serializar os campos do formulário
-            // var formData = "id=" + encodeURIComponent(wardId) + "&indicador=ward_archive";
-
-            const formData = {
-              id: wardId,
-              indicador: 'archive_something',
-              bd: 'wards'
-            };
-
-            // Realiza a ação de arquivamento via AJAX
-            $.ajax({
-              url: apiPath,
-              type: 'POST',
-              data: formData, // Enviar os dados com o indicador e wardId
-              success: function (response) {
-                try {
-                  var jsonResponse = JSON.parse(response); // Tentar fazer o parsing do JSON
-                  if (jsonResponse.status === "success") {
-                    toast(jsonResponse.status, jsonResponse.msg);
-                    const wardEditModal = new Modal(document.getElementById('ward_edit_modal'));
-
-                    if (wardEditModal) {
-                      wardEditModal.hide();
-                    }
-
-                    updateWardsList(true);
-                  } else if (jsonResponse.status === "error") {
-                    toast(jsonResponse.status, jsonResponse.msg);
-                  }
-                } catch (e) {
-
-                  toast('error', 'Erro ao processar a resposta do servidor.');
-                }
-              },
-              error: function (xhr, status, error) {
-                toast('error', 'Erro ao enviar a solicitação: ' + error);
-              }
-            });
-          }
-        });
-
-        // Função para salvar os dados
-        $("#ward_edit").submit(function (event) {
-          event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
-
-          // Serializar os campos do formulário
-          var formData = $(this).serialize() + "&user_id=" + encodeURIComponent(userId) + "&indicador=ward_edit";
-
-          $.ajax({
-            type: "POST",
-            url: apiPath,
-            data: formData, // Enviar os dados com o indicador e user_id
-            success: function (response) {
-              try {
-                var jsonResponse = JSON.parse(response); // Tentar fazer o parsing do JSON
-
-                // Verificar o status da resposta e mostrar o toast apropriado
-                if (jsonResponse.status === "success") {
-                  $("#ward_edit")[0].reset(); // Reseta o formulário
-                  toast(jsonResponse.status, jsonResponse.msg);
-                  updateWardsList(true);
-
-                  const wardEditModal = new Modal(document.getElementById('ward_edit_modal'));
-
-                  if (wardEditModal) {
-                    wardEditModal.hide();
-                  }
-
-                } else if (jsonResponse.status === "error") {
-                  toast(jsonResponse.status, jsonResponse.msg);
-                }
-              } catch (e) {
-                toast('error', 'Erro ao processar a resposta do servidor.');
-              }
-            },
-            error: function (xhr, status, error) {
-              toast('error', 'Erro ao enviar a solicitação: ' + error);
-            }
-          });
-        });
 
 
         // Função para atualizar a lista de wards
@@ -714,7 +484,7 @@ $vehicles = getVehicles($user_stake);
                       var formattedReturnTime = formatTime(caravan.return_time);
 
                       var caravanItem = `
-                <button type="button" data-modal-target="caravan_edit_modal" data-modal-toggle="caravan_edit_modal" data-id="${caravan.id}"
+                <a href="stake_caravan.php?id=${caravan.id}"
                   class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between items-center">
                   <div class="text-left w-full">
                     <p class="truncate text-sm">${caravan.name}</p>
@@ -732,7 +502,7 @@ $vehicles = getVehicles($user_stake);
                       </div>
                     </div>
                   </div>
-                </button>
+                </a>
               `;
                       container.append(caravanItem);
                     });
@@ -799,8 +569,7 @@ $vehicles = getVehicles($user_stake);
           updateCaravansList(true);
         }
 
-        //atualizar uma vez que carrega a pagina
-        updateCaravansList(true);
+
 
 
         // Adicionar ward
@@ -850,6 +619,11 @@ $vehicles = getVehicles($user_stake);
             }
           });
         });
+
+        //atualizar uma vez que carrega a pagina
+        updateCaravansList(true);
+
+
       });
     </script>
 

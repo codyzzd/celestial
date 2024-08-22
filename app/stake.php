@@ -72,7 +72,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
               Caravanas</span>
             <i class="fa fa-chevron-right text-lg text-gray-500"></i>
           </a>
-          <a href="vehicles.php"
+          <a href="stake_vehicles.php"
              class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
             <span><i class="fa fa-car-side text-lg text-gray-500 fa-fw me-2"></i>
               Veiculos</span>

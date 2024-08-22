@@ -781,16 +781,24 @@ if ($indicador == 'vehicle_list') {
     }
   }
 
-
   try {
     // Verificar se id_stake foi recebido
     if (isset($id_stake)) {
-      // Construir a consulta SQL base
-      $sql = "SELECT * FROM vehicles WHERE id_stake = ?";
+      // Construir a consulta SQL base com JOIN
+      $sql = "
+        SELECT v.*,
+               CASE
+                 WHEN cv.id_vehicle IS NOT NULL THEN 'yes'
+                 ELSE 'no'
+               END AS used
+        FROM vehicles v
+        LEFT JOIN caravan_vehicles cv ON v.id = cv.id_vehicle
+        WHERE v.id_stake = ?
+      ";
 
       // Adicionar condição para registros não excluídos se necessário
       if ($status === 'not_deleted') {
-        $sql .= " AND deleted_at IS NULL";
+        $sql .= " AND v.deleted_at IS NULL";
       }
 
       // Preparar a consulta SQL
@@ -828,7 +836,6 @@ if ($indicador == 'vehicle_list') {
   } catch (Exception $e) {
     // Tratar erros e exibir uma mensagem adequada
     echo json_encode(['status' => 'error', 'msg' => 'Erro ao executar a consulta: ' . $e->getMessage()]);
-
   }
   // O fechamento da conexão com o banco de dados deve ser feito no final do arquivo.
 }
@@ -899,8 +906,8 @@ if ($indicador == 'vehicle_edit') {
   }
 
   // Preparar a query de atualização
-  $stmt = $conn->prepare("UPDATE vehicles SET name = ?, obs = ?, capacity = ? WHERE id = ?");
-  $stmt->bind_param("ssis", $name, $obs, $capacity, $id);
+  $stmt = $conn->prepare("UPDATE vehicles SET name = ?, obs = ?, capacity = ? ,seat_map = ? WHERE id = ?");
+  $stmt->bind_param("ssiss", $name, $obs, $capacity, $seat_map, $id);
 
   // Executar a query
   if ($stmt->execute()) {
