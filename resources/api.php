@@ -1001,9 +1001,78 @@ if ($indicador == 'caravan_add') {
   $stmt->close();
 }
 
+if ($indicador == 'caravan_edit') {
+  // Pega valores do POST
+  if (!empty($_POST)) {
+    foreach ($_POST as $key => $value) {
+      // Remove possíveis tags HTML e espaços em branco
+      ${$key} = $value;
+    }
+  }
+
+  // Inicia a transação
+  $conn->begin_transaction();
+
+  try {
+    // Converte as datas (caso seja necessário)
+    $start_date = $start_date ? formatDateOrTime($start_date, 'date_BR_EN') : null;
+    $return_date = $return_date ? formatDateOrTime($return_date, 'date_BR_EN') : null;
+
+    // Prepara a consulta para atualizar a tabela caravans
+    $stmt = $conn->prepare("
+      UPDATE caravans
+      SET  name = ?, start_date = ?, start_time = ?, return_date = ?, return_time = ?, obs = ?
+      WHERE id = ?
+    ");
+
+    // Associa os parâmetros
+    $stmt->bind_param("sssssss", $name, $start_date, $start_time, $return_date, $return_time, $obs, $id);
+
+    // Executa a consulta para atualizar a caravana
+    if ($stmt->execute()) {
+      // Verifica se há IDs de veículos e se não está vazio
+      if (!empty($_POST['vehicle_ids'])) {
+        $vehicleIds = json_decode($_POST['vehicle_ids'], true);
+
+        if (!empty($vehicleIds)) {
+          // Prepara a inserção na tabela caravan_vehicles
+          $stmt = $conn->prepare("INSERT INTO caravan_vehicles (id, id_caravan, id_vehicle) VALUES (UUID(), ?, ?)");
+
+          foreach ($vehicleIds as $vehicle) {
+            $stmt->bind_param("ss", $id, $vehicle['id']);
+            $stmt->execute();
+          }
+        }
+      }
+
+      // Confirma a transação se tudo deu certo
+      $conn->commit();
+
+      echo json_encode([
+        'status' => 'success',
+        'msg' => 'Caravana atualizada com sucesso!'
+      ]);
+    } else {
+      throw new Exception('Erro ao atualizar a caravana: ' . $stmt->error);
+    }
+  } catch (Exception $e) {
+    // Algo deu errado, desfaz a transação
+    $conn->rollback();
+
+    echo json_encode([
+      'status' => 'error',
+      'msg' => $e->getMessage()
+    ]);
+  }
+
+  // Fecha a declaração e a conexão com o banco de dados
+  $stmt->close();
+}
+
 if ($indicador == 'caravan_list') {
   // Inicializar variável
   $stake_id = null;
+  $status = null;
 
   // Verifica se o array $_POST não está vazio
   if (!empty($_POST)) {
@@ -1021,9 +1090,9 @@ if ($indicador == 'caravan_list') {
       $sql = "SELECT * FROM caravans WHERE id_stake = ? order by start_date desc";
 
       // Adicionar condição para registros não excluídos (soft delete)
-      // if ($status === 'not_deleted') {
-      //   $sql .= " AND deleted_at IS NULL";
-      // }
+      if ($status === 'not_deleted') {
+        $sql .= " AND deleted_at IS NULL";
+      }
 
       // Preparar a consulta SQL
       $stmt = $conn->prepare($sql);
@@ -1077,6 +1146,7 @@ if ($indicador == 'archive_something') {
     'vehicles' => 'Veículo arquivado com sucesso!',
     'passengers' => 'Pessoa arquivada com sucesso!',
     'wards' => 'Ala arquivada com sucesso!',
+    'caravans' => 'Caravana arquivada com sucesso!',
     // Adicionar mais tabelas conforme necessário
   ];
 

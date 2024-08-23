@@ -38,13 +38,11 @@ $showAlert = empty($id_stake);
 $stmt->close();
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -64,10 +62,7 @@ $conn->close();
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto p-4 pb-20">
-
       <!-- header -->
       <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
         <div class="flex-col gap-1">
@@ -77,7 +72,6 @@ $conn->close();
         <!-- <button type="button"
                 class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full md:w-fit">Criar</button> -->
       </div>
-
       <?php if ($showAlert): ?>
         <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
              role="alert">
@@ -88,14 +82,11 @@ $conn->close();
           </div>
         </div>
       <?php endif; ?>
-
       <!-- tabela -->
       <div class="flex flex-col gap-4">
-
         <div class="p-4 bg-white rounded-lg shadow  flex flex-col  gap-2 w-full  relative-container">
           <form class="grid gap-4 grid-cols-2"
                 id="ward_edit">
-
             <div class="col-span-2">
               <label for="id_ward"
                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ala atual</label>
@@ -113,12 +104,10 @@ $conn->close();
                 <?php endforeach; ?>
               </select>
             </div>
-
             <button type="submit"
                     class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full col-span-2">Ativar Ala</button>
           </form>
         </div>
-
         <!-- <div class="flex items-center p-4 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600"
              role="alert">
           <i class="fa fa-exclamation-triangle text-lg fa-fw me-3"></i>
@@ -128,7 +117,6 @@ $conn->close();
             <p class="text-gray-600">Se a sua estaca não estiver na lista, por favor, envie uma mensagem pelo WhatsApp para <strong>45 98824-0321</strong> com o nome da estaca e o código.</p>
           </div>
         </div> -->
-
         <div id="alert-additional-content-4"
              class="p-4 mb-4 text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800"
              role="alert">
@@ -153,13 +141,9 @@ $conn->close();
             </button>
           </div>-->
         </div>
-
       </div>
-
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>

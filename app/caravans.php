@@ -17,14 +17,13 @@ $user_role = checkUserRole($user_id);
 $user_stake = checkStake($user_id);
 // Pega as caravanas
 $caravans = getCaravans($user_id);
+// echo json_encode($caravans);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -43,11 +42,7 @@ $caravans = getCaravans($user_id);
 
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
-    <section class="max-w-lg container mx-auto p-4 pb-20">
-
+    <section class="max-w-lg container mx-auto p-4 mb-20">
       <!-- header -->
       <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
         <div class="flex-col gap-1">
@@ -59,12 +54,10 @@ $caravans = getCaravans($user_id);
                 data-modal-toggle="criar-caravana"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full md:w-fit">Criar Caravana</button> -->
       </div>
-
       <!-- tabela -->
-      <div class="bg-white rounded-lg overflow-hidden border-gray-200 border-[1px]">
-        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600  divide-y">
-
-          <?php foreach ($caravans as $caravan): ?>
+      <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y overflow-auto">
+        <?php foreach ($caravans as $caravan): ?>
+          <?php if (empty($caravan['deleted_at'])): // Verifica se o campo deleted_at está vazio ?>
             <a href="caravan.php?id=<?= htmlspecialchars($caravan['id']) ?>"
                class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between items-center">
               <div class="text-left w-full">
@@ -84,86 +77,11 @@ $caravans = getCaravans($user_id);
                 </div>
               </div>
             </a>
-          <?php endforeach; ?>
-
-        </div>
+          <?php endif; ?>
+        <?php endforeach; ?>
       </div>
-
-      <!-- <div class="relative overflow-x-auto">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col"
-                  class="px-6 py-3">
-                Product name
-              </th>
-              <th scope="col"
-                  class="px-6 py-3">
-                Color
-              </th>
-              <th scope="col"
-                  class="px-6 py-3">
-                Category
-              </th>
-              <th scope="col"
-                  class="px-6 py-3">
-                Price
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="bg-white  dark:bg-gray-800 dark:border-gray-700">
-              <th scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Apple MacBook Pro 17"
-              </th>
-              <td class="px-6 py-4">
-                Silver
-              </td>
-              <td class="px-6 py-4">
-                Laptop
-              </td>
-              <td class="px-6 py-4">
-                $2999
-              </td>
-            </tr>
-            <tr class="bg-white  dark:bg-gray-800 dark:border-gray-700">
-              <th scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Microsoft Surface Pro
-              </th>
-              <td class="px-6 py-4">
-                White
-              </td>
-              <td class="px-6 py-4">
-                Laptop PC
-              </td>
-              <td class="px-6 py-4">
-                $1999
-              </td>
-            </tr>
-            <tr class="bg-white dark:bg-gray-800">
-              <th scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Magic Mouse 2
-              </th>
-              <td class="px-6 py-4">
-                Black
-              </td>
-              <td class="px-6 py-4">
-                Accessories
-              </td>
-              <td class="px-6 py-4">
-                $99
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>

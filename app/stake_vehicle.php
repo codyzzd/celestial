@@ -29,12 +29,9 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
 
 // $isUsed = "readonly";
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-
   <meta charset="utf-8" />
-
   <?php
   require_once ROOT_PATH . '/resources/head_favicon.php';
   require_once ROOT_PATH . '/resources/functions.php';
@@ -51,21 +48,15 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
         href="manifest.json">
   <link rel="stylesheet"
         href="../resources/css.css">
-
   </head>
 
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto pb-2 md:p-4 mb-20">
       <div class="flex flex-col gap-1 md:gap-2">
-
         <div class="bg-white   dark:bg-gray-800 dark:border-gray-700 flex flex-row justify-between gap-4 md:rounded-lg md:shadow  "
              id="detail">
-
           <form class=" w-full"
                 id="vehicle_edit">
             <div class="grid gap-4 grid-cols-2 p-4">
@@ -83,7 +74,6 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
                        autocomplete="off"
                        <?php echo $isUsed; ?>>
               </div>
-
               <div class="col-span-2">
                 <label for="obs"
                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
@@ -94,7 +84,6 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
                           class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                           <?php echo $isUsed; ?>><?php echo $obs; ?></textarea>
               </div>
-
               <div class="col-span-2 flex space-x-4">
                 <button type="button"
                         id="add-row"
@@ -102,7 +91,6 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
                 <button type="button"
                         id="add-hr"
                         class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">+ Separador</button>
-
               </div>
               <div class="col-span-2">
                 <label for="seat-layout"
@@ -112,7 +100,6 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
                   <!-- Fileiras serão adicionadas dinamicamente aqui -->
                 </div>
               </div>
-
               <!-- Campo oculto para armazenar o layout dos assentos em JSON -->
               <input type="hidden"
                      id="id"
@@ -122,14 +109,11 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
                      id="seat_map"
                      name="seat_map"
                      value="<?php echo $seat_map; ?>">
-
               <input type="hidden"
                      id="capacity"
                      name="capacity"
                      value="<?php echo $capacity; ?>">
-
             </div>
-
             <!-- Modal footer -->
             <div class="flex items-center  p-4 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
               <button id="vehicle_archive"
@@ -143,20 +127,15 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
               </button>
             </div>
           </form>
-
         </div>
       </div>
       </div>
       </div>
-
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
-
     <script>
       $(document).ready(function () {
         // Caminho da API para passenger_add
@@ -462,7 +441,6 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
 
       });
     </script>
-
   </body>
 
 </html>

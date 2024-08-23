@@ -33,13 +33,11 @@ $obs = isset($caravan['obs']) ? htmlspecialchars($caravan['obs']) : '';
 $vehicles = getVehicles($user_stake);
 $vehicles_used = getVehiclesUsed($caravan['id']);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -59,21 +57,14 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto pb-2 md:p-4 mb-20">
       <div class="flex flex-col gap-1 md:gap-2">
-
         <div class="bg-white   dark:bg-gray-800 dark:border-gray-700 flex flex-row justify-between gap-4 md:rounded-lg md:shadow  "
              id="detail">
-
           <form class=" w-full"
                 id="caravan_edit">
             <div class="grid gap-4 grid-cols-2 p-4">
-
               <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Caravana</h5>
-
               <div class="col-span-2">
                 <label for="name"
                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome da Caravana</label>
@@ -109,7 +100,6 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                        value="<?php echo $start_time; ?>"
                        required
                        autocomplete="off">
-
               </div>
               <div class="">
                 <label for="return_date"
@@ -134,16 +124,14 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                        value="<?php echo $return_time; ?>"
                        required
                        autocomplete="off">
-
               </div>
-
               <div class="col-span-2">
                 <label for="obs"
                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
                 <textarea id="obs"
                           name="obs"
                           rows="4"
-                          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500">   <?php echo $obs; ?></textarea>
+                          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"><?php echo $obs; ?></textarea>
               </div>
               <div class="col-span-2 flex flex-row gap-3 items-end justify-end">
                 <div class="w-full">
@@ -169,7 +157,6 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                         class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">Adicionar Veículo</button>
               </div>
               <div class="col-span-2">
-
                 <div class="relative overflow-x-auto">
                   <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-900 uppercase dark:text-gray-400">
@@ -178,19 +165,15 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                             class="p-2">
                           Lista de Veículo
                         </th>
-
                         <th scope="col"
                             class="p-2">
-
                         </th>
                         <th scope="col"
                             class="p-2">
-
                         </th>
                       </tr>
                     </thead>
                     <tbody id="vehicleTableBody">
-
                     </tbody>
                     <tfoot>
                       <tr class="font-semibold text-gray-900 dark:text-white">
@@ -203,20 +186,16 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                     </tfoot>
                   </table>
                 </div>
-
               </div>
-
               <!-- Campo oculto para armazenar o layout dos assentos em JSON -->
               <input type="hidden"
                      id="id"
                      name="id"
                      value="<?php echo $_GET['id']; ?>">
-
             </div>
-
             <!-- Modal footer -->
             <div class="flex items-center  p-4 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
-              <button id="vehicle_archive"
+              <button id="caravan_archive"
                       type="button"
                       class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Arquivar</button>
               <a href="javascript:history.back()"
@@ -227,16 +206,12 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
               </button>
             </div>
           </form>
-
         </div>
       </div>
       </div>
       </div>
-
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
@@ -331,11 +306,114 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
           updateTotalCapacity();
         }
 
+        // Adicionar ward
+        $("#caravan_edit").submit(function (event) {
+          event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
+
+          // Colete os IDs dos veículos da tabela, ignorando os que têm a classe 'initial'
+          var vehicleData = [];
+          $('#vehicleTableBody tr').each(function () {
+            if (!$(this).hasClass('initial')) { // Verifique se a linha não tem a classe 'initial'
+              var vehicleId = $(this).data('id'); // Pegue o id do veículo
+              if (vehicleId) {
+                vehicleData.push({ id: vehicleId });
+              }
+            }
+          });
+
+          // Pegar o valor do campo id no formulário
+          var formId = $("#caravan_edit #id").val();
+
+          // Serializar os campos do formulário e adicionar as variáveis user_id, stake_id e o id do formulário
+          var formData = $(this).serialize() +
+            "&user_id=" + encodeURIComponent(userId) +
+            "&indicador=caravan_edit" +
+            "&stake_id=" + encodeURIComponent(userStake) +
+            "&vehicle_ids=" + encodeURIComponent(JSON.stringify(vehicleData)) + // Adicione os IDs dos veículos
+            "&id=" + encodeURIComponent(formId); // Adicione o id do formulário
+
+          $.ajax({
+            type: "POST",
+            url: apiPath,
+            data: formData, // Enviar os dados com o indicador e user_id
+            success: function (response) {
+              try {
+                var jsonResponse = JSON.parse(response); // Tentar fazer o parsing do JSON
+
+                // Verificar o status da resposta e mostrar o toast apropriado
+                if (jsonResponse.status === "success") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+
+                  // Aguarda 2 segundos (2000 milissegundos) antes de redirecionar
+                  setTimeout(function () {
+                    window.location.href = "stake_caravans.php";
+                  }, 2000);
+                } else if (jsonResponse.status === "error") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+                }
+              } catch (e) {
+                toast('error', 'Erro ao processar a resposta do servidor.');
+              }
+            },
+            error: function (xhr, status, error) {
+              toast('error', 'Erro ao enviar a solicitação: ' + error);
+            }
+          });
+        });
+
+
+        // Verifica se o botão clicado é o de arquivamento
+        $(document).on('click', '#caravan_archive', function (event) {
+          event.preventDefault(); // Previne o comportamento padrão do botão
+          // console.log("clicou no #passenger_archive")
+
+          // Obtém o ID do passageiro que será arquivado
+          const form = $('#caravan_edit');
+          const caravanId = form.find('input[name="id"]').val();
+
+          // Cria um objeto com os dados a serem enviados
+          const formData = {
+            id: caravanId,
+            indicador: 'archive_something',
+            bd: 'caravans'
+          };
+
+          // Realiza a ação de arquivamento via AJAX
+          $.ajax({
+            url: apiPath,
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+              try {
+                const jsonResponse = JSON.parse(response);
+                if (jsonResponse.status === "success") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+
+                  // Aguarda 2 segundos (2000 milissegundos) antes de redirecionar
+                  setTimeout(function () {
+                    window.location.href = "stake_caravans.php";
+                  }, 2000);
+                } else if (jsonResponse.status === "error") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+                }
+              } catch (e) {
+                console.error('Erro ao processar resposta:', e);
+                toast('error', 'Erro ao processar a resposta do servidor.');
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error('Erro AJAX:', error);
+              toast('error', 'Erro ao enviar a solicitação: ' + error);
+            }
+          });
+        });
+
+
+
         // Load vehicles on page load
         loadVehicles();
       });
     </script>
-
   </body>
 
 </html>

@@ -20,13 +20,11 @@ $user_role = checkUserRole($user_id, 'stake_lider');
 // Obter as wards associadas ao usuário
 // $wards =  getWardsByUserId($user_id);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -46,22 +44,16 @@ $user_role = checkUserRole($user_id, 'stake_lider');
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto p-4 pb-20">
       <div class="fixed end-4 bottom-24 group md:hidden">
-
         <button type="button"
                 data-modal-toggle="ward_add_modal"
                 data-modal-target="ward_add_modal"
                 class="flex items-center justify-center text-white bg-purple-700 rounded-full w-14 h-14 hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 focus:outline-none dark:focus:ring-purple-800">
           <i class="fa fa-plus transition-transform  text-2xl"></i>
-
           <span class="sr-only">Open actions menu</span>
         </button>
       </div>
-
       <!-- header -->
       <div class="flex flex-col mb-4 gap-4 ">
         <div class="flex-col gap-1">
@@ -73,7 +65,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                 data-modal-target="ward_add_modal"
                 class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full hidden md:block">Adicionar Ala</button>
       </div>
-
       <!-- modal add -->
       <div id="ward_add_modal"
            data-modal-placement="bottom-center"
@@ -109,7 +100,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
             <form class=""
                   id="ward_add">
               <div class="grid gap-4 grid-cols-2 p-4">
-
                 <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome da Ala</label>
@@ -132,12 +122,10 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                          required
                          autocomplete="off" />
                 </div>
-
               </div>
               <!-- <div class="flex justify-end gap-3">
 
               </div> -->
-
               <!-- Modal footer -->
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
                 <button type="button"
@@ -152,7 +140,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
           </div>
         </div>
       </div>
-
       <!-- modal edit -->
       <div id="ward_edit_modal"
            tabindex="-1"
@@ -208,7 +195,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                          placeholder="ex: 12345678"
                          required
                          autocomplete="off" />
-
                   <input type="hidden"
                          id="id"
                          name="id" />
@@ -225,35 +211,25 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                         class="py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
                 <button type="submit"
                         class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">Salvar</button>
-
               </div>
             </form>
           </div>
         </div>
       </div>
-
       <div class="flex flex-col gap-4">
-
-        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y"
+        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y overflow-auto"
              id="ward_list">
-
         </div>
-
         <!-- empty state -->
         <div class="p-4  rounded-lg   flex flex-col   w-full  border-[2px] border-gray-300 border-dashed hidden"
              id="empty_state">
           <i class="fa fa-circle-question text-3xl text-gray-500 mb-2"></i>
-
           <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Cade as alas?</h5>
           <p class="text-gray-600 dark:text-gray-300 text-base">Vamos lá, não vai deixar as pedras fazerem o trabalho, vai? Comece a cadastrar suas alas e vamos juntos fortalecer o reino de Deus.</p>
         </div>
-
       </div>
-
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
@@ -493,7 +469,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
         });
       });
     </script>
-
   </body>
 
 </html>

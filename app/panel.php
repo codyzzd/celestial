@@ -14,13 +14,11 @@ $user_id = checkUserLogin();
 // Guarda a role do usuário
 $user_role = checkUserRole($user_id);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -41,24 +39,17 @@ $user_role = checkUserRole($user_id);
 
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto p-4 pb-20">
-
       <!-- header -->
       <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
         <div class="flex-col gap-1">
           <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Painel</h1>
           <p class="text-gray-500">Veja suas estatísticas, confira o ranking e planeje suas próximas caravanas facilmente.</p>
-
         </div>
         <!-- <button type="button"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full md:w-fit">Criar</button> -->
       </div>
-
       <div class="flex flex-col gap-4">
-
         <div class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
              id="shareapp">
           <div class="appshare rounded-t-lg"></div>
@@ -66,20 +57,16 @@ $user_role = checkUserRole($user_id);
           <img class="rounded-t-lg"
                src="/docs/images/blog/image-1.jpg"
                alt="" /> -->
-
           <div class="p-5">
             <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Leve o céu no seu bolso?”</h5>
             <p class="text-gray-600 dark:text-gray-300 text-base">Salve o "App da Caravana" como atalho <strong>a partir desta tela</strong> e tenha as bênçãos do Senhor sempre à mão!</p>
             <!-- <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quer ter o céu ao alcance de um toque?</h5>
 
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Salve o "App da Caravana" como atalho e tenha as bênçãos do Senhor sempre à mão!</p> -->
-
           </div>
         </div>
-
         <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed">
           <i class="fa fa-message text-3xl text-gray-500"></i>
-
           <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Tem alguma ideia ou sugestão?</h5>
           <p class="text-gray-600 dark:text-gray-300 text-base">Envie suas ideias e ajude-nos a fortalecer nosso trabalho no reino!</p>
           <a href="mailto:codyzzd@gmail.com?subject=CaravanaCelestial"
@@ -100,13 +87,10 @@ $user_role = checkUserRole($user_id);
         </div>
       </div>
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
-
   </body>
 
 </html>

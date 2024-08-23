@@ -32,13 +32,11 @@ $sexs = getSexs();
 // Select relations
 $relations = getRelations();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -58,12 +56,8 @@ $relations = getRelations();
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto p-4 pb-20">
       <div class="fixed end-4 bottom-24 group md:hidden">
-
         <?php
         $showButton = false;
 
@@ -88,7 +82,6 @@ $relations = getRelations();
           </button>
         <?php endif; ?>
       </div>
-
       <!-- header -->
       <div class="flex flex-col mb-4 gap-4">
         <div class="flex-col gap-1">
@@ -100,30 +93,21 @@ $relations = getRelations();
                 data-modal-target="passenger_add_modal"
                 class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full hidden md:block">Adicionar Passageiro</button>
       </div>
-
       <div class="flex flex-col gap-4">
-
         <div class="flex flex-col gap-2"
              id="family_list">
           <h2 class=" text-lg font-semibold text-gray-900 dark:text-white">Família</h2>
-
-          <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y"
+          <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y overflow-auto"
                id="passenger_list_family">
-
           </div>
         </div>
-
         <div class="flex flex-col gap-2"
              id="friend_list">
           <h2 class=" text-lg font-semibold text-gray-900 dark:text-white">Amigos</h2>
-
-          <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y"
+          <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y overflow-auto"
                id="passenger_list_friend">
-
           </div>
-
         </div>
-
         <!-- empty state de alas -->
         <?php
         $showAla = false;
@@ -143,22 +127,18 @@ $relations = getRelations();
           <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed"
                id="empty_state_ala">
             <i class="fa fa-tents text-3xl text-gray-500 mb-2"></i>
-
             <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Sem alas por aqui!</h5>
             <p class="text-gray-600 dark:text-gray-300 text-base">Parece que os líderes ainda não adicionaram as alas. Vamos torcer para que eles não estejam esperando um sinal, como Moisés no deserto!</p>
           </div>
         <?php endif; ?>
-
         <!-- empty state de pessoas -->
         <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed hidden"
              id="empty_state">
           <i class="fa fa-people-roof text-3xl text-gray-500 mb-2"></i>
-
           <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Ninguém por aqui!</h5>
           <p class="text-gray-600 dark:text-gray-300 text-base">Parece que você ainda não cadastrou nenhum familiar ou amigo para a caravana. Como você vai encher o ônibus assim? Nem Noé deixou de chamar a família para a arca!</p>
         </div>
       </div>
-
       <!-- modal add -->
       <div id="passenger_add_modal"
            data-modal-placement="bottom-center"
@@ -194,7 +174,6 @@ $relations = getRelations();
             <form class=""
                   id="passenger_add">
               <div class="grid gap-4 grid-cols-2 p-4">
-
                 <div class="col-span-2">
                   <label for="inline-radio-group"
                          class="block mb-2 text-sm font-medium text-gray-900">Relação</label>
@@ -212,13 +191,11 @@ $relations = getRelations();
                                  required>
                           <label for="horizontal-list-radio-<?php echo $relation['slug']; ?>"
                                  class="w-full py-3 ms-2 text-sm font-medium text-gray-900">
-
                             <?php echo $relation['name']; ?>
                           </label>
                         </div>
                       </li>
                     <?php endforeach; ?>
-
                   </ul>
                 </div>
                 <div class="col-span-2">
@@ -233,7 +210,6 @@ $relations = getRelations();
                          style="text-transform: uppercase;"
                          required />
                 </div>
-
                 <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900">Nome Completo</label>
@@ -245,7 +221,6 @@ $relations = getRelations();
                          required
                          autocomplete="off">
                 </div>
-
                 <div class="col-span-2">
                   <label for="nasc_date"
                          class="block mb-2 text-sm font-medium text-gray-900">Data de Nascimento</label>
@@ -257,7 +232,6 @@ $relations = getRelations();
                          required
                          autocomplete="off">
                 </div>
-
                 <div class="col-span-2">
                   <label for="inline-radio-group"
                          class="block mb-2 text-sm font-medium text-gray-900">Gênero</label>
@@ -285,10 +259,8 @@ $relations = getRelations();
                         </div>
                       </li>
                     <?php endforeach; ?>
-
                   </ul>
                 </div>
-
                 <div class="col-span-2">
                   <label for="id_ward"
                          class="block mb-2 text-sm font-medium text-gray-900">Qual ala pertence?</label>
@@ -303,7 +275,6 @@ $relations = getRelations();
                     <?php endforeach; ?>
                   </select>
                 </div>
-
                 <div class="col-span-2">
                   <label for="id_document"
                          class="block mb-2 text-sm font-medium text-gray-900">Tipo de Documento</label>
@@ -318,7 +289,6 @@ $relations = getRelations();
                     <?php endforeach; ?>
                   </select>
                 </div>
-
                 <div class="col-span-2">
                   <label for="document"
                          class="block mb-2 text-sm font-medium text-gray-900">Documento</label>
@@ -329,7 +299,6 @@ $relations = getRelations();
                          required
                          autocomplete="off">
                 </div>
-
                 <!-- <div class="col-span-2">
                   <label for="fever_date"
                          class="block mb-2 text-sm font-medium text-gray-900">Data da Vacina da Febre Amarela</label>
@@ -341,7 +310,6 @@ $relations = getRelations();
                          autocomplete="off">
                          <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">We’ll never share your details. Read our <a href="#" class="font-medium text-purple-600 hover:underline dark:text-purple-500">Privacy Policy</a>.</p>
                 </div> -->
-
                 <div class="col-span-2">
                   <label for="obs"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
@@ -350,9 +318,7 @@ $relations = getRelations();
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
-
               </div>
-
               <!-- Modal footer -->
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
                 <button type="button"
@@ -367,7 +333,6 @@ $relations = getRelations();
           </div>
         </div>
       </div>
-
       <!-- modal edit -->
       <div id="passenger_edit_modal"
            data-modal-placement="bottom-center"
@@ -426,7 +391,6 @@ $relations = getRelations();
                         </div>
                       </li>
                     <?php endforeach; ?>
-
                   </ul>
                 </div>
                 <div class="col-span-2">
@@ -452,7 +416,6 @@ $relations = getRelations();
                          required
                          autocomplete="off">
                 </div>
-
                 <div class="col-span-2">
                   <label for="nasc_date"
                          class="block mb-2 text-sm font-medium text-gray-900">Data de Nascimento</label>
@@ -464,7 +427,6 @@ $relations = getRelations();
                          required
                          autocomplete="off">
                 </div>
-
                 <div class="col-span-2">
                   <label for="inline-radio-group"
                          class="block mb-2 text-sm font-medium text-gray-900">Gênero</label>
@@ -492,10 +454,8 @@ $relations = getRelations();
                         </div>
                       </li>
                     <?php endforeach; ?>
-
                   </ul>
                 </div>
-
                 <div class="col-span-2">
                   <label for="id_ward"
                          class="block mb-2 text-sm font-medium text-gray-900">Qual ala pertence?</label>
@@ -510,7 +470,6 @@ $relations = getRelations();
                     <?php endforeach; ?>
                   </select>
                 </div>
-
                 <div class="col-span-2">
                   <label for="id_document"
                          class="block mb-2 text-sm font-medium text-gray-900">Tipo de Documento</label>
@@ -525,7 +484,6 @@ $relations = getRelations();
                     <?php endforeach; ?>
                   </select>
                 </div>
-
                 <div class="col-span-2">
                   <label for="document"
                          class="block mb-2 text-sm font-medium text-gray-900">Documento</label>
@@ -536,7 +494,6 @@ $relations = getRelations();
                          required
                          autocomplete="off">
                 </div>
-
                 <!-- <div class="col-span-2">
                   <label for="fever_date"
                          class="block mb-2 text-sm font-medium text-gray-900">Data da Vacina da Febre Amarela</label>
@@ -548,7 +505,6 @@ $relations = getRelations();
                          autocomplete="off">
                          <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">We’ll never share your details. Read our <a href="#" class="font-medium text-purple-600 hover:underline dark:text-purple-500">Privacy Policy</a>.</p>
                 </div> -->
-
                 <div class="col-span-2">
                   <label for="obs"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
@@ -560,9 +516,7 @@ $relations = getRelations();
                 <input type="hidden"
                        id="id"
                        name="id" />
-
               </div>
-
               <!-- Modal footer -->
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
                 <button data-modal-hide="passenger_edit_modal"
@@ -583,15 +537,11 @@ $relations = getRelations();
           </div>
         </div>
       </div>
-
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
-
     <script>
       $(document).ready(function () {
         // Caminho da API para passenger_add

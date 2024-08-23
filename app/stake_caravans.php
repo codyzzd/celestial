@@ -26,13 +26,11 @@ $vehicles = getVehicles($user_stake);
 // Obter as wards associadas ao usuário
 // $wards =  getWardsByUserId($user_id);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -52,22 +50,16 @@ $vehicles = getVehicles($user_stake);
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto p-4 pb-20">
       <div class="fixed end-4 bottom-24 group md:hidden">
-
         <button type="button"
                 data-modal-toggle="caravan_add_modal"
                 data-modal-target="caravan_add_modal"
                 class="flex items-center justify-center text-white bg-purple-700 rounded-full w-14 h-14 hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 focus:outline-none dark:focus:ring-purple-800">
           <i class="fa fa-plus transition-transform  text-2xl"></i>
-
           <span class="sr-only">Open actions menu</span>
         </button>
       </div>
-
       <!-- header -->
       <div class="flex flex-col mb-4 gap-4 ">
         <div class="flex-col gap-1">
@@ -79,7 +71,6 @@ $vehicles = getVehicles($user_stake);
                 data-modal-target="caravan_add_modal"
                 class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full hidden md:block">Adicionar Caravana</button>
       </div>
-
       <!-- modal add -->
       <div id="caravan_add_modal"
            data-modal-placement="bottom-center"
@@ -115,7 +106,6 @@ $vehicles = getVehicles($user_stake);
             <form class=""
                   id="caravan_add">
               <div class="grid gap-4 grid-cols-2 p-4">
-
                 <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome da Caravana</label>
@@ -148,7 +138,6 @@ $vehicles = getVehicles($user_stake);
                          placeholder="00:00"
                          required
                          autocomplete="off">
-
                 </div>
                 <div class="">
                   <label for="return_date"
@@ -171,9 +160,7 @@ $vehicles = getVehicles($user_stake);
                          placeholder="00:00"
                          required
                          autocomplete="off">
-
                 </div>
-
                 <div class="col-span-2">
                   <label for="obs"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
@@ -181,6 +168,16 @@ $vehicles = getVehicles($user_stake);
                             name="obs"
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
+                </div>
+                <div class="col-span-2">
+                  <div class="flex items-center p-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800"
+                       role="alert">
+                    <i class="fa fa-exclamation-triangle text-lg fa-fw me-3"></i>
+                    <span class="sr-only">Info</span>
+                    <div>
+                      Os veículos cadastrados em uma caravana não poderão ser removidos após a confirmação do salvamento.
+                    </div>
+                  </div>
                 </div>
                 <div class="col-span-2 flex flex-row gap-3 items-end justify-end">
                   <div class="w-full">
@@ -206,7 +203,6 @@ $vehicles = getVehicles($user_stake);
                           class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">Adicionar Veículo</button>
                 </div>
                 <div class="col-span-2">
-
                   <div class="relative overflow-x-auto">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                       <thead class="text-xs text-gray-900 uppercase dark:text-gray-400">
@@ -215,19 +211,15 @@ $vehicles = getVehicles($user_stake);
                               class="p-2">
                             Lista de Veículo
                           </th>
-
                           <th scope="col"
                               class="p-2">
-
                           </th>
                           <th scope="col"
                               class="p-2">
-
                           </th>
                         </tr>
                       </thead>
                       <tbody id="vehicleTableBody">
-
                       </tbody>
                       <tfoot>
                         <tr class="font-semibold text-gray-900 dark:text-white">
@@ -240,11 +232,8 @@ $vehicles = getVehicles($user_stake);
                       </tfoot>
                     </table>
                   </div>
-
                 </div>
-
               </div>
-
               <!-- Modal footer -->
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
                 <button type="button"
@@ -259,13 +248,10 @@ $vehicles = getVehicles($user_stake);
           </div>
         </div>
       </div>
-
       <div class="flex flex-col gap-4">
         <div>
-
           <select id="perpage"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-
             <option value="4"
                     selected>4 por página</option>
             <option value="8">8 por página</option>
@@ -273,12 +259,9 @@ $vehicles = getVehicles($user_stake);
             <option value="24">24 por página</option>
           </select>
         </div>
-
-        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600  divide-y"
+        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600  divide-y overflow-auto"
              id="caravan_list">
-
         </div>
-
         <div class="flex flex-col items-start">
           <span class="text-sm text-gray-700 "
                 id="pagination_text">
@@ -317,22 +300,16 @@ $vehicles = getVehicles($user_stake);
             </button>
           </div>
         </div>
-
         <!-- empty state -->
         <div class="p-4  rounded-lg   flex flex-col   w-full  border-[2px] border-gray-300 border-dashed hidden"
              id="empty_state">
           <i class="fa fa-circle-question text-3xl text-gray-500 mb-2"></i>
-
           <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Cade as alas?</h5>
           <p class="text-gray-600 dark:text-gray-300 text-base">Vamos lá, não vai deixar as pedras fazerem o trabalho, vai? Comece a cadastrar suas alas e vamos juntos fortalecer o reino de Deus.</p>
         </div>
-
       </div>
-
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
@@ -434,7 +411,6 @@ $vehicles = getVehicles($user_stake);
             data: {
               user_id: userId,
               stake_id: userStake,
-
               indicador: "caravan_list" // Indicador para buscar as wards
             },
             success: function (response) {
@@ -570,8 +546,6 @@ $vehicles = getVehicles($user_stake);
         }
 
 
-
-
         // Adicionar ward
         $("#caravan_add").submit(function (event) {
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
@@ -626,7 +600,6 @@ $vehicles = getVehicles($user_stake);
 
       });
     </script>
-
   </body>
 
 </html>

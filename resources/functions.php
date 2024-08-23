@@ -622,10 +622,10 @@ function getVehiclesUsed($caravan_id)
 
   // Prepara a consulta SQL para buscar os veículos associados à caravana
   $sql = "
-      SELECT v.id, v.name, v.capacity
-      FROM caravan_vehicles cv
-      JOIN vehicles v ON cv.id_vehicle = v.id
-      WHERE cv.id_caravan = ?
+  SELECT v.id as id, v.name, v.capacity, cv.id as id_caravan_vehicle
+  FROM caravan_vehicles cv
+  JOIN vehicles v ON cv.id_vehicle = v.id
+  WHERE cv.id_caravan = ?
   ";
 
   // Prepara a declaração SQL
@@ -649,12 +649,13 @@ function getVehiclesUsed($caravan_id)
   $vehicles = array();
   if ($stmt->num_rows > 0) {
     // Liga as variáveis de saída aos campos da consulta
-    $stmt->bind_result($id, $name, $capacity);
+    $stmt->bind_result($id, $name, $capacity, $id_caravan_vehicle);
 
     // Busca os resultados
     while ($stmt->fetch()) {
       $vehicles[] = [
         'id' => $id,
+        'id_cv' => $id_caravan_vehicle,
         'name' => $name,
         'capacity' => $capacity,
       ];

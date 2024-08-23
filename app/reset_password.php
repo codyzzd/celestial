@@ -4,13 +4,11 @@ define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //$apiPath = ROOT_PATH . '/resources/api.php';
 $apiPath = "../resources/api.php";
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -28,19 +26,14 @@ $apiPath = "../resources/api.php";
   </head>
 
   <body class="bg-gray-100">
-
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="flex flex-col h-dvh p-4 items-center justify-end md:justify-center">
-
       <!-- caixa -->
       <div class="p-4 bg-white rounded-lg shadow  flex flex-col gap-4 w-full sm:max-w-md">
         <form class="flex flex-col gap-4"
               id="resetpw"
               autocomplete="on">
-
           <div>
             <label for="email"
                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">E-mail</label>
@@ -52,26 +45,19 @@ $apiPath = "../resources/api.php";
                    autocomplete="off"
                    required />
           </div>
-
           <!-- <button type="submit"
                   class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full ">Resetar Senha</button> -->
-
           <p class="text-sm font-light text-gray-500 dark:text-gray-400">
             Já tem conta? <a href="login.php"
                class="font-medium text-purple-600 hover:underline dark:text-primary-500">Fazer Login</a>
           </p>
-
         </form>
       </div>
-
     </section>
-
     <?php //require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
-
     <script>
       $(document).ready(function () {
         // Caminho da API passado pelo PHP

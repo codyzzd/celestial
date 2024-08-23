@@ -18,13 +18,11 @@ $stake_id = getStake($user_id);
 $user_role = checkUserRole($user_id, 'stake_lider');
 
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -46,12 +44,8 @@ $user_role = checkUserRole($user_id, 'stake_lider');
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="max-w-lg container mx-auto p-4 pb-20">
       <div class="fixed end-4 bottom-24 group md:hidden">
-
         <button type="button"
                 id="vehicle_add_modal_fob"
                 data-modal-toggle="vehicle_add_modal"
@@ -60,9 +54,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
           <i class="fa fa-plus transition-transform text-2xl"></i>
           <span class="sr-only">Open actions menu</span>
         </button>
-
       </div>
-
       <!-- header -->
       <div class="flex flex-col mb-4 gap-4">
         <div class="flex-col gap-1">
@@ -74,9 +66,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                 data-modal-target="vehicle_add_modal"
                 class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full hidden md:block">Adicionar Veículo</button>
       </div>
-
       <div class="flex flex-col gap-4">
-
         <div class="flex items-center p-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800"
              role="alert">
           <i class="fa fa-exclamation-triangle text-lg fa-fw me-3"></i>
@@ -85,22 +75,17 @@ $user_role = checkUserRole($user_id, 'stake_lider');
             Após um veículo ser adicionado a uma caravana, você não poderá mais editar as informações dele.
           </div>
         </div>
-
-        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y"
+        <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y overflow-auto"
              id="vehicle_list_items">
-
         </div>
-
         <!-- empty state de veiculos -->
         <div class="p-4 rounded-lg flex flex-col w-full  border-[2px] border-gray-300 border-dashed hidden"
              id="empty_state">
           <i class="fa fa-car-side text-3xl text-gray-500 mb-2"></i>
-
           <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Nenhum veículo registrado ainda!</h5>
           <p class="text-gray-600 dark:text-gray-300 text-base">Mas não se preocupe, até Jesus fez sua entrada triunfal montado em um burro. Às vezes, as melhores viagens começam com o básico!</p>
         </div>
       </div>
-
       <!-- modal add -->
       <div id="vehicle_add_modal"
            data-modal-placement="bottom-center"
@@ -136,7 +121,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
             <form class=""
                   id="vehicle_add">
               <div class="grid gap-4 grid-cols-2 p-4">
-
                 <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900">Nome</label>
@@ -148,7 +132,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                          placeholder="ex: Itaipu Travel Double Deck 60"
                          autocomplete="off">
                 </div>
-
                 <div class="col-span-2">
                   <label for="obs"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
@@ -158,7 +141,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                             placeholder="ex: Bancos 50 a 60 são reservados para idosos e pessoas com necessidades especiais."
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
-
                 <div class="col-span-2 flex space-x-4">
                   <button type="button"
                           id="add-row"
@@ -166,7 +148,6 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                   <button type="button"
                           id="add-hr"
                           class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">+ Separador</button>
-
                 </div>
                 <div class="col-span-2">
                   <label for="seat-layout"
@@ -176,20 +157,16 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                     <!-- Fileiras serão adicionadas dinamicamente aqui -->
                   </div>
                 </div>
-
                 <!-- Campo oculto para armazenar o layout dos assentos em JSON -->
                 <input type="hidden"
                        id="seat_map"
                        name="seat_map"
                        value="">
-
                 <input type="hidden"
                        id="capacity"
                        name="capacity"
                        value="">
-
               </div>
-
               <!-- Modal footer -->
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
                 <button type="button"
@@ -204,15 +181,11 @@ $user_role = checkUserRole($user_id, 'stake_lider');
           </div>
         </div>
       </div>
-
     </section>
-
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
-
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
-
     <script>
       $(document).ready(function () {
         // Caminho da API para passenger_add
@@ -355,7 +328,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
           });
         });
 
-        
+
         // Função para atualizar a lista de veículos
         function updateVehicleList(status = 'all') {
           // Criar o objeto data com os parâmetros padrão

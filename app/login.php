@@ -34,13 +34,11 @@ if (isset($_COOKIE['caravana_remember_token'])) {
   $stmt->close();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
   <head>
     <meta charset="utf-8" />
-
     <?php
     require_once ROOT_PATH . '/resources/head_favicon.php';
     require_once ROOT_PATH . '/resources/functions.php';
@@ -58,17 +56,12 @@ if (isset($_COOKIE['caravana_remember_token'])) {
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
     <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
-
-    <?php //require_once ROOT_PATH . '/section/nav.php'; ?>
-
     <section class="flex flex-col h-dvh p-4 items-center justify-end md:justify-center">
-
       <!-- caixa -->
       <div class="p-4 bg-white shadow  flex flex-col gap-4 w-full sm:max-w-md rounded-lg mb-4">
         <form class="flex flex-col gap-4"
               id="login"
               autocomplete="on">
-
           <div>
             <label for="email"
                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">E-mail</label>
@@ -80,7 +73,6 @@ if (isset($_COOKIE['caravana_remember_token'])) {
                    autocomplete="email"
                    required />
           </div>
-
           <div>
             <label for="password"
                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
@@ -119,22 +111,17 @@ if (isset($_COOKIE['caravana_remember_token'])) {
           </div>
           <button type="submit"
                   class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full ">Entrar</button>
-
           <p class="text-sm font-light text-gray-500 dark:text-gray-400">
             Não tem conta ainda? <a href="signup.php"
                class="font-medium text-purple-600 hover:underline dark:text-primary-500">Criar Conta</a>
           </p>
-
         </form>
       </div>
-
     </section>
-
     <?php //require_once ROOT_PATH . '/section/advanced_menu_bottom.php'; ?>
     <?php
     require_once ROOT_PATH . '/resources/body_flowbitejs.php';
     ?>
-
     <script>
       $(document).ready(function () {
         // Caminho da API passado pelo PHP
@@ -177,7 +164,6 @@ if (isset($_COOKIE['caravana_remember_token'])) {
         });
       });
     </script>
-
   </body>
 
 </html>
