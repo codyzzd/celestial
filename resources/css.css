@@ -44,6 +44,16 @@
   border-radius: 5px;
 }
 
+/* .seat.empty {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+} */
+
+/* .seat-active {
+  background-color: rgb(216 180 254) !important;
+  color: rgb(107 33 168) !important;
+  border: 1px solid rgb(107 33 168) !important;
+} */
+
 .readonly-seat {
   pointer-events: none; /* Impede qualquer interação com o elemento */
   background-color: #e0e0e0; /* Cor para indicar que o assento está desabilitado */

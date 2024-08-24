@@ -425,18 +425,6 @@ function formatDateOrTime($value, $type)
   }
 }
 
-
-// Função para converter data do formato dd/mm/yyyy para YYYY-MM-DD
-// function convertDateFormat($date)
-// {
-//   $dateArray = explode('/', $date);
-//   if (count($dateArray) == 3) {
-//     return sprintf('%04d-%02d-%02d', $dateArray[2], $dateArray[1], $dateArray[0]);
-//   }
-//   return null;
-// }
-
-
 function isMobile()
 {
   $userAgent = $_SERVER['HTTP_USER_AGENT'];
@@ -668,4 +656,73 @@ function getVehiclesUsed($caravan_id)
 
   // Retorna o array de veículos (pode estar vazio)
   return $vehicles;
+}
+
+function getCaravanVehicles($caravan_id)
+{
+  // Conecta no banco
+  $conn = getDatabaseConnection();
+
+  // Prepara a consulta SQL
+  $sql = "
+        SELECT vehicles.*
+        FROM caravan_vehicles
+        JOIN vehicles ON caravan_vehicles.id_vehicle = vehicles.id
+        WHERE caravan_vehicles.id_caravan = ?
+    ";
+
+  // Prepara a declaração
+  $stmt = $conn->prepare($sql);
+
+  // Vincula o parâmetro e executa
+  $stmt->bind_param('i', $caravan_id); // 'i' indica que o parâmetro é um inteiro
+  $stmt->execute();
+
+  // Obtém o resultado
+  $result = $stmt->get_result();
+
+  // Busca todos os dados
+  $vehicles = $result->fetch_all(MYSQLI_ASSOC);
+
+  // Fecha a declaração e a conexão
+  $stmt->close();
+  $conn->close();
+
+  return $vehicles;
+}
+
+function getPassengers($user_id)
+{
+  // Obter a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Preparar a consulta SQL
+  $sql = "SELECT * FROM passengers WHERE created_by = ? AND deleted_at IS NULL";
+
+  // Preparar a declaração
+  if ($stmt = $conn->prepare($sql)) {
+    // Bind the user_id parameter to the query
+    $stmt->bind_param("i", $user_id); // "i" para integer
+
+    // Executar a declaração
+    $stmt->execute();
+
+    // Obter o resultado
+    $result = $stmt->get_result();
+
+    // Armazenar todos os dados em um array
+    $passengers = $result->fetch_all(MYSQLI_ASSOC);
+
+    // Fechar a declaração
+    $stmt->close();
+
+    // Fechar a conexão
+    $conn->close();
+
+    // Retornar os dados dos passageiros
+    return $passengers;
+  } else {
+    // Se houver um erro ao preparar a consulta
+    throw new Exception("Erro ao preparar a consulta: " . $conn->error);
+  }
 }
