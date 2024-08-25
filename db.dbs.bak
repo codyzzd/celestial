@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="MySql" database="MySql" id="MySql-293" >
 	<schema name="u821249804_caravana" >
+		<table name="caravan_seat_passengers" spec="" >
+			<column name="id" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="id_caravan" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="id_seat" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="id_passenger" type="INT" length="11" jt="4" mandatory="y" />
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
 		<table name="caravan_vehicles" row_count="0" spec="" >
 			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_caravan" type="VARCHAR" length="36" jt="12" mandatory="y" />
@@ -141,6 +148,7 @@
 			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_vehicle" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_caravan" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_passenger" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="seat_number" type="INT" length="11" jt="4" mandatory="y" />
 			<index name="pk_seats" unique="PRIMARY_KEY" >
 				<column name="id" />
@@ -282,13 +290,14 @@
 		</table>
 	</schema>
 	<layout name="Main Layout" id="Layout-1354" show_column_type="y" show_relation="columns" >
+		<entity schema="u821249804_caravana" name="caravan_seat_passengers" color="3986C1" x="850" y="816" />
 		<entity schema="u821249804_caravana" name="caravan_vehicles" color="C7F4BE" x="884" y="646" />
 		<entity schema="u821249804_caravana" name="caravans" color="C7F4BE" x="612" y="493" />
 		<entity schema="u821249804_caravana" name="documents" color="BED3F4" x="323" y="442" />
 		<entity schema="u821249804_caravana" name="passengers" color="BED3F4" x="51" y="442" />
 		<entity schema="u821249804_caravana" name="relationship" color="BED3F4" x="323" y="561" />
 		<entity schema="u821249804_caravana" name="roles" color="E6CCFF" x="340" y="85" />
-		<entity schema="u821249804_caravana" name="seats" color="C7F4BE" x="850" y="493" />
+		<entity schema="u821249804_caravana" name="seats" color="C7F4BE" x="867" y="459" />
 		<entity schema="u821249804_caravana" name="sexs" color="BED3F4" x="323" y="680" />
 		<entity schema="u821249804_caravana" name="stakes" color="BED3F4" x="918" y="85" />
 		<entity schema="u821249804_caravana" name="users" color="E6CCFF" x="51" y="85" />
@@ -305,8 +314,8 @@
 		<group name="caravans" color="EEF7EC" >
 			<entity schema="u821249804_caravana" name="caravan_vehicles" />
 			<entity schema="u821249804_caravana" name="vehicles" />
-			<entity schema="u821249804_caravana" name="seats" />
 			<entity schema="u821249804_caravana" name="caravans" />
+			<entity schema="u821249804_caravana" name="seats" />
 		</group>
 		<group name="passengers" color="ECF0F7" >
 			<entity schema="u821249804_caravana" name="passengers" />

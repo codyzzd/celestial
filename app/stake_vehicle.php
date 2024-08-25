@@ -420,7 +420,7 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
                   // Aguarda 2 segundos (2000 milissegundos) antes de redirecionar
                   setTimeout(function () {
                     window.location.href = "stake_vehicles.php";
-                  }, 2000);
+                  }, 3000);
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }

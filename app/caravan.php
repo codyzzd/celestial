@@ -25,6 +25,7 @@ $vehicles = getCaravanVehicles($id_caravan);
 // echo json_encode($vehicles);
 $passengers = getPassengers($user_id);
 // echo json_encode($passengers);
+$kids = getPassengers($user_id, $caravan['start_date']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -72,6 +73,7 @@ $passengers = getPassengers($user_id);
 
   <body class="bg-gray-100">
     <?php require_once ROOT_PATH . '/resources/body_removedark.php'; ?>
+    <?php require_once ROOT_PATH . '/resources/toast.php'; ?>
     <section class="max-w-lg container mx-auto pb-2 md:p-4 mb-20">
       <form id="reserva_bancos">
         <div class="flex flex-col gap-1 md:gap-2">
@@ -120,6 +122,15 @@ $passengers = getPassengers($user_id);
                 <?= htmlspecialchars($vehicle['name']); ?></div>
               <div id="seat-layout-<?= $index ?>"
                    class="bus-layout"></div>
+              <button id="add-passenger-no-seat-<?= $index ?>"
+                      class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700  add-no-seat-passenger"
+                      data-vehicle-id="<?= $vehicle['id_cv'] ?>"
+                      data-vehicle-name="<?= htmlspecialchars($vehicle['name']) ?>""><i class="
+                      fa
+                      fa-plus
+                      me-2"></i>
+                Adicionar Passageiro Sem Banco
+              </button>
             </div>
           <?php endforeach; ?>
           <h2 class=" text-lg font-semibold text-gray-900 dark:text-white mx-4 mt-4">Lugares escolhidos</h2>
@@ -133,9 +144,12 @@ $passengers = getPassengers($user_id);
               <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Nenhum banco reservado ainda!</h5>
               <p class="text-gray-600 dark:text-gray-300 text-base">Assim como o bom pastor não deixaria uma ovelha para trás, nós também não queremos deixar ninguém sem lugar!</p>
             </div>
+            <div id="no-seat-passengers">
+              <!-- Passageiros sem assento vão aparecer aqui -->
+            </div>
             <button type="submit"
                     class=" px-5 py-2.5 text-sm font-medium inline-flex items-center bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-white text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 w-full justify-center">
-              Confirmar Reservas
+              <i class="fa fa-check me-2"></i> Confirmar Reservas
             </button>
           </div>
         </div>
@@ -160,39 +174,70 @@ $passengers = getPassengers($user_id);
         // Dados dos passageiros em formato JSON
         const passengers = <?= json_encode($passengers); ?>;
 
+        // Dados dos passageiros em formato JSON kids
+        const kids = <?= json_encode($kids); ?>;
+
+        // Guarda a caravana id
+        const caravana_id = "<?php echo $id_caravan; ?>";
+
         // Array para armazenar as reservas
         let reservations = [];
 
         const reservationContainer = $('#reserva');
 
-        // Função para criar uma nova linha de reserva
-        function createReservationRow(vehicleName, vehicleId, seatNumber) {
-          const reservationHTML = `
-          <div class="flex flex-col gap-2 banco_reservado">
-        <div class="flex flex-row">
-            <p class="truncate flex-1" data-vehicle="${vehicleId}">${vehicleName}</p>
-            <span class="" data-seat="${seatNumber}">Banco: ${seatNumber}</span>
 
-        </div>
-        <div class="w-full flex flex-row gap-3 justify-end items-end">
-            <select name="passenger[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                <option value="" disabled selected>Selecione...</option>
-                ${passengers.map(passenger => `
-                    <option required value="${passenger.id}">${passenger.name}</option>
-                `).join('')}
-            </select>
-            <button class="remove-reservation w-10 h-10 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm remove-btn">
-    <i class="fa fa-times text-xl"></i>
-</button>
-        </div>
-    </div>`;
+
+
+        // Contador global para IDs de reserva
+        let reservationCounter = 1;
+
+        function generateUniqueId() {
+          return reservationCounter++;
+        }
+
+        function createReservationRow(vehicleName, vehicleId, seatNumber, isNoSeat) {
+          const reservationId = generateUniqueId(); // Gera um ID único
+
+          const optionsHtml = isNoSeat
+            ? kids.map(kid => `
+            <option value="${kid.id}">${kid.name}</option>
+        `).join('')
+            : passengers.map(passenger => `
+            <option value="${passenger.id}">${passenger.name}</option>
+        `).join('');
+
+          const reservationHTML = `
+        <div class="flex flex-col gap-2 banco_reservado" data-reservation-id="${reservationId}">
+            <div class="flex flex-row">
+                <p class="truncate flex-1" data-vehicle="${vehicleId}">${vehicleName}</p>
+                <span class="${isNoSeat ? '' : 'seat-number'}" ${isNoSeat ? '' : `data-seat="${seatNumber}"`}>
+                    ${isNoSeat ? 'Sem Banco' : `Banco: ${seatNumber}`}
+                </span>
+            </div>
+            <div class="w-full flex flex-row gap-3 justify-end items-end">
+                <select name="passenger[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <option value="" disabled selected>Selecione...</option>
+                    ${optionsHtml}
+                </select>
+                <button class="remove-reservation w-10 h-10 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm remove-btn">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>`;
 
           reservationContainer.append(reservationHTML);
 
-          reservations.push({ vehicleId, seatNumber, passengerId: null });
+          // Adiciona a reserva ao array
+          reservations.push({ vehicleId, seatNumber, passengerId: null, id: reservationId });
 
+          // Atualiza o campo de dados de reserva
           $('#reservations_data').val(JSON.stringify(reservations));
+
+          // Atualiza o estado do botão de submit
+          updateSubmitButtonState();
         }
+
+
 
         $(document).on('click', '.seat', function () {
           // Verifica se o assento já está ativo ou se é um assento vazio
@@ -208,8 +253,20 @@ $passengers = getPassengers($user_id);
           const vehicleId = $(this).data('vehicle-id');
           const vehicleName = $(this).data('vehicle-name');
 
-          // Cria a linha de reserva
-          createReservationRow(vehicleName, vehicleId, seatNumber);
+          // Cria a linha de reserva para um banco
+          createReservationRow(vehicleName, vehicleId, seatNumber, false);
+
+          // Atualizar opções após a criação da reserva
+          updateOptions();
+          updateSubmitButtonState();
+        });
+
+        $(document).on('click', '.add-no-seat-passenger', function () {
+          const vehicleId = $(this).data('vehicle-id');
+          const vehicleName = $(this).data('vehicle-name');
+          // console.log('Button clicked:', vehicleId, vehicleName); // Debugging
+          // Cria a linha de reserva para um passageiro sem banco
+          createReservationRow(vehicleName, vehicleId, "no-seat", true);
 
           // Atualizar opções após a criação da reserva
           updateOptions();
@@ -226,23 +283,24 @@ $passengers = getPassengers($user_id);
         $(document).on('click', '.remove-reservation', function () {
           // Encontra a linha de reserva correspondente ao botão clicado
           const $reservationRow = $(this).closest('.banco_reservado');
+          const reservationId = $reservationRow.data('reservation-id'); // Obtém o ID da reserva
 
-          const seatNumber = $reservationRow.find('span').data('seat');
+          const seatNumber = $reservationRow.find('span').data('seat') || "no-seat"; // Handle "no-seat"
           const vehicleId = $reservationRow.find('p').data('vehicle');
 
           // Remove a linha de reserva do DOM
           $reservationRow.remove();
 
           // Atualiza o array de reservas removendo a reserva correspondente
-          reservations = reservations.filter(reservation =>
-            !(reservation.seatNumber === seatNumber && reservation.vehicleId === vehicleId)
-          );
+          reservations = reservations.filter(reservation => reservation.id !== reservationId);
 
           // Atualiza o valor do campo de dados das reservas
           $('#reservations_data').val(JSON.stringify(reservations));
 
-          // Remove a classe 'seat-active' do assento correspondente
-          $(`.seat[data-seat="${seatNumber}"][data-vehicle-id="${vehicleId}"]`).removeClass('seat-active');
+          // Remove a classe 'seat-active' do assento correspondente (se aplicável)
+          if (seatNumber !== "no-seat") {
+            $(`.seat[data-seat="${seatNumber}"][data-vehicle-id="${vehicleId}"]`).removeClass('seat-active');
+          }
 
           // Atualizar opções após a remoção
           updateOptions();
@@ -273,30 +331,51 @@ $passengers = getPassengers($user_id);
             });
           }
 
-          renderSeatMap(seatMap<?= $index ?>, '#seat-layout-<?= $index ?>', '<?= $vehicle['id'] ?>', '<?= $vehicle['name'] ?>');
+          renderSeatMap(seatMap<?= $index ?>, '#seat-layout-<?= $index ?>', '<?= $vehicle['id_cv'] ?>', '<?= $vehicle['name'] ?>');
         <?php endforeach; ?>
 
         $('#reserva_bancos').on('submit', function (event) {
           event.preventDefault();
 
-          // Serializar os dados do formulário
-          var formData = $(this).serialize();
+          // Obter valores necessários
+          // var userId = encodeURIComponent($('#user_id').val()); // Obtém o user_id do formulário
+          var reservaData = encodeURIComponent($('#reservations_data').val()); // Obtém os dados de reservas
+          // var idCaravan = encodeURIComponent($('#id_caravan').val()); // Obtém o id_caravan do formulário
 
-          // Adicionar outros parâmetros à string de consulta
-          formData += "&user_id=" + encodeURIComponent(userId);
-          formData += "&indicador=seat_reserv"; // Corrigido para o valor correto
-          formData += "&reserva=" + encodeURIComponent($('#reservations_data').val());
+          // Criar a string de consulta com os dados necessários
+          var data = $.param({
+            user_id: userId,
+            indicador: 'seat_add',
+            reserva: JSON.stringify(reservaData),
+            id_caravan: caravana_id
+          });
 
           $.ajax({
             type: "POST",
             url: apiPath,
-            data: formData, // Enviar os dados com o indicador e user_id
+            data: data, // Enviar os dados
             success: function (response) {
-              console.log(response);
-              // Lógica adicional, como redirecionamento ou mensagens de sucesso
+              try {
+                var jsonResponse = JSON.parse(response); // Tentar fazer o parsing do JSON
+
+                // Verificar o status da resposta e mostrar o toast apropriado
+                if (jsonResponse.status === "loading") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+                  // Lógica adicional, como redirecionamento ou mensagens de sucesso
+                  // Por exemplo, você pode fazer um redirecionamento ou atualizar a UI
+                  setTimeout(function () {
+                    window.location.href = "caravans.php"; // Redirecionar para a página após o login
+                  }, 3000); // 3000 milissegundos = 3 segundos
+                } else if (jsonResponse.status === "error") {
+                  toast(jsonResponse.status, jsonResponse.msg);
+                }
+              } catch (e) {
+                toast('error', 'Erro ao processar a resposta do servidor.');
+              }
             },
             error: function (xhr, status, error) {
-              console.error('Erro ao enviar a reserva:', error);
+              toast('error', 'Erro ao enviar a reserva: ' + error);
+              // console.error('Erro ao enviar a reserva:', error);
             }
           });
         });
@@ -339,9 +418,11 @@ $passengers = getPassengers($user_id);
           if (reservationsData !== '[]' && reservationsData !== null && reservationsData !== undefined && reservationsData.trim() !== '') {
             // Remove a classe 'hidden' e ativa o botão se #reservations_data não for igual a '[]'
             $('#reserva_bancos button[type="submit"]').removeClass('cursor-not-allowed').prop('disabled', false);
+            $('#empty_state').addClass('hidden');
           } else {
             // Adiciona a classe 'hidden' e desativa o botão se #reservations_data for igual a '[]'
             $('#reserva_bancos button[type="submit"]').addClass('cursor-not-allowed').prop('disabled', true);
+            $('#empty_state').removeClass('hidden');
           }
         }
         updateSubmitButtonState();

@@ -665,10 +665,15 @@ function getCaravanVehicles($caravan_id)
 
   // Prepara a consulta SQL
   $sql = "
-        SELECT vehicles.*
-        FROM caravan_vehicles
-        JOIN vehicles ON caravan_vehicles.id_vehicle = vehicles.id
-        WHERE caravan_vehicles.id_caravan = ?
+  SELECT
+  vehicles.*,
+  caravan_vehicles.id AS id_cv
+FROM
+  caravan_vehicles
+JOIN
+  vehicles ON caravan_vehicles.id_vehicle = vehicles.id
+WHERE
+  caravan_vehicles.id_caravan = ?
     ";
 
   // Prepara a declaração
@@ -691,20 +696,27 @@ function getCaravanVehicles($caravan_id)
   return $vehicles;
 }
 
-function getPassengers($user_id)
+function getPassengers($user_id, $date = null)
 {
   // Obter a conexão com o banco de dados
   $conn = getDatabaseConnection();
 
   // Preparar a consulta SQL
-  $sql = "SELECT * FROM passengers WHERE created_by = ? AND deleted_at IS NULL";
-
-  // Preparar a declaração
-  if ($stmt = $conn->prepare($sql)) {
-    // Bind the user_id parameter to the query
+  if ($date) {
+    // Se uma data for fornecida, filtrar passageiros com menos de 6 anos em relação à data
+    $sql = "SELECT * FROM passengers WHERE created_by = ? AND deleted_at IS NULL
+                AND TIMESTAMPDIFF(YEAR, nasc_date, ?) < 6";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $user_id, $date); // "s" para string (data)
+  } else {
+    // Se nenhuma data for fornecida, retornar todos os passageiros
+    $sql = "SELECT * FROM passengers WHERE created_by = ? AND deleted_at IS NULL";
+    $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id); // "i" para integer
+  }
 
-    // Executar a declaração
+  // Executar a declaração
+  if ($stmt) {
     $stmt->execute();
 
     // Obter o resultado
@@ -715,14 +727,14 @@ function getPassengers($user_id)
 
     // Fechar a declaração
     $stmt->close();
-
-    // Fechar a conexão
-    $conn->close();
-
-    // Retornar os dados dos passageiros
-    return $passengers;
   } else {
     // Se houver um erro ao preparar a consulta
     throw new Exception("Erro ao preparar a consulta: " . $conn->error);
   }
+
+  // Fechar a conexão
+  $conn->close();
+
+  // Retornar os dados dos passageiros
+  return $passengers;
 }

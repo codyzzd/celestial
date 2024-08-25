@@ -284,7 +284,7 @@ if (!empty($id_stake)) {
                   // Após 2 segundos (2000 milissegundos), recarregar a página
                   setTimeout(function () {
                     location.reload(); // Recarrega a página
-                  }, 2000); // 2000 milissegundos = 3 segundos
+                  }, 3000); // 2000 milissegundos = 3 segundos
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }

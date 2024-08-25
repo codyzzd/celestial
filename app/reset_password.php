@@ -86,7 +86,7 @@ $apiPath = "../resources/api.php";
                   // Atrasar o redirecionamento para a página de login por 2 segundos (2000 milissegundos)
                   // setTimeout(function () {
                   //   window.location.href = "login.php";
-                  // }, 2000);
+                  // }, 3000);
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }

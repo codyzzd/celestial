@@ -1133,7 +1133,97 @@ if ($indicador == 'caravan_list') {
   }
 }
 
+if ($indicador === 'seat_add') {
+  // user_id, reserva, id_caravan
+  $user_id = $_POST['user_id'] ?? '';
+  $id_caravan = $_POST['id_caravan'] ?? '';
+  $reservaData = $_POST['reserva'] ?? '';
 
+  // Decodificar os dados JSON
+  $decodedReservaData1 = urldecode($reservaData);
+  $decodedReservaData2 = trim($decodedReservaData1, '"');
+  $reserva = json_decode($decodedReservaData2, true);
+
+  // Iniciar transação
+  $conn->begin_transaction();
+
+  try {
+    // Preparar a consulta para verificação
+    $checkStmt = $conn->prepare("SELECT COUNT(*) FROM seats WHERE id_caravan_vehicle = ? AND seat = ?");
+    if (!$checkStmt) {
+      throw new Exception("Erro ao preparar a consulta de verificação: " . $conn->error);
+    }
+
+    // Preparar a consulta para inserção
+    $stmt = $conn->prepare("INSERT INTO seats (id, id_caravan_vehicle, id_caravan, id_passenger, seat) VALUES (UUID(), ?, ?, ?, ?)");
+    if (!$stmt) {
+      throw new Exception("Erro ao preparar a consulta de inserção: " . $conn->error);
+    }
+
+    // Inserir cada reserva
+    foreach ($reserva as $reservaItem) {
+      $vehicleId = $reservaItem['vehicleId'];
+      $seatNumber = $reservaItem['seatNumber'];
+      $passengerId = $reservaItem['passengerId'];
+
+      // Ajustar $seatNumber para NULL se for "no-seat"
+      if ($seatNumber === "no-seat") {
+        $seatNumber = null;  // Definir seat como NULL no banco de dados
+      } else {
+        // Verificar se o banco já está ocupado
+        $checkStmt->bind_param("ss", $vehicleId, $seatNumber);
+        $checkStmt->execute();
+        $checkStmt->bind_result($seatCount);
+        $checkStmt->fetch();
+
+        if ($seatCount > 0) {
+          throw new Exception("O banco já está ocupado. Atualizando página...");
+        }
+
+        // Liberar o resultado antes de continuar
+        $checkStmt->free_result();
+      }
+
+      // Bind parameters (id_caravan_vehicle, id_caravan, id_passenger, seat)
+      $stmt->bind_param("ssss", $vehicleId, $id_caravan, $passengerId, $seatNumber);
+
+      // Executar a declaração
+      if (!$stmt->execute()) {
+        throw new Exception("Erro ao inserir dados: " . $stmt->error);
+      }
+    }
+
+    // Confirmar a transação se tudo deu certo
+    $conn->commit();
+
+    // Fechar as declarações e a conexão
+    $checkStmt->close();
+    $stmt->close();
+    // $conn->close();
+
+    // Retornar sucesso em formato JSON
+    echo json_encode([
+      'status' => 'loading',
+      'msg' => 'Fazendo reservas...'
+    ]);
+  } catch (Exception $e) {
+    // Desfazer a transação em caso de erro
+    $conn->rollback();
+
+    // Fechar as declarações e a conexão
+    if (isset($checkStmt))
+      $checkStmt->close();
+    if (isset($stmt))
+      $stmt->close();
+    // $conn->close();
+
+    // Retornar erro em formato JSON
+    echo json_encode([
+      'status' => 'error',
+      'msg' => $e->getMessage()
+    ]);
+  }
+}
 
 
 if ($indicador == 'archive_something') {

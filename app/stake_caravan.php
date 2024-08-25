@@ -347,7 +347,7 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                   // Aguarda 2 segundos (2000 milissegundos) antes de redirecionar
                   setTimeout(function () {
                     window.location.href = "stake_caravans.php";
-                  }, 2000);
+                  }, 3000);
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
@@ -392,7 +392,7 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                   // Aguarda 2 segundos (2000 milissegundos) antes de redirecionar
                   setTimeout(function () {
                     window.location.href = "stake_caravans.php";
-                  }, 2000);
+                  }, 3000);
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }

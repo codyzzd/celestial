@@ -178,7 +178,7 @@ $conn->close();
                   // Após 2 segundos (2000 milissegundos), recarregar a página
                   setTimeout(function () {
                     window.location.href = 'profile.php'; // Redireciona para a página profile.php
-                  }, 2000); // 2000 milissegundos = 2 segundos
+                  }, 3000); // 2000 milissegundos = 2 segundos
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
