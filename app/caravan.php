@@ -22,10 +22,12 @@ $user_stake = checkStake($user_id);
 $caravan = getCaravan($id_caravan);
 //pega os veiculos da caravana
 $vehicles = getCaravanVehicles($id_caravan);
-// echo json_encode($vehicles);
+//pega os passageiros disponiveis do usuario
 $passengers = getPassengers($user_id);
-// echo json_encode($passengers);
+//pega os passageiros que tem até 6 anos
 $kids = getPassengers($user_id, $caravan['start_date']);
+//descobrir qual banco esta ocupado por quem
+$reserveds = getSeatsReserved($id_caravan);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -67,6 +69,11 @@ $kids = getPassengers($user_id, $caravan['start_date']);
 
       .seat.empty {
         background-color: rgba(0, 0, 0, 0.05) !important;
+      }
+
+      .reserved {
+        background-color: #581c87 !important;
+        color: white;
       }
     </style>
   </head>
@@ -180,6 +187,10 @@ $kids = getPassengers($user_id, $caravan['start_date']);
         // Guarda a caravana id
         const caravana_id = "<?php echo $id_caravan; ?>";
 
+        // Dados de bancos reservados
+        const reserveds = <?= json_encode($reserveds); ?>;
+        console.log(reserveds);
+
         // Array para armazenar as reservas
         let reservations = [];
 
@@ -241,7 +252,7 @@ $kids = getPassengers($user_id, $caravan['start_date']);
 
         $(document).on('click', '.seat', function () {
           // Verifica se o assento já está ativo ou se é um assento vazio
-          if ($(this).hasClass('seat-active') || $(this).hasClass('empty')) {
+          if ($(this).hasClass('seat-active') || $(this).hasClass('empty') || $(this).hasClass('reserved')) {
             return; // Impede o código abaixo de ser executado se o assento já estiver ativo ou for vazio
           }
 
@@ -314,22 +325,39 @@ $kids = getPassengers($user_id, $caravan['start_date']);
           function renderSeatMap(seatMap, layoutId, vehicleId, vehicleName) {
             var seatLayout = $(layoutId);
             seatLayout.empty();
+
+            // Percorre cada linha do mapa de assentos
             seatMap.forEach(function (row) {
               let seatRow = $('<div>').addClass('seat-row');
+
+              // Percorre cada assento na linha
               row.forEach(function (seat) {
                 let seatElement = $('<div>').addClass('seat');
                 seatElement.attr('data-vehicle-id', vehicleId);
                 seatElement.attr('data-vehicle-name', vehicleName);
+
                 if (seat === 'space' || !seat) {
                   seatElement.addClass('empty').attr('data-seat', '');
                 } else {
                   seatElement.attr('data-seat', seat).text(seat);
+
+                  // Verifica se o assento está reservado para o mesmo veículo
+                  const isReserved = reserveds.some(reserved =>
+                    reserved.seat_number === seat && reserved.vehicles === vehicleId
+                  );
+                  if (isReserved) {
+                    seatElement.addClass('reserved');
+                  }
                 }
+
                 seatRow.append(seatElement);
               });
+
               seatLayout.append(seatRow);
             });
           }
+
+
 
           renderSeatMap(seatMap<?= $index ?>, '#seat-layout-<?= $index ?>', '<?= $vehicle['id_cv'] ?>', '<?= $vehicle['name'] ?>');
         <?php endforeach; ?>
@@ -368,9 +396,14 @@ $kids = getPassengers($user_id, $caravan['start_date']);
                   }, 3000); // 3000 milissegundos = 3 segundos
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
+
                 }
               } catch (e) {
-                toast('error', 'Erro ao processar a resposta do servidor.');
+                toast('error', 'Bancos podem já estar ocupados, recarregando em 3 segundos...');
+                // toast('error', 'Erro ao processar a resposta do servidor.');
+                setTimeout(function () {
+                  window.location.href = "caravans.php"; // Redirecionar para a página após o login
+                }, 3000); // 3000 milissegundos = 3 segundos
               }
             },
             error: function (xhr, status, error) {

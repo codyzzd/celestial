@@ -738,3 +738,107 @@ function getPassengers($user_id, $date = null)
   // Retornar os dados dos passageiros
   return $passengers;
 }
+
+function getSeatsReserved($id_caravan)
+{
+  // Obter a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Escrever a consulta SQL
+  $sql = "
+  SELECT
+  s.id_caravan_vehicle AS vehicles,
+  s.seat AS seat_number,
+  p.name AS passenger_name,
+  w.name AS ward_name
+FROM
+  seats s
+JOIN
+  passengers p ON s.id_passenger = p.id
+LEFT JOIN
+  wards w ON p.id_ward = w.id
+WHERE
+  s.id_caravan = ?
+  AND s.seat IS NOT NULL
+    ";
+
+  // Preparar a declaração SQL
+  $stmt = $conn->prepare($sql);
+
+  // Verificar se a preparação foi bem-sucedida
+  if (!$stmt) {
+    throw new Exception("Erro ao preparar a consulta: " . $conn->error);
+  }
+
+  // Bind do parâmetro $id_caravan
+  $stmt->bind_param("s", $id_caravan);
+
+  // Executar a declaração
+  $stmt->execute();
+
+  // Obter o resultado
+  $result = $stmt->get_result();
+
+  // Verificar se houve resultados
+  if ($result->num_rows > 0) {
+    // Armazenar os resultados em um array
+    $reservedSeats = [];
+    while ($row = $result->fetch_assoc()) {
+      $reservedSeats[] = $row;
+    }
+
+    // Fechar a declaração e a conexão
+    $stmt->close();
+    $conn->close();
+
+    return $reservedSeats;
+  } else {
+    // Fechar a declaração e a conexão
+    $stmt->close();
+    $conn->close();
+
+    // Retornar um array vazio se não houver resultados
+    return [];
+  }
+}
+
+function getMyCaravans($user_id)
+{
+  // Obtém a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Define a consulta SQL
+  $sql = "SELECT DISTINCT s.id_caravan,
+                        c.id,
+                        c.name,
+                        c.start_date,
+                        c.start_time,
+                        c.return_date,
+                        c.return_time
+            FROM seats s
+            JOIN caravans c ON s.id_caravan = c.id
+            WHERE s.created_by = ?";
+
+  // Prepara a consulta
+  $stmt = $conn->prepare($sql);
+
+  // Vincula o parâmetro e executa a consulta
+  $stmt->bind_param("s", $user_id);
+  $stmt->execute();
+
+  // Obtém os resultados
+  $result = $stmt->get_result();
+
+  // Armazena os resultados em um array
+  $caravans = [];
+  while ($row = $result->fetch_assoc()) {
+    $caravans[] = $row;
+  }
+
+  // Fecha a consulta e a conexão
+  $stmt->close();
+  $conn->close();
+
+  // Retorna os resultados
+  return $caravans;
+}

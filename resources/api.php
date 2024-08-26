@@ -1177,7 +1177,15 @@ if ($indicador === 'seat_add') {
         $checkStmt->fetch();
 
         if ($seatCount > 0) {
-          throw new Exception("O banco já está ocupado. Atualizando página...");
+          // Retornar erro específico para banco já ocupado
+          echo json_encode([
+            'status' => 'error',
+            'msg' => "Banco $seatNumber já está ocupado."
+          ]);
+          $conn->rollback();
+          $checkStmt->close();
+          $stmt->close();
+          exit;
         }
 
         // Liberar o resultado antes de continuar
