@@ -16,7 +16,7 @@ $user_role = checkUserRole($user_id);
 // Descobrir quais caravanas tem reserva
 $caravan = getMyCaravans($user_id);
 // echo json_encode($caravan);
-$caravan = null;
+// $caravan = null;
 $hasCaravans = !empty($caravan);
 ?>
 <!DOCTYPE html>
@@ -92,7 +92,7 @@ $hasCaravans = !empty($caravan);
               <div class="flex">
                 <a href="caravans.php"
                    class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 me-2 text-center inline-flex items-center dark:bg-green-300 dark:text-green-800 dark:hover:bg-green-400 dark:focus:ring-green-800">
-                  Quero ir na próxima<i class="fa fa-person-running  text-white ms-2"></i>
+                  Quero ir na próxima
                 </a>
               </div>
             </div>
@@ -100,9 +100,9 @@ $hasCaravans = !empty($caravan);
         </div>
         <div class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-row overflow-auto"
              id="shareapp">
-          <div class="appshare  w-[200px]"></div>
-          <div class="p-4 flex flex-col w-full">
-            <h5 class="text-base font-semibold text-gray-900 dark:text-white">Leve o céu no seu bolso?”</h5>
+          <div class="appshare min-w-[100px] min-h-full"></div>
+          <div class="p-4 flex flex-col">
+            <!-- <h5 class="text-base font-semibold text-gray-900 dark:text-white mb-2">Leve o céu no seu bolso?”</h5> -->
             <p class="text-gray-600 dark:text-gray-300 text-sm">Salve o "App da Caravana" como atalho <strong>a partir desta tela</strong> e tenha as bênçãos do Senhor sempre à mão!</p>
           </div>
         </div>
@@ -117,9 +117,9 @@ $hasCaravans = !empty($caravan);
           </svg>
           <span class="sr-only">Info</span>
           <div>
-            <span class="font-medium">Tem alguma ideia ou sugestão?</span> Envie suas ideias e ajude-nos a fortalecer nosso trabalho no reino!
+            <p><span class="font-medium  flex flex-col">Tem alguma ideia ou sugestão?</span> Envie suas ideias e ajude-nos a fortalecer nosso trabalho no reino!</p>
             <a href="mailto:codyzzd@gmail.com?subject=CaravanaCelestial"
-               class="inline-flex font-medium items-center text-blue-600 hover:underline">
+               class="inline-flex font-medium items-center text-blue-700 hover:underline mt-2">
               Mandar e-mail
               <svg class="w-3 h-3 ms-2.5 rtl:rotate-[270deg]"
                    aria-hidden="true"

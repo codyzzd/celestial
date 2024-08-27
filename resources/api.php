@@ -1234,6 +1234,64 @@ if ($indicador === 'seat_add') {
 }
 
 
+if ($indicador == 'destination_add') {
+
+  $name = $_POST['name'] ?? '';
+
+  // Inicialize a variável para o caminho da foto
+  $photoPath = null;
+
+  // Verifique se o arquivo foi enviado
+  if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] === UPLOAD_ERR_OK) {
+    $fileTmpPath = $_FILES['file_upload']['tmp_name'];
+    $fileName = $_FILES['file_upload']['name'];
+    $fileSize = $_FILES['file_upload']['size'];
+    $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+    // Verifique o tamanho do arquivo (máximo 6 MB)
+    if ($fileSize > 6 * 1024 * 1024) {
+      die(json_encode(['status' => 'error', 'msg' => 'O arquivo é maior que 6 MB.']));
+    }
+
+    // Defina o caminho do arquivo de upload
+    $uploadFileDir = 'i/destinations/';
+
+    // Gera um nome de arquivo único baseado no nome fornecido
+    // Remove caracteres não alfanuméricos e substitui espaços por underscores
+    $safeName = preg_replace('/[^a-zA-Z0-9]/', '_', $name);
+    // Adiciona um identificador único para garantir a unicidade
+    $uniqueFileName = strtolower($safeName) . '_' . uniqid() . '.' . $fileExtension;
+    $destFilePath = $uploadFileDir . $uniqueFileName;
+
+    // Verifique se o diretório de upload existe e, se não, crie-o
+    if (!is_dir($uploadFileDir)) {
+      mkdir($uploadFileDir, 0755, true);
+    }
+
+    // Redimensionar a imagem se necessário
+    if (!resizeImage($fileTmpPath, $destFilePath)) {
+      die(json_encode(['status' => 'error', 'msg' => 'Erro ao processar o arquivo de imagem.']));
+    }
+
+    // Defina o caminho final da foto
+    $photoPath = $destFilePath;
+  }
+
+  // Prepare e execute a consulta para inserir os dados na tabela
+  $stmt = $conn->prepare("INSERT INTO destinations (id, name, photo) VALUES (uuid(), ?, ?)");
+  $stmt->bind_param("ss", $name, $photoPath);
+
+  if ($stmt->execute()) {
+    echo json_encode(['status' => 'success', 'msg' => 'Destino adicionado com sucesso.']);
+  } else {
+    echo json_encode(['status' => 'error', 'msg' => 'Erro ao adicionar destino.']);
+  }
+
+  // Fechar a declaração
+  $stmt->close();
+}
+
+
 if ($indicador == 'archive_something') {
   // Pegar dados do formulário
   $bd = $_POST['bd'] ?? '';

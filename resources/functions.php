@@ -842,3 +842,73 @@ function getMyCaravans($user_id)
   // Retorna os resultados
   return $caravans;
 }
+
+
+// Função para redimensionar a imagem
+function resizeImage($sourcePath, $destinationPath, $maxDimension = 1000, $maxAllowedDimension = 1500)
+{
+  $fileExtension = strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION));
+
+  switch ($fileExtension) {
+    case 'jpg':
+    case 'jpeg':
+      $image = imagecreatefromjpeg($sourcePath);
+      break;
+    case 'png':
+      $image = imagecreatefrompng($sourcePath);
+      break;
+    case 'gif':
+      $image = imagecreatefromgif($sourcePath);
+      break;
+    default:
+      return false; // Formato não suportado
+  }
+
+  if ($image) {
+    $width = imagesx($image);
+    $height = imagesy($image);
+
+    if ($width > $maxAllowedDimension || $height > $maxAllowedDimension) {
+      // Calcule o novo tamanho proporcional
+      if ($width > $height) {
+        $newWidth = $maxDimension;
+        $newHeight = (int) ($height * ($maxDimension / $width));
+      } else {
+        $newHeight = $maxDimension;
+        $newWidth = (int) ($width * ($maxDimension / $height));
+      }
+
+      // Redimensione a imagem
+      $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+      imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+      // Salve a imagem redimensionada
+      switch ($fileExtension) {
+        case 'jpg':
+        case 'jpeg':
+          imagejpeg($resizedImage, $destinationPath);
+          break;
+        case 'png':
+          imagepng($resizedImage, $destinationPath);
+          break;
+        case 'gif':
+          imagegif($resizedImage, $destinationPath);
+          break;
+      }
+
+      // Libere a memória
+      imagedestroy($image);
+      imagedestroy($resizedImage);
+
+      return true;
+    } else {
+      // Mova o arquivo sem redimensionamento
+      if (move_uploaded_file($sourcePath, $destinationPath)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+  return false;
+}
