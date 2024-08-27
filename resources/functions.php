@@ -881,6 +881,12 @@ function resizeAndConvertToPng($sourcePath, $destinationPath, $maxWidth = 1000, 
     case IMAGETYPE_GIF:
       $image = imagecreatefromgif($sourcePath);
       break;
+    case IMAGETYPE_WEBP:
+      $image = imagecreatefromwebp($sourcePath);
+      break;
+    case IMAGETYPE_AVIF:
+      $image = imagecreatefromavif($sourcePath);
+      break;
     default:
       return false;
   }
