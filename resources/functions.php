@@ -845,70 +845,55 @@ function getMyCaravans($user_id)
 
 
 // Função para redimensionar a imagem
-function resizeImage($sourcePath, $destinationPath, $maxDimension = 1000, $maxAllowedDimension = 1500)
+function resizeAndConvertToPng($sourcePath, $destinationPath, $maxWidth = 1000, $maxHeight = 1000)
 {
-  $fileExtension = strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION));
+  // Obtém as dimensões e o tipo da imagem
+  list($width, $height, $type) = getimagesize($sourcePath);
 
-  switch ($fileExtension) {
-    case 'jpg':
-    case 'jpeg':
+  // Se a imagem já está dentro dos limites, copie diretamente para o destino
+  if ($width <= $maxWidth && $height <= $maxHeight) {
+    return copy($sourcePath, $destinationPath);
+  }
+
+  // Calcula a proporção da imagem
+  $aspectRatio = $width / $height;
+
+  // Calcula as novas dimensões
+  if ($width > $height) {
+    $newWidth = $maxWidth;
+    $newHeight = intval($maxWidth / $aspectRatio); // Garante que seja um inteiro
+  } else {
+    $newHeight = $maxHeight;
+    $newWidth = intval($maxHeight * $aspectRatio); // Garante que seja um inteiro
+  }
+
+  // Cria uma nova imagem com as novas dimensões
+  $imageResized = imagecreatetruecolor($newWidth, $newHeight);
+
+  // Carrega a imagem original
+  switch ($type) {
+    case IMAGETYPE_JPEG:
       $image = imagecreatefromjpeg($sourcePath);
       break;
-    case 'png':
+    case IMAGETYPE_PNG:
       $image = imagecreatefrompng($sourcePath);
       break;
-    case 'gif':
+    case IMAGETYPE_GIF:
       $image = imagecreatefromgif($sourcePath);
       break;
     default:
-      return false; // Formato não suportado
+      return false;
   }
 
-  if ($image) {
-    $width = imagesx($image);
-    $height = imagesy($image);
-
-    if ($width > $maxAllowedDimension || $height > $maxAllowedDimension) {
-      // Calcule o novo tamanho proporcional
-      if ($width > $height) {
-        $newWidth = $maxDimension;
-        $newHeight = (int) ($height * ($maxDimension / $width));
-      } else {
-        $newHeight = $maxDimension;
-        $newWidth = (int) ($width * ($maxDimension / $height));
-      }
-
-      // Redimensione a imagem
-      $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-      imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-      // Salve a imagem redimensionada
-      switch ($fileExtension) {
-        case 'jpg':
-        case 'jpeg':
-          imagejpeg($resizedImage, $destinationPath);
-          break;
-        case 'png':
-          imagepng($resizedImage, $destinationPath);
-          break;
-        case 'gif':
-          imagegif($resizedImage, $destinationPath);
-          break;
-      }
-
-      // Libere a memória
-      imagedestroy($image);
-      imagedestroy($resizedImage);
-
-      return true;
-    } else {
-      // Mova o arquivo sem redimensionamento
-      if (move_uploaded_file($sourcePath, $destinationPath)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+  if (!$image) {
+    return false;
   }
-  return false;
+
+  // Redimensiona a imagem
+  if (!imagecopyresampled($imageResized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height)) {
+    return false;
+  }
+
+  // Salva a imagem redimensionada como PNG
+  return imagepng($imageResized, $destinationPath);
 }

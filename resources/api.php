@@ -1235,6 +1235,8 @@ if ($indicador === 'seat_add') {
 
 
 if ($indicador == 'destination_add') {
+  // Debug: Verifique se o arquivo está sendo enviado
+  // error_log(print_r($_FILES['file_upload'], true));
 
   $name = $_POST['name'] ?? '';
 
@@ -1269,17 +1271,17 @@ if ($indicador == 'destination_add') {
     }
 
     // Redimensionar a imagem se necessário
-    if (!resizeImage($fileTmpPath, $destFilePath)) {
+    if (!resizeAndConvertToPng($fileTmpPath, $destFilePath)) {
       die(json_encode(['status' => 'error', 'msg' => 'Erro ao processar o arquivo de imagem.']));
     }
 
     // Defina o caminho final da foto
-    $photoPath = $destFilePath;
+    // $photoPath = $destFilePath;
   }
 
   // Prepare e execute a consulta para inserir os dados na tabela
   $stmt = $conn->prepare("INSERT INTO destinations (id, name, photo) VALUES (uuid(), ?, ?)");
-  $stmt->bind_param("ss", $name, $photoPath);
+  $stmt->bind_param("ss", $name, $uniqueFileName);
 
   if ($stmt->execute()) {
     echo json_encode(['status' => 'success', 'msg' => 'Destino adicionado com sucesso.']);
