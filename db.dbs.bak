@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="MySql" database="MySql" id="MySql-293" >
 	<schema name="u821249804_caravana" >
-		<table name="caravan_seat_passengers" spec="" >
-			<column name="id" type="INT" length="11" jt="4" mandatory="y" />
-			<column name="id_caravan" type="INT" length="11" jt="4" mandatory="y" />
-			<column name="id_seat" type="INT" length="11" jt="4" mandatory="y" />
-			<column name="id_passenger" type="INT" length="11" jt="4" mandatory="y" />
-			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
-		</table>
 		<table name="caravan_vehicles" row_count="0" spec="" >
 			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_caravan" type="VARCHAR" length="36" jt="12" mandatory="y" />
@@ -21,7 +14,7 @@
 			<index name="vehicle_id" unique="NORMAL" >
 				<column name="id_vehicle" />
 			</index>
-			<fk name="caravan_vehicles_ibfk_1" to_schema="u821249804_caravana" to_table="caravans" options="" >
+			<fk name="caravan_vehicles_ibfk_1" to_schema="u821249804_caravana" to_table="caravans" delete_action="cascade" options="" >
 				<fk_column name="id_caravan" pk="id" />
 			</fk>
 			<fk name="caravan_vehicles_ibfk_2" to_schema="u821249804_caravana" to_table="vehicles" options="" >
@@ -149,7 +142,7 @@
 			<column name="id_vehicle" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_caravan" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_passenger" type="VARCHAR" length="36" jt="12" mandatory="y" />
-			<column name="seat_number" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="seat" type="VARCHAR" length="255" jt="12" mandatory="y" />
 			<index name="pk_seats" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -250,6 +243,7 @@
 				<column_options><![CDATA[ON UPDATE current_timestamp]]></column_options>
 			</column>
 			<column name="deleted_at" type="TIMESTAMP" jt="93" />
+			<column name="seat_map" type="TEXT" jt="-1" />
 			<index name="pk_vehicles" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -290,7 +284,6 @@
 		</table>
 	</schema>
 	<layout name="Main Layout" id="Layout-1354" show_column_type="y" show_relation="columns" >
-		<entity schema="u821249804_caravana" name="caravan_seat_passengers" color="3986C1" x="850" y="816" />
 		<entity schema="u821249804_caravana" name="caravan_vehicles" color="C7F4BE" x="884" y="646" />
 		<entity schema="u821249804_caravana" name="caravans" color="C7F4BE" x="612" y="493" />
 		<entity schema="u821249804_caravana" name="documents" color="BED3F4" x="323" y="442" />

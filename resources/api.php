@@ -786,19 +786,13 @@ if ($indicador == 'vehicle_list') {
     if (isset($id_stake)) {
       // Construir a consulta SQL base com JOIN
       $sql = "
-        SELECT v.*,
-               CASE
-                 WHEN cv.id_vehicle IS NOT NULL THEN 'yes'
-                 ELSE 'no'
-               END AS used
-        FROM vehicles v
-        LEFT JOIN caravan_vehicles cv ON v.id = cv.id_vehicle
-        WHERE v.id_stake = ?
+        select * from vehicles
+        WHERE id_stake = ?
       ";
 
       // Adicionar condição para registros não excluídos se necessário
       if ($status === 'not_deleted') {
-        $sql .= " AND v.deleted_at IS NULL";
+        $sql .= " AND deleted_at IS NULL";
       }
 
       // Preparar a consulta SQL
@@ -949,12 +943,12 @@ if ($indicador == 'caravan_add') {
 
     // Prepara a consulta para inserção na tabela caravans com UUID()
     $stmt = $conn->prepare("
-      INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs,destination)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)
     ");
 
     // Associa os parâmetros
-    $stmt->bind_param("ssssssss", $uuid, $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs);
+    $stmt->bind_param("sssssssss", $uuid, $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs, $destination);
 
     // Executa a consulta para inserir a caravana
     if ($stmt->execute()) {
@@ -1133,7 +1127,7 @@ if ($indicador == 'caravan_list') {
   }
 }
 
-if ($indicador === 'seat_add') {
+if ($indicador == 'seat_add') {
   // user_id, reserva, id_caravan
   $user_id = $_POST['user_id'] ?? '';
   $id_caravan = $_POST['id_caravan'] ?? '';
@@ -1155,7 +1149,7 @@ if ($indicador === 'seat_add') {
     }
 
     // Preparar a consulta para inserção
-    $stmt = $conn->prepare("INSERT INTO seats (id, id_caravan_vehicle, id_caravan, id_passenger, seat) VALUES (UUID(), ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO seats (id, id_caravan_vehicle, id_caravan, id_passenger, seat, created_by) VALUES (UUID(), ?, ?, ?, ?, ?)");
     if (!$stmt) {
       throw new Exception("Erro ao preparar a consulta de inserção: " . $conn->error);
     }
@@ -1193,7 +1187,7 @@ if ($indicador === 'seat_add') {
       }
 
       // Bind parameters (id_caravan_vehicle, id_caravan, id_passenger, seat)
-      $stmt->bind_param("ssss", $vehicleId, $id_caravan, $passengerId, $seatNumber);
+      $stmt->bind_param("sssss", $vehicleId, $id_caravan, $passengerId, $seatNumber, $user_id);
 
       // Executar a declaração
       if (!$stmt->execute()) {
@@ -1232,6 +1226,8 @@ if ($indicador === 'seat_add') {
     ]);
   }
 }
+
+
 
 
 if ($indicador == 'destination_add') {
@@ -1291,6 +1287,96 @@ if ($indicador == 'destination_add') {
 
   // Fechar a declaração
   $stmt->close();
+}
+
+if ($indicador == 'destination_list') {
+  // Consulta para selecionar todos os destinos
+  $sql = "SELECT id, name, photo FROM destinations";
+
+  // Executar a consulta
+  $result = $conn->query($sql);
+
+  // Verificar se a consulta foi executada com sucesso
+  if ($result) {
+    // Verificar se houve resultados
+    if ($result->num_rows > 0) {
+      $destinations = [];
+
+      // Iterar sobre os resultados e armazená-los em um array
+      while ($row = $result->fetch_assoc()) {
+        $destinations[] = [
+          'id' => $row['id'],
+          'name' => $row['name'],
+          'photo' => $row['photo'],
+        ];
+      }
+
+      // Retornar os destinos como JSON
+      echo json_encode($destinations);
+    } else {
+      // Caso não haja resultados
+      echo json_encode([
+        'status' => 'error',
+        'msg' => 'Nenhum destino encontrado.'
+      ]);
+    }
+  } else {
+    // Caso a consulta falhe
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao executar a consulta no banco de dados: ' . $conn->error
+    ]);
+  }
+}
+
+if ($indicador == 'destination_get') {
+  // Recupera o ID do POST
+  $id = $_POST['id'];
+
+  // Consulta para selecionar o destino com o ID fornecido
+  $sql = "SELECT * FROM destinations WHERE id = ?";
+
+  // Preparar a declaração
+  if ($stmt = $conn->prepare($sql)) {
+    // Fazer o bind do parâmetro
+    $stmt->bind_param("i", $id); // "i" indica que o parâmetro é um inteiro
+
+    // Executar a consulta
+    if ($stmt->execute()) {
+      // Obter o resultado
+      $result = $stmt->get_result();
+
+      // Verificar se há um resultado
+      if ($result->num_rows > 0) {
+        // Obter o registro como um array associativo
+        $destination = $result->fetch_assoc();
+
+        // Retornar o destino como JSON
+        echo json_encode($destination);
+      } else {
+        // Caso não haja resultados
+        echo json_encode([
+          'status' => 'error',
+          'msg' => 'Nenhum destino encontrado.'
+        ]);
+      }
+    } else {
+      // Caso a execução da consulta falhe
+      echo json_encode([
+        'status' => 'error',
+        'msg' => 'Erro ao executar a consulta no banco de dados: ' . $stmt->error
+      ]);
+    }
+
+    // Fechar a declaração
+    $stmt->close();
+  } else {
+    // Caso a preparação da consulta falhe
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao preparar a consulta no banco de dados: ' . $conn->error
+    ]);
+  }
 }
 
 

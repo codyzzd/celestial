@@ -515,7 +515,10 @@ function getCaravan($caravan_id)
   $conn = getDatabaseConnection();
 
   // Prepare a consulta SQL para selecionar todos os dados da tabela caravans baseado no caravan_id
-  $sql = "SELECT * FROM caravans WHERE id = ?";
+  $sql = "SELECT c.*, d.photo
+  FROM caravans c
+  INNER JOIN destinations d ON c.destination = d.id
+  WHERE c.id = ?;";
 
   // Preparar a declaração SQL
   if ($stmt = $conn->prepare($sql)) {
@@ -666,6 +669,7 @@ function getCaravanVehicles($caravan_id)
   // Prepara a consulta SQL
   $sql = "
   SELECT
+  ROW_NUMBER() OVER (ORDER BY id_cv) AS ordem,
   vehicles.*,
   caravan_vehicles.id AS id_cv
 FROM
@@ -674,6 +678,8 @@ JOIN
   vehicles ON caravan_vehicles.id_vehicle = vehicles.id
 WHERE
   caravan_vehicles.id_caravan = ?
+ORDER BY
+  id_cv;
     ";
 
   // Prepara a declaração
@@ -802,6 +808,63 @@ WHERE
   }
 }
 
+function getMySeats($user_id, $caravan_id)
+{
+  // Obtém a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Verifica se a conexão foi bem-sucedida
+  if ($conn->connect_error) {
+    echo "Erro ao conectar ao banco de dados: " . $conn->connect_error;
+    return []; // Retorna um array vazio em caso de erro de conexão
+  }
+
+  // Prepara a consulta SQL
+  $sql = "SELECT seats.id_caravan_vehicle, seats.is_approved, seats.seat, passengers.name, vehicles.name AS vehicle_name
+            FROM seats
+            INNER JOIN passengers ON seats.id_passenger = passengers.id
+            INNER JOIN caravan_vehicles ON seats.id_caravan_vehicle = caravan_vehicles.id
+            INNER JOIN vehicles ON caravan_vehicles.id_vehicle = vehicles.id
+            WHERE seats.created_by = ? AND seats.id_caravan = ?";
+
+  // Prepara a statement
+  $stmt = $conn->prepare($sql);
+
+  // Verifica se a preparação foi bem-sucedida
+  if (!$stmt) {
+    echo "Erro ao preparar a consulta: " . $conn->error;
+    return []; // Retorna um array vazio em caso de erro na preparação
+  }
+
+  // Bind os parâmetros
+  $stmt->bind_param('ss', $user_id, $caravan_id);
+
+  // Executa a statement
+  $stmt->execute();
+
+  // Obtém o resultado
+  $result = $stmt->get_result();
+
+  // Verifica se houve algum erro durante a execução
+  if ($stmt->errno) {
+    echo "Erro ao executar a consulta: " . $stmt->error;
+    return []; // Retorna um array vazio em caso de erro
+  }
+
+  // Armazena os dados em um array
+  $seats = [];
+  while ($row = $result->fetch_assoc()) {
+    $seats[] = $row;
+  }
+
+  // Fecha o resultado e a statement
+  $result->close();
+  $stmt->close();
+
+  // Retorna o array de assentos
+  return $seats;
+}
+
 function getMyCaravans($user_id)
 {
   // Obtém a conexão com o banco de dados
@@ -843,17 +906,106 @@ function getMyCaravans($user_id)
   return $caravans;
 }
 
+function getProfile($user_id)
+{
+  // Supondo que a conexão $conn já esteja estabelecida globalmente
+  // global $conn;
+  $conn = getDatabaseConnection();
+
+  // Prepare a SQL statement com placeholders
+  $sql = "
+      SELECT
+          u.id,
+          u.name AS user_name,
+          s.name AS stake_name,
+          w.name AS ward_name,
+          r.name AS role_name
+      FROM
+          users u
+      LEFT JOIN
+          stakes s ON u.id_stake = s.id
+      LEFT JOIN
+          wards w ON u.id_ward = w.id
+      LEFT JOIN
+          roles r ON u.role = r.id
+      WHERE
+          u.id = ?
+  ";
+
+  // Preparar a declaração SQL
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("s", $user_id);
+
+  // Execute a consulta
+  $stmt->execute();
+
+  // Obtenha o resultado
+  $result = $stmt->get_result();
+
+  // Inicializa o array de perfil com valores padrão
+  $profile = [
+    'name' => null,
+    'stake' => 'não selecionada',
+    'ward' => 'não selecionada',
+    'role' => 'Membro',
+    'avatar' => null
+  ];
+
+  if ($row = $result->fetch_assoc()) {
+    // Atribuir os valores às variáveis
+    $profile['name'] = $row["user_name"] ?? null;
+    $profile['stake'] = $row["stake_name"] ?? 'não selecionada';
+    $profile['ward'] = $row["ward_name"] ?? 'não selecionada';
+    $profile['role'] = $row["role_name"] ?? 'Membro';
+
+    // Extrair a primeira letra do primeiro nome e a primeira letra da última palavra
+    if ($profile['name']) {
+      $name_parts = explode(' ', trim($profile['name']));
+      $first_letter = strtoupper($name_parts[0][0]);  // Primeira letra do primeiro nome
+      $last_letter = isset($name_parts[1]) ? strtoupper(end($name_parts)[0]) : '';  // Primeira letra da última palavra, se houver
+      $profile['avatar'] = $first_letter . $last_letter;
+    }
+  }
+
+  // Fechar a declaração
+  $stmt->close();
+
+  // Retornar o array de perfil
+  return $profile;
+}
+
+function getDestinations()
+{
+  // Obter a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Consultar todos os registros da tabela destinations
+  $sql = "SELECT * FROM destinations";
+  $result = $conn->query($sql);
+
+  // Inicializar um array para armazenar os resultados
+  $destinations = array();
+
+  // Verificar se a consulta retornou resultados
+  if ($result->num_rows > 0) {
+    // Percorrer os resultados e adicionar ao array
+    while ($row = $result->fetch_assoc()) {
+      $destinations[] = $row;
+    }
+  }
+
+  // Fechar a conexão
+  $conn->close();
+
+  // Retornar o array com os resultados
+  return $destinations;
+}
 
 // Função para redimensionar a imagem
 function resizeAndConvertToPng($sourcePath, $destinationPath, $maxWidth = 1000, $maxHeight = 1000)
 {
   // Obtém as dimensões e o tipo da imagem
   list($width, $height, $type) = getimagesize($sourcePath);
-
-  // Se a imagem já está dentro dos limites, copie diretamente para o destino
-  if ($width <= $maxWidth && $height <= $maxHeight) {
-    return copy($sourcePath, $destinationPath);
-  }
 
   // Calcula a proporção da imagem
   $aspectRatio = $width / $height;
@@ -870,7 +1022,13 @@ function resizeAndConvertToPng($sourcePath, $destinationPath, $maxWidth = 1000, 
   // Cria uma nova imagem com as novas dimensões
   $imageResized = imagecreatetruecolor($newWidth, $newHeight);
 
-  // Carrega a imagem original
+  // Define a transparência para PNG
+  imagealphablending($imageResized, false);
+  imagesavealpha($imageResized, true);
+  $transparent = imagecolorallocatealpha($imageResized, 255, 255, 255, 127);
+  imagefill($imageResized, 0, 0, $transparent);
+
+  // Carrega a imagem original com base no tipo
   switch ($type) {
     case IMAGETYPE_JPEG:
       $image = imagecreatefromjpeg($sourcePath);
@@ -883,9 +1041,6 @@ function resizeAndConvertToPng($sourcePath, $destinationPath, $maxWidth = 1000, 
       break;
     case IMAGETYPE_WEBP:
       $image = imagecreatefromwebp($sourcePath);
-      break;
-    case IMAGETYPE_AVIF:
-      $image = imagecreatefromavif($sourcePath);
       break;
     default:
       return false;
@@ -901,5 +1056,12 @@ function resizeAndConvertToPng($sourcePath, $destinationPath, $maxWidth = 1000, 
   }
 
   // Salva a imagem redimensionada como PNG
-  return imagepng($imageResized, $destinationPath);
+  $result = imagepng($imageResized, $destinationPath);
+
+  // Limpa a memória
+  imagedestroy($image);
+  imagedestroy($imageResized);
+
+  // Verifica se a imagem foi salva com sucesso
+  return $result ? $destinationPath : false;
 }

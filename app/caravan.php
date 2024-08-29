@@ -28,6 +28,24 @@ $passengers = getPassengers($user_id);
 $kids = getPassengers($user_id, $caravan['start_date']);
 //descobrir qual banco esta ocupado por quem
 $reserveds = getSeatsReserved($id_caravan);
+
+
+//calcular capacity
+$totalCapacity = 0;
+foreach ($vehicles as $vehicle) {
+  $totalCapacity += $vehicle['capacity'];
+}
+// Contar o número de assentos reservados
+$totalReservedSeats = count($reserveds);
+
+// Calcular a capacidade disponível
+$availableSeats = $totalCapacity - $totalReservedSeats;
+
+// Calcular a porcentagem de ocupação
+$occupiedPercentage = ($totalCapacity - $availableSeats) / $totalCapacity * 100;
+
+// Formatar a porcentagem com duas casas decimais
+$formattedPercentage = number_format($occupiedPercentage, 2);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -86,7 +104,9 @@ $reserveds = getSeatsReserved($id_caravan);
         <div class="flex flex-col gap-1 md:gap-2">
           <div class="bg-white  dark:bg-gray-800 dark:border-gray-700 md:rounded-lg md:shadow  overflow-auto "
                id="header">
-            <div class="destinationphoto aspect-video"></div>
+            <div class="bg-cover bg-center bg-no-repeat aspect-video"
+                 id="foto"
+                 style="background-image: url('../resources/i/destinations/<?= $caravan['photo'] ?>');"></div>
             <div class="p-4">
               <p class="text-xs font-medium tracking-wider text-gray-600 uppercase truncate">Caravana</p>
               <h5 class="text-xl font-semibold text-gray-900 dark:text-white"><?= $caravan['name']; ?></h5>
@@ -108,31 +128,33 @@ $reserveds = getSeatsReserved($id_caravan);
           <div class="bg-white  p-4 dark:bg-gray-800 dark:border-gray-700 flex flex-col gap-1 md:rounded-lg md:shadow"
                id="capacity">
             <div class="flex flex-row gap-1 items-end">
-              <p class="text-2xl">52</p>
+              <p class="text-2xl"><?= $availableSeats ?></p>
               <p class="text-sm text-gray-500 mb-[2px]">Assentos disponíveis</p>
             </div>
             <div class="w-full bg-gray-200 h-2 rounded-full overflow-auto flex flex-row ">
-              <div class="bg-purple-600 h-2 "
-                   style="width: 15%;"></div>
+              <div class="h-2 <?= $formattedPercentage >= 80 ? 'bg-red-600' : 'bg-purple-600' ?>"
+                   style="width:<?= $formattedPercentage ?>%;"></div>
             </div>
           </div>
-          <div class="bg-white  p-4 dark:bg-gray-800 dark:border-gray-700 md:rounded-lg md:shadow  "
-               id="obs">
-            <p class="text-xs font-medium tracking-wider text-gray-600 uppercase truncate">Observação</p>
-            <p class="text-sm text-gray-500"><?= $caravan['obs']; ?></p>
-          </div>
+          <?php if (!empty($caravan['obs'])): ?>
+            <div class="bg-white  p-4 dark:bg-gray-800 dark:border-gray-700 md:rounded-lg md:shadow  "
+                 id="obs">
+              <p class="text-xs font-medium tracking-wider text-gray-600 uppercase truncate">Observação</p>
+              <p class="text-sm text-gray-500"><?= $caravan['obs']; ?></p>
+            </div>
+          <?php endif; ?>
           <h2 class=" text-lg font-semibold text-gray-900 dark:text-white mx-4 mt-4">Escolha os lugares</h2>
           <?php foreach ($vehicles as $index => $vehicle): ?>
             <div class="bg-white p-4 dark:bg-gray-800 dark:border-gray-700 md:rounded-lg md:shadow flex flex-col gap-2">
               <!-- <p class="text-sm text-gray-500 mb-4"> -->
               <div class="flex flex-row gap-2"><i class="fa fa-car-side text-lg text-gray-500 fa-fw "></i>
-                <?= htmlspecialchars($vehicle['name']); ?></div>
+                <?= htmlspecialchars($vehicle['name']); ?> - <?= htmlspecialchars($vehicle['ordem']); ?></div>
               <div id="seat-layout-<?= $index ?>"
                    class="bus-layout"></div>
               <button id="add-passenger-no-seat-<?= $index ?>"
                       class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700  add-no-seat-passenger"
                       data-vehicle-id="<?= $vehicle['id_cv'] ?>"
-                      data-vehicle-name="<?= htmlspecialchars($vehicle['name']) ?>""><i class="
+                      data-vehicle-name="<?= htmlspecialchars($vehicle['name']) ?>"><i class="
                       fa
                       fa-plus
                       me-2"></i>
@@ -359,7 +381,7 @@ $reserveds = getSeatsReserved($id_caravan);
 
 
 
-          renderSeatMap(seatMap<?= $index ?>, '#seat-layout-<?= $index ?>', '<?= $vehicle['id_cv'] ?>', '<?= $vehicle['name'] ?>');
+          renderSeatMap(seatMap<?= $index ?>, '#seat-layout-<?= $index ?>', '<?= $vehicle['id_cv'] ?>', '<?= $vehicle['name'] ?> - <?= $vehicle['ordem'] ?>');
         <?php endforeach; ?>
 
         $('#reserva_bancos').on('submit', function (event) {

@@ -32,6 +32,9 @@ $obs = isset($caravan['obs']) ? htmlspecialchars($caravan['obs']) : '';
 //get vehicles
 $vehicles = getVehicles($user_stake);
 $vehicles_used = getVehiclesUsed($caravan['id']);
+
+//get destinations
+$destinations = getDestinations();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -76,6 +79,22 @@ $vehicles_used = getVehiclesUsed($caravan['id']);
                        required
                        value="<?php echo $name; ?>"
                        autocomplete="off" />
+              </div>
+              <div class="col-span-2">
+                <label for="destination"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Destino</label>
+                <select id="destination"
+                        name="destination"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                        required>
+                  <option value=""
+                          disabled
+                          selected>Selecione...</option>
+                  <?php foreach ($destinations as $destination): ?>
+                    <option value="<?= $destination['id'] ?>"
+                            <?= $destination['id'] === $caravan['destination'] ? 'selected' : '' ?>><?= $destination['name'] ?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
               <div class="">
                 <label for="start_date"

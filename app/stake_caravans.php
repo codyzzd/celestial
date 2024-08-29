@@ -23,6 +23,9 @@ $user_stake = checkStake($user_id);
 //get vehicles
 $vehicles = getVehicles($user_stake);
 
+//get destinations
+$destinations = getDestinations();
+
 // Obter as wards associadas ao usuário
 // $wards =  getWardsByUserId($user_id);
 ?>
@@ -116,6 +119,21 @@ $vehicles = getVehicles($user_stake);
                          placeholder="ex: Templo Curitiba"
                          required
                          autocomplete="off" />
+                </div>
+                <div class="col-span-2">
+                  <label for="destination"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Destino</label>
+                  <select id="destination"
+                          name="destination"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                          required>
+                    <option value=""
+                            disabled
+                            selected>Selecione...</option>
+                    <?php foreach ($destinations as $destination): ?>
+                      <option value="<?= $destination['id'] ?>"><?= $destination['name'] ?></option>
+                    <?php endforeach; ?>
+                  </select>
                 </div>
                 <div class="">
                   <label for="start_date"

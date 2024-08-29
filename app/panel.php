@@ -18,6 +18,7 @@ $caravan = getMyCaravans($user_id);
 // echo json_encode($caravan);
 // $caravan = null;
 $hasCaravans = !empty($caravan);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -98,6 +99,7 @@ $hasCaravans = !empty($caravan);
             </div>
           <?php endif; ?>
         </div>
+        <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
         <div class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-row overflow-auto"
              id="shareapp">
           <div class="appshare min-w-[100px] min-h-full"></div>
@@ -106,7 +108,7 @@ $hasCaravans = !empty($caravan);
             <p class="text-gray-600 dark:text-gray-300 text-sm">Salve o "App da Caravana" como atalho <strong>a partir desta tela</strong> e tenha as bênçãos do Senhor sempre à mão!</p>
           </div>
         </div>
-        <div class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+        <div class="flex items-center p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
              role="alert">
           <svg class="flex-shrink-0 inline w-4 h-4 me-3"
                aria-hidden="true"
