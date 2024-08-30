@@ -73,7 +73,7 @@ $conn->close();
                 class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full md:w-fit">Criar</button> -->
       </div>
       <?php if ($showAlert): ?>
-        <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+        <div class="flex items-start p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
              role="alert">
           <i class="fa fa-exclamation-triangle text-lg fa-fw me-3"></i>
           <span class="sr-only">Info</span>
@@ -118,7 +118,7 @@ $conn->close();
           </div>
         </div> -->
         <div id="alert-additional-content-4"
-             class="p-4 mb-4 text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800"
+             class="p-4 mb-4 items-start text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800"
              role="alert">
           <div class="flex items-center">
             <i class="fa fa-info-circle text-lg fa-fw me-2"></i>

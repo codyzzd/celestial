@@ -108,7 +108,7 @@ $hasCaravans = !empty($caravan);
             <p class="text-gray-600 dark:text-gray-300 text-sm">Salve o "App da Caravana" como atalho <strong>a partir desta tela</strong> e tenha as bênçãos do Senhor sempre à mão!</p>
           </div>
         </div>
-        <div class="flex items-center p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+        <div class="flex items-start p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
              role="alert">
           <svg class="flex-shrink-0 inline w-4 h-4 me-3"
                aria-hidden="true"

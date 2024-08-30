@@ -1379,6 +1379,132 @@ if ($indicador == 'destination_get') {
   }
 }
 
+if ($indicador == 'role_alt') {
+  // Obter variáveis de POST
+  $role = $_POST['permission-radio'];
+  $ward_id = $_POST['id_ward'];
+  $user_id = $_POST['user_id'];
+  $stake_id = $_POST['stake_id'];
+
+  // Definir o período de expiração (7 dias por padrão)
+  $daysToExpire = 7; // você pode alterar esse valor conforme necessário
+  $expireDate = (new DateTime())->modify("+$daysToExpire days")->format('Y-m-d H:i:s');
+
+  try {
+    // Buscar o role_id no banco usando o slug
+    $stmt = $conn->prepare("SELECT id FROM roles WHERE slug = ?");
+    $stmt->bind_param("s", $role);
+    $stmt->execute();
+    $stmt->bind_result($role_id);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($role_id === null) {
+      // Tratar caso em que o role_slug não é encontrado
+      echo json_encode([
+        'status' => 'error',
+        'msg' => 'Role não encontrado.'
+      ]);
+      exit;
+    }
+
+    // Gerar um novo UUID no banco de dados
+    $uuid_stmt = $conn->query("SELECT UUID() AS new_id");
+    $uuid_row = $uuid_stmt->fetch_assoc();
+    $new_uuid = $uuid_row['new_id'];
+
+    // Inserir no banco de dados
+    $sql = "INSERT INTO role_alt (id, role, stake_id, ward_id,expire_at)
+            VALUES (?, ?, ?, ?,?)";
+
+    // Preparar e executar a consulta
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+      throw new Exception("Erro ao preparar a consulta: " . $conn->error);
+    }
+
+    // Associar os parâmetros
+    $stmt->bind_param('sssss', $new_uuid, $role_id, $stake_id, $ward_id, $expireDate);
+
+    // Executar a consulta
+    if ($stmt->execute()) {
+      echo json_encode([
+        'status' => 'success',
+        'msg' => 'Token gerado e inserido com sucesso.',
+        'uuid' => $new_uuid
+      ]);
+    } else {
+      throw new Exception("Erro ao inserir no banco de dados: " . $stmt->error);
+    }
+
+    // Fechar a declaração
+    $stmt->close();
+  } catch (Exception $e) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => $e->getMessage()
+    ]);
+  }
+}
+
+if ($indicador == 'user_list_stake') {
+  // Obter variáveis de POST
+  $stake_id = $_POST['stake_id'];
+
+  try {
+    // Preparar a consulta SQL com joins para trazer name da tabela users, name da tabela roles e name da tabela wards
+    $stmt = $conn->prepare("
+          SELECT
+              u.name AS user_name,
+              r.name AS role_name,
+              w.name AS ward_name
+          FROM
+              users u
+          LEFT JOIN
+              roles r ON u.role = r.id
+          LEFT JOIN
+              wards w ON u.id_ward = w.id
+          WHERE
+              u.id_stake = ? AND u.role IS NOT NULL AND u.role != 3
+      ");
+
+    // Associar os parâmetros
+    $stmt->bind_param("s", $stake_id);
+
+    // Executar a consulta
+    $stmt->execute();
+
+    // Obter os resultados
+    $result = $stmt->get_result();
+    $users = [];
+
+    // Loop pelos resultados e adicionar ao array
+    while ($row = $result->fetch_assoc()) {
+      $users[] = [
+        'user_name' => $row['user_name'],
+        'role_name' => $row['role_name'],
+        'ward_name' => $row['ward_name']
+      ];
+    }
+
+    // Fechar a declaração e a conexão
+    $stmt->close();
+    // $conn->close();
+
+    // Retornar o array de usuários como JSON
+    echo json_encode([
+      'status' => 'success',
+      'data' => $users
+    ]);
+
+  } catch (Exception $e) {
+    // Em caso de erro, lançar uma exceção ou tratar o erro conforme necessário
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao buscar os usuários: ' . $e->getMessage()
+    ]);
+  }
+}
 
 if ($indicador == 'archive_something') {
   // Pegar dados do formulário

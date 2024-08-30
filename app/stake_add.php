@@ -58,7 +58,7 @@ $user_role = checkUserRole($user_id);
       <!-- tabela -->
       <div class="flex flex-col gap-4">
         <div id="alert-additional-content-4"
-             class="p-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-300 dark:border-red-800"
+             class="p-4 items-start text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-300 dark:border-red-800"
              role="alert">
           <div class="flex items-center">
             <i class="fa fa-exclamation-triangle text-lg fa-fw me-2"></i>
