@@ -318,6 +318,182 @@ $activeWards = array_filter($wards, function ($ward) {
           </div>
         </div>
       </div>
+      <!-- modal edit -->
+      <div id="user_edit_modal"
+           data-modal-placement="bottom-center"
+           tabindex="-1"
+           aria-hidden="true"
+           class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-lg max-h-full">
+          <!-- Modal content -->
+          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 rounded-t dark:border-gray-600 border-b">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Editar Permissão
+              </h3>
+              <button type="button"
+                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      data-modal-hide="user_edit_modal">
+                <svg class="w-3 h-3"
+                     aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 14 14">
+                  <path stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+                <span class="sr-only">Fechar Modal</span>
+              </button>
+            </div>
+            <!-- Modal body -->
+            <form id="role_alt_edit">
+              <div class="grid gap-4 grid-cols-2 p-4">
+                <div id="user_form_edit"
+                     class="col-span-2 flex flex-col gap-4">
+                  <div class="col-span-2">
+                    <h3 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de Permissão</h3>
+                    <ul class="space-y-1 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="dropdownHelperRadioButton">
+                      <li>
+                        <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                          <div class="flex items-center h-5">
+                            <input id="stake_lider-radio_edit"
+                                   name="permission-radio"
+                                   type="radio"
+                                   value="stake_lider"
+                                   data-slug="stake_lider"
+                                   required
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                          </div>
+                          <div class="ms-2 text-sm">
+                            <label for="stake_lider-radio_edit"
+                                   class="font-medium text-gray-900 dark:text-gray-300">
+                              <div>Líder da Estaca</div>
+                              <p id="stake_lider-description"
+                                 class="text-xs font-normal text-gray-500 dark:text-gray-300">
+                                Permissão total: adicionar usuários no nível de ala e estaca.
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                          <div class="flex items-center h-5">
+                            <input id="stake_aux-radio_edit"
+                                   name="permission-radio"
+                                   type="radio"
+                                   value="stake_aux"
+                                   data-slug="stake_aux"
+                                   required
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                          </div>
+                          <div class="ms-2 text-sm">
+                            <label for="stake_aux-radio_edit"
+                                   class="font-medium text-gray-900 dark:text-gray-300">
+                              <div>Auxiliar da Estaca</div>
+                              <p id="stake_aux-description"
+                                 class="text-xs font-normal text-gray-500 dark:text-gray-300">
+                                Pode resetar senhas, gerar relatórios de nível estaca, administrar caravanas e veículos.
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                          <div class="flex items-center h-5">
+                            <input id="ward_lider-radio_edit"
+                                   name="permission-radio"
+                                   type="radio"
+                                   value="ward_lider"
+                                   data-slug="ward_lider"
+                                   required
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                          </div>
+                          <div class="ms-2 text-sm">
+                            <label for="ward_lider-radio_edit"
+                                   class="font-medium text-gray-900 dark:text-gray-300">
+                              <div>Líder da Ala</div>
+                              <p id="ward_lider-description"
+                                 class="text-xs font-normal text-gray-500 dark:text-gray-300">
+                                Pode resetar senhas, gerar relatórios de nível ala e adicionar usuários no nível de ala.
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                          <div class="flex items-center h-5">
+                            <input id="ward_aux-radio_edit"
+                                   name="permission-radio"
+                                   type="radio"
+                                   value="ward_aux"
+                                   required
+                                   data-slug="ward_aux"
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                          </div>
+                          <div class="ms-2 text-sm">
+                            <label for="ward_aux-radio_edit"
+                                   class="font-medium text-gray-900 dark:text-gray-300">
+                              <div>Auxiliar da Ala</div>
+                              <p id="ward_aux-description"
+                                 class="text-xs font-normal text-gray-500 dark:text-gray-300">
+                                Pode resetar senhas e gerar relatórios de nível ala.
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                          <div class="flex items-center h-5">
+                            <input id="member-radio_edit"
+                                   name="permission-radio"
+                                   type="radio"
+                                   value="member"
+                                   required
+                                   data-slug="null"
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                          </div>
+                          <div class="ms-2 text-sm">
+                            <label for="member-radio_edit"
+                                   class="font-medium text-gray-900 dark:text-gray-300">
+                              <div>Membro</div>
+                              <p id="member-description"
+                                 class="text-xs font-normal text-gray-500 dark:text-gray-300">
+                                Pode se inscrever em caravanas e cadastrar pessoas.
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden"
+                     id="id"
+                     name="id" />
+              <!-- Modal footer -->
+              <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
+                <button type="button"
+                        data-modal-hide="user_edit_modal"
+                        class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
+                <button type="submit"
+                        class="px-5 py-2.5 text-sm font-medium inline-flex items-center bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-white text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                  Salvar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </section>
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
     <?php
@@ -355,9 +531,7 @@ $activeWards = array_filter($wards, function ($ward) {
         var userId = "<?php echo $user_id; ?>";
         var stakeId = "<?php echo $stake_id; ?>";
 
-
-
-        // Editar ward
+        // gerar link de permissão
         $("#role_alt").submit(function (event) {
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
 
@@ -401,6 +575,83 @@ $activeWards = array_filter($wards, function ($ward) {
           });
         });
 
+        // alterar role de usuário
+        $("#role_alt_edit").submit(function (event) {
+          event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
+
+          // Serializar os campos do formulário
+          var formData = $(this).serialize() + "&user_id=" + encodeURIComponent(userId) + "&indicador=role_alt_edit";
+
+          $.ajax({
+            type: "POST",
+            url: apiPath,
+            data: formData, // Enviar os dados com o indicador e user_id
+            dataType: "json", // Esperar resposta JSON
+            success: function (response) {
+              // Verificar o status da resposta e mostrar o toast apropriado
+              if (response.status === "success") {
+                toast(response.status, response.msg);
+
+                const userEditModal = new Modal(document.getElementById('user_edit_modal'));
+                userEditModal.hide();
+
+                updateUsersList();
+              } else if (response.status === "error") {
+                toast(response.status, response.msg);
+              }
+            },
+            error: function (xhr, status, error) {
+              toast('error', 'Erro ao enviar a solicitação: ' + error);
+            }
+          });
+        });
+
+        // Adiciona um ouvinte de eventos para o documento
+        document.addEventListener('click', function (event) {
+          // Verifica se o elemento clicado, ou algum dos seus pais, é o botão para mostrar o modal
+          const showModalTarget = event.target.closest('[data-modal-target="user_edit_modal"]');
+
+          if (showModalTarget) {
+            const userIdedit = showModalTarget.getAttribute('data-id');
+
+            $.ajax({
+              type: "POST",
+              url: apiPath,
+              data: {
+                user_id: userIdedit,
+                indicador: 'user_get'
+              },
+              success: function (response) {
+                // Parse the response to JSON if needed (if it's not already an object)
+                const userData = typeof response === 'string' ? JSON.parse(response) : response;
+
+                // Preencher o campo id com o valor userData.id
+                $('#role_alt_edit #id').val(userData.id);
+
+                // Encontrar o botão de rádio com o data-slug correspondente e marcá-lo
+                const slug = userData.slug;
+                const $radioButton = $(`input[type="radio"][data-slug="${slug}"]`);
+                if ($radioButton.length) {
+                  $radioButton.prop('checked', true);
+                }
+
+                // Inicializa e exibe o modal após os dados terem sido carregados
+                const userEditModal = new Modal(document.getElementById('user_edit_modal'));
+                userEditModal.show();
+              }
+            });
+          }
+
+          // Verifica se o elemento clicado, ou algum dos seus pais, é o botão para ocultar o modal
+          const hideModalTarget = event.target.closest('[data-modal-hide="user_edit_modal"]');
+          if (hideModalTarget) {
+            // Inicializa e oculta o modal
+            const passengerEditModal = new Modal(document.getElementById('user_edit_modal'));
+            passengerEditModal.hide();
+          }
+        });
+
+
         $('#copy_link').on('click', function () {
           const linkText = $('#link_role').text();
 
@@ -423,22 +674,21 @@ $activeWards = array_filter($wards, function ($ward) {
           $.ajax({
             type: "POST",
             url: apiPath,  // Substitua pelo caminho da sua API
-            data: formData, // Enviar os dados do POST, caso necessário, adicione aqui
+            data: formData,
             success: function (response) {
               try {
                 var jsonResponse = JSON.parse(response); // Tentar fazer o parsing do JSON
 
-                if (jsonResponse.status === "success") {
+                var userListHTML = '';
+
+                // Verifica se a resposta é de sucesso e há pelo menos 1 usuário
+                if (jsonResponse.status === "success" && jsonResponse.data && jsonResponse.data.length > 0) {
                   var users = jsonResponse.data;
 
-                  if (users && users.length > 0) {
-                    var userListHTML = '';
-
-                    users.forEach(function (user) {
-                      userListHTML += `
-                            <button class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between items-center text-left">
+                  users.forEach(function (user) {
+                    userListHTML += `
+                            <button class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between items-center text-left" data-modal-target="user_edit_modal" data-id="${user.id}">
                                 <div class="flex flex-row items-center truncate">
-                                    <!--<i class="fa fa-user text-lg text-gray-500 fa-fw me-2"></i>-->
                                     <div class="flex flex-col truncate w-full">
                                         <p class="truncate">${user.user_name}</p>
                                         <p class="text-sm text-gray-500">${user.role_name}</p>
@@ -446,30 +696,34 @@ $activeWards = array_filter($wards, function ($ward) {
                                 </div>
                                 <i class="fa fa-chevron-right text-lg text-gray-500"></i>
                             </button>`;
-                    });
+                  });
 
-                    $('#user_list').show();
-                    $('#user_list').html(userListHTML);
+                  // Esconde o `#empty_state` se houver 2 ou mais usuários
+                  if (users.length >= 2) {
                     $('#empty_state').hide();
                   } else {
-                    $('#user_list').hide();  // Limpar a lista de usuários
-                    $('#empty_state').show();  // Mostrar o estado vazio
+                    $('#empty_state').show();
                   }
+
+                  // Exibe a lista de usuários
+                  $('#user_list').html(userListHTML).show();
                 } else {
-                  toast('error', jsonResponse.msg);
-                  $('#user_list').hide();  // Limpar a lista de usuários
-                  $('#empty_state').show();  // Mostrar o estado vazio
+                  // Se não houver usuários, esconde a lista de usuários e mostra o estado vazio
+                  $('#user_list').hide();
+                  $('#empty_state').show();
                 }
               } catch (e) {
+                // Em caso de erro no parsing do JSON, exibe uma mensagem de erro e mostra o estado vazio
                 toast('error', 'Erro ao processar a resposta do servidor.');
-                $('#user_list').hide();  // Limpar a lista de usuários
-                $('#empty_state').show();  // Mostrar o estado vazio
+                $('#user_list').hide();
+                $('#empty_state').show();
               }
             },
-            error: function (xhr, status, error) {
-              toast('error', 'Erro ao enviar a solicitação: ' + error);
-              $('#user_list').hide();  // Limpar a lista de usuários
-              $('#empty_state').show();  // Mostrar o estado vazio
+            error: function () {
+              // Em caso de erro na solicitação AJAX, exibe uma mensagem de erro e mostra o estado vazio
+              toast('error', 'Erro ao enviar a solicitação.');
+              $('#user_list').hide();
+              $('#empty_state').show();
             }
           });
         }

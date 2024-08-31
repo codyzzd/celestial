@@ -1227,9 +1227,6 @@ if ($indicador == 'seat_add') {
   }
 }
 
-
-
-
 if ($indicador == 'destination_add') {
   // Debug: Verifique se o arquivo está sendo enviado
   // error_log(print_r($_FILES['file_upload'], true));
@@ -1447,6 +1444,70 @@ if ($indicador == 'role_alt') {
   }
 }
 
+
+if ($indicador === 'role_alt_edit') {
+  $permissionRadio = $_POST['permission-radio'] ?? '';
+  $userId = $_POST['id'] ?? '';
+
+  // Resposta padrão
+  $response = ['status' => 'error', 'msg' => 'Dados insuficientes fornecidos.'];
+
+  // Verifica se os dados necessários estão presentes
+  if ($permissionRadio && $userId) {
+    // Se o permissionRadio for "member", atualiza diretamente
+    if ($permissionRadio === 'member') {
+      $sql = "UPDATE users SET role = NULL WHERE id = ?";
+      if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $response = [
+          'status' => $stmt->affected_rows > 0 ? 'success' : 'error',
+          'msg' => $stmt->affected_rows > 0 ? 'Role atualizada com sucesso.' : 'Nenhuma alteração foi feita ou usuário não encontrado.'
+        ];
+        $stmt->close();
+      } else {
+        $response['msg'] = 'Erro na preparação da consulta de atualização.';
+      }
+    } else {
+      // Consulta para obter o ID da role
+      $sql = "SELECT id FROM roles WHERE slug = ?";
+      if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param('s', $permissionRadio);
+        $stmt->execute();
+        $stmt->bind_result($roleId);
+        $stmt->fetch();
+        $stmt->close();
+
+        // Atualiza o usuário se o roleId foi encontrado
+        if ($roleId) {
+          $sql = "UPDATE users SET role = ? WHERE id = ?";
+          if ($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param('is', $roleId, $userId);
+            $stmt->execute();
+            $response = [
+              'status' => $stmt->affected_rows > 0 ? 'success' : 'error',
+              'msg' => $stmt->affected_rows > 0 ? 'Role atualizada com sucesso.' : 'Nenhuma alteração foi feita ou usuário não encontrado.'
+            ];
+            $stmt->close();
+          } else {
+            $response['msg'] = 'Erro na preparação da consulta de atualização.';
+          }
+        } else {
+          $response['msg'] = 'Nenhuma role encontrada para o slug fornecido.';
+        }
+      } else {
+        $response['msg'] = 'Erro na preparação da consulta.';
+      }
+    }
+  }
+
+  // Retorna a resposta em formato JSON
+  echo json_encode($response);
+}
+
+
+
+
 if ($indicador == 'user_list_stake') {
   // Obter variáveis de POST
   $stake_id = $_POST['stake_id'];
@@ -1454,7 +1515,7 @@ if ($indicador == 'user_list_stake') {
   try {
     // Preparar a consulta SQL com joins para trazer name da tabela users, name da tabela roles e name da tabela wards
     $stmt = $conn->prepare("
-          SELECT
+          SELECT u.id,
               u.name AS user_name,
               r.name AS role_name,
               w.name AS ward_name
@@ -1481,6 +1542,7 @@ if ($indicador == 'user_list_stake') {
     // Loop pelos resultados e adicionar ao array
     while ($row = $result->fetch_assoc()) {
       $users[] = [
+        'id' => $row['id'],
         'user_name' => $row['user_name'],
         'role_name' => $row['role_name'],
         'ward_name' => $row['ward_name']
@@ -1503,6 +1565,47 @@ if ($indicador == 'user_list_stake') {
       'status' => 'error',
       'msg' => 'Erro ao buscar os usuários: ' . $e->getMessage()
     ]);
+  }
+}
+
+if ($indicador == 'user_get') {
+  // Armazenar o valor de $_POST['user_id'] em uma variável
+  $user_id = $_POST['user_id'];
+
+  // Preparar a consulta SQL com JOIN
+  $sql = "SELECT users.id, users.role, users.name, roles.slug
+          FROM users
+          JOIN roles ON users.role = roles.id
+          WHERE users.id = ?";
+
+  // Preparar a declaração
+  if ($stmt = $conn->prepare($sql)) {
+    // Associar a variável $user_id ao placeholder (?) na consulta
+    $stmt->bind_param("s", $user_id); // "s" indica que o parâmetro é uma string
+
+    // Executar a declaração preparada
+    $stmt->execute();
+
+    // Obter o resultado
+    $result = $stmt->get_result();
+
+    // Verificar se houve resultados
+    if ($result->num_rows > 0) {
+      // Retornar os dados como um array associativo
+      $user_data = $result->fetch_assoc();
+
+      // Exibir ou manipular os dados retornados
+      echo json_encode($user_data);
+    } else {
+      // Caso não haja resultados, pode retornar uma mensagem de erro
+      echo json_encode(['status' => 'error', 'msg' => 'Usuário não encontrado.']);
+    }
+
+    // Fechar a declaração
+    $stmt->close();
+  } else {
+    // Caso a preparação da declaração falhe
+    echo json_encode(['status' => 'error', 'msg' => 'Erro na preparação da consulta.']);
   }
 }
 
