@@ -70,14 +70,21 @@ $apiPath = "../resources/api.php";
           </div>
           <div>
             <label for="password"
-                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
-            <input type="password"
-                   id="password"
-                   name="password"
-                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-                   placeholder="•••••••••"
-                   autocomplete="new-password"
-                   required />
+                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white col-span-2">Senha</label>
+            <div class="relative col-span-2">
+              <div class="absolute inset-y-0 end-0 flex items-center pe-3.5 cursor-pointer"
+                   id="eye">
+                <i class="fa fa-eye-slash text-base text-gray-500 fa-fw"
+                   id="togglePassword"></i>
+              </div>
+              <input type="password"
+                     id="password"
+                     name="password"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full pe-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                     placeholder="•••••••••"
+                     autocomplete="current-password"
+                     required>
+            </div>
           </div>
           <button type="submit"
                   class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full ">Criar Conta</button>
@@ -94,6 +101,25 @@ $apiPath = "../resources/api.php";
     ?>
     <script>
       $(document).ready(function () {
+
+        // função de trocar input
+        function togglePasswordVisibility(triggerSelector, inputSelector) {
+          $(triggerSelector).on('click', function () {
+            const passwordInput = $(inputSelector);
+            const icon = $(this).find('i');
+            const isPassword = passwordInput.attr('type') === 'password';
+
+            // Toggle input type
+            passwordInput.attr('type', isPassword ? 'text' : 'password');
+
+            // Toggle icon class
+            icon.toggleClass('fa-eye fa-eye-slash');
+          });
+        }
+
+        // Call the function with appropriate selectors
+        togglePasswordVisibility('#eye', '#password');
+
         // Caminho da API passado pelo PHP
         var apiPath = "<?php echo $apiPath; ?>";
 
