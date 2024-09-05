@@ -1065,3 +1065,44 @@ function resizeAndConvertToPng($sourcePath, $destinationPath, $maxWidth = 1000, 
   // Verifica se a imagem foi salva com sucesso
   return $result ? $destinationPath : false;
 }
+
+
+function checkRoleAltValidity($id)
+{
+  $conn = getDatabaseConnection();
+
+  // Verifica se o parâmetro id foi passado e não está vazio
+  if (empty($id)) {
+    return 'noid';
+  }
+
+  // Consulta ao banco de dados para verificar o id e a data de expiração
+  $sql = "SELECT expire_at FROM role_alt WHERE id = ?";
+  if ($stmt = $conn->prepare($sql)) {
+    $stmt->bind_param('s', $id);
+    $stmt->execute();
+    $stmt->bind_result($expire_at);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Verificando se o id existe e se não está expirado
+    if ($expire_at) {
+      $currentDate = date('Y-m-d H:i:s');
+      if ($currentDate > $expire_at) {
+        return 'expired';
+      }
+    } else {
+      // Se o id não existe na tabela role_alt
+      return 'wrongid';
+    }
+  } else {
+    // Caso haja um erro na preparação da consulta
+    return 'wrongid';
+  }
+
+  // Fechar a conexão
+  $conn->close();
+
+  // Se tudo estiver válido, retorna 'valid'
+  return 'valid';
+}

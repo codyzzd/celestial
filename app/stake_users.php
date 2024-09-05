@@ -550,7 +550,7 @@ $activeWards = array_filter($wards, function ($ward) {
                 if (jsonResponse.status === "success") {
                   toast(jsonResponse.status, jsonResponse.msg);
                   $('#link_box').show();
-                  const link = 'https://caravanacelestial.com.br/app/user_role.php?id=' + jsonResponse.uuid;
+                  const link = 'https://caravanacelestial.com.br/app/role_alt.php?id=' + jsonResponse.uuid;
                   $('#link_role').text(link);
 
                   // Copiar o link automaticamente para o clipboard

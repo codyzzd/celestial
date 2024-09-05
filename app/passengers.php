@@ -574,7 +574,7 @@ $relations = getRelations();
 
               success: function (response) {
                 // Assumindo que passengerData é um array
-                const passenger = JSON.parse(response)[0];
+                const passenger = JSON.parse(response);
                 // console.log(passenger.name);
 
                 // Selecionando o rádio button correspondente à relação
@@ -664,7 +664,6 @@ $relations = getRelations();
         // Salvar passenger
         $("#passenger_edit").submit(function (event) {
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
-
 
           // Serializar os campos do formulário
           var formData = $(this).serialize() + "&user_id=" + encodeURIComponent(userId) + "&indicador=passenger_edit";

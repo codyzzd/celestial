@@ -631,10 +631,10 @@ if ($indicador == 'passenger_list') {
 }
 
 if ($indicador == 'passenger_get') {
-  // Pegar dados do form
+  // Pega dados do formulário
   $passenger_id = $_POST['passenger_id'] ?? '';
 
-  // Verifica se o user_id é válido
+  // Verifica se o passenger_id é válido
   if ($passenger_id <= 0) {
     echo json_encode([
       'error' => 'ID de passageiro inválido.'
@@ -648,7 +648,7 @@ if ($indicador == 'passenger_get') {
   // Prepara a declaração
   if ($stmt = $conn->prepare($sql)) {
     // Liga os parâmetros
-    $stmt->bind_param("i", $passenger_id);
+    $stmt->bind_param("s", $passenger_id);
 
     // Executa a declaração
     $stmt->execute();
@@ -658,16 +658,11 @@ if ($indicador == 'passenger_get') {
 
     // Verifica se há resultados
     if ($result->num_rows > 0) {
-      // Cria um array para armazenar os dados
-      $passengers = [];
+      // Obtém o único resultado
+      $passenger = $result->fetch_assoc();
 
-      // Itera sobre os resultados e armazena no array
-      while ($row = $result->fetch_assoc()) {
-        $passengers[] = $row;
-      }
-
-      // Codifica o array em JSON e envia como resposta
-      echo json_encode($passengers);
+      // Codifica o resultado em JSON e envia como resposta
+      echo json_encode($passenger);
     } else {
       // Se nenhum resultado, retorna uma mensagem de erro
       echo json_encode([
@@ -681,7 +676,6 @@ if ($indicador == 'passenger_get') {
     // Erro ao preparar a declaração
     echo json_encode(['error' => 'Erro ao preparar a declaração SQL.']);
   }
-
 }
 
 if ($indicador == 'ward_edit_user') {
@@ -1505,40 +1499,213 @@ if ($indicador === 'role_alt_edit') {
   echo json_encode($response);
 }
 
+if ($indicador === 'role_alt_edit_exist') {
+  // Variável de controle de transação
+  $transactionStarted = false;
 
+  try {
+    // Pega e sanitiza valores do POST
+    $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'] ?? '';
+    $perm = $_POST['perm'] ?? '';
 
+    // Verifica se os dados são válidos
+    if (!$email || !$password || !$perm) {
+      throw new Exception('Dados inválidos fornecidos.');
+    }
+
+    // Verifica login
+    $sql = "SELECT id, password, salt, id_stake, id_ward FROM users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt)
+      throw new Exception('Erro ao preparar a declaração SQL.');
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows === 0)
+      throw new Exception('Email ou senha incorretos!');
+    $stmt->bind_result($user_id, $stored_password, $stored_salt, $user_stake_id, $user_ward_id);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Verifica a senha
+    if (!verifyPassword($password, $stored_password, $stored_salt))
+      throw new Exception('Email ou senha incorretos!');
+
+    // Inicia a transação
+    $conn->begin_transaction();
+    $transactionStarted = true;
+
+    // Verifica permissão
+    $sql_role = "SELECT role, stake_id, ward_id, expire_at FROM role_alt WHERE id = ?";
+    $stmt_role = $conn->prepare($sql_role);
+    if (!$stmt_role)
+      throw new Exception('Erro ao preparar a declaração SQL para permissões.');
+    $stmt_role->bind_param("s", $perm);
+    $stmt_role->execute();
+    $stmt_role->store_result();
+    if ($stmt_role->num_rows === 0)
+      throw new Exception('Permissão não encontrada.');
+    $stmt_role->bind_result($role, $role_stake_id, $role_ward_id, $expire_at);
+    $stmt_role->fetch();
+    $stmt_role->close();
+
+    // Verifica se a permissão expirou e se a estaca corresponde
+    if (strtotime($expire_at) < time())
+      throw new Exception('Permissão expirou.');
+    if ($role_stake_id !== $user_stake_id)
+      throw new Exception('Permissão não é válida para este usuário.');
+
+    // Atualiza usuário com a nova permissão e ward_id
+    $sql_update = "UPDATE users SET role = ?, id_ward = ? WHERE id = ?";
+    $stmt_update = $conn->prepare($sql_update);
+    if (!$stmt_update)
+      throw new Exception('Erro ao preparar a declaração de atualização.');
+    $stmt_update->bind_param("sss", $role, $role_ward_id, $user_id);
+    if (!$stmt_update->execute())
+      throw new Exception('Erro ao atualizar a permissão.');
+    $stmt_update->close();
+
+    // Remove a permissão da tabela role_alt
+    $sql_delete = "DELETE FROM role_alt WHERE id = ?";
+    $stmt_delete = $conn->prepare($sql_delete);
+    if (!$stmt_delete)
+      throw new Exception('Erro ao preparar a declaração de exclusão.');
+    $stmt_delete->bind_param("s", $perm);
+    if (!$stmt_delete->execute())
+      throw new Exception('Erro ao excluir a permissão da tabela role_alt.');
+    $stmt_delete->close();
+
+    // Confirma a transação
+    $conn->commit();
+    echo json_encode(['status' => 'loading', 'msg' => 'Permissão atualizada! Enviando para login...']);
+
+  } catch (Exception $e) {
+    // Reverte a transação se ela foi iniciada
+    if ($transactionStarted) {
+      $conn->rollback();
+    }
+    echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
+  }
+}
+
+if ($indicador === 'role_alt_edit_new') {
+  $name = $_POST['name'] ?? '';
+  $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+  $password = $_POST['password'] ?? '';
+  $perm = $_POST['perm'] ?? '';
+
+  // Converter o e-mail para minúsculas
+  $email = strtolower($email);
+
+  // Variável de controle de transação
+  $transactionStarted = false;
+
+  try {
+    // Verifica se todos os dados foram fornecidos
+    if (!$name || !$email || !$password || !$perm) {
+      throw new Exception('Dados inválidos fornecidos.');
+    }
+
+    // Inicia a transação
+    $conn->begin_transaction();
+    $transactionStarted = true;
+
+    // Verifica se o email já existe
+    $sql_check_email = "SELECT id FROM users WHERE email = ?";
+    $stmt_check_email = $conn->prepare($sql_check_email);
+    if (!$stmt_check_email)
+      throw new Exception('Erro ao preparar a declaração SQL para verificar email.');
+    $stmt_check_email->bind_param("s", $email);
+    $stmt_check_email->execute();
+    $stmt_check_email->store_result();
+    if ($stmt_check_email->num_rows > 0)
+      throw new Exception('Este email já foi cadastrado!');
+    $stmt_check_email->close();
+
+    // Verifica permissão
+    $sql_role = "SELECT role, stake_id, ward_id, expire_at FROM role_alt WHERE id = ?";
+    $stmt_role = $conn->prepare($sql_role);
+    if (!$stmt_role)
+      throw new Exception('Erro ao preparar a declaração SQL para permissões.');
+    $stmt_role->bind_param("s", $perm);
+    $stmt_role->execute();
+    $stmt_role->store_result();
+    if ($stmt_role->num_rows === 0)
+      throw new Exception('Permissão não encontrada.');
+    $stmt_role->bind_result($role, $role_stake_id, $role_ward_id, $expire_at);
+    $stmt_role->fetch();
+    $stmt_role->close();
+
+    // Verifica se a permissão expirou
+    if (strtotime($expire_at) < time())
+      throw new Exception('Permissão expirou.');
+
+    // Gerar um SALT aleatório
+    $salt = generateSalt();
+
+    // Hash a senha com o SALT
+    $hashed_password = hashPassword($password, $salt);
+
+    // Inserir o novo usuário
+    $sql_insert = "INSERT INTO users (id, email, password, salt, name, role, id_stake, id_ward) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?)";
+    $stmt_insert = $conn->prepare($sql_insert);
+    if (!$stmt_insert)
+      throw new Exception('Erro ao preparar a declaração de inserção.');
+    $stmt_insert->bind_param("sssssss", $email, $hashed_password, $salt, $name, $role, $role_stake_id, $role_ward_id);
+    if (!$stmt_insert->execute())
+      throw new Exception('Erro ao criar a conta: ' . $stmt_insert->error);
+    $stmt_insert->close();
+
+    // Remove a permissão da tabela role_alt
+    $sql_delete = "DELETE FROM role_alt WHERE id = ?";
+    $stmt_delete = $conn->prepare($sql_delete);
+    if (!$stmt_delete)
+      throw new Exception('Erro ao preparar a declaração de exclusão.');
+    $stmt_delete->bind_param("s", $perm);
+    if (!$stmt_delete->execute())
+      throw new Exception('Erro ao excluir a permissão da tabela role_alt: ' . $stmt_delete->error);
+    $stmt_delete->close();
+
+    // Confirma a transação
+    $conn->commit();
+    echo json_encode(['status' => 'loading', 'msg' => 'Conta criada com Permissão atualizada! Enviando para login...']);
+
+  } catch (Exception $e) {
+    // Reverte a transação se ela foi iniciada
+    if ($transactionStarted) {
+      $conn->rollback();
+    }
+    echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
+  }
+}
 
 if ($indicador == 'user_list_stake') {
   // Obter variáveis de POST
   $stake_id = $_POST['stake_id'];
-
   try {
     // Preparar a consulta SQL com joins para trazer name da tabela users, name da tabela roles e name da tabela wards
     $stmt = $conn->prepare("
-          SELECT u.id,
-              u.name AS user_name,
-              r.name AS role_name,
-              w.name AS ward_name
-          FROM
-              users u
-          LEFT JOIN
-              roles r ON u.role = r.id
-          LEFT JOIN
-              wards w ON u.id_ward = w.id
-          WHERE
-              u.id_stake = ? AND u.role IS NOT NULL AND u.role != 3
-      ");
-
+SELECT u.id,
+u.name AS user_name,
+r.name AS role_name,
+w.name AS ward_name
+FROM
+users u
+LEFT JOIN
+roles r ON u.role = r.id
+LEFT JOIN
+wards w ON u.id_ward = w.id
+WHERE
+u.id_stake = ? AND u.role IS NOT NULL AND u.role != 3
+");
     // Associar os parâmetros
     $stmt->bind_param("s", $stake_id);
-
     // Executar a consulta
     $stmt->execute();
-
     // Obter os resultados
     $result = $stmt->get_result();
     $users = [];
-
     // Loop pelos resultados e adicionar ao array
     while ($row = $result->fetch_assoc()) {
       $users[] = [
@@ -1548,17 +1715,14 @@ if ($indicador == 'user_list_stake') {
         'ward_name' => $row['ward_name']
       ];
     }
-
     // Fechar a declaração e a conexão
     $stmt->close();
     // $conn->close();
-
-    // Retornar o array de usuários como JSON
+// Retornar o array de usuários como JSON
     echo json_encode([
       'status' => 'success',
       'data' => $users
     ]);
-
   } catch (Exception $e) {
     // Em caso de erro, lançar uma exceção ou tratar o erro conforme necessário
     echo json_encode([
@@ -1567,40 +1731,32 @@ if ($indicador == 'user_list_stake') {
     ]);
   }
 }
-
 if ($indicador == 'user_get') {
   // Armazenar o valor de $_POST['user_id'] em uma variável
   $user_id = $_POST['user_id'];
-
   // Preparar a consulta SQL com JOIN
   $sql = "SELECT users.id, users.role, users.name, roles.slug
-          FROM users
-          JOIN roles ON users.role = roles.id
-          WHERE users.id = ?";
-
+FROM users
+JOIN roles ON users.role = roles.id
+WHERE users.id = ?";
   // Preparar a declaração
   if ($stmt = $conn->prepare($sql)) {
     // Associar a variável $user_id ao placeholder (?) na consulta
     $stmt->bind_param("s", $user_id); // "s" indica que o parâmetro é uma string
-
-    // Executar a declaração preparada
+// Executar a declaração preparada
     $stmt->execute();
-
     // Obter o resultado
     $result = $stmt->get_result();
-
     // Verificar se houve resultados
     if ($result->num_rows > 0) {
       // Retornar os dados como um array associativo
       $user_data = $result->fetch_assoc();
-
       // Exibir ou manipular os dados retornados
       echo json_encode($user_data);
     } else {
       // Caso não haja resultados, pode retornar uma mensagem de erro
       echo json_encode(['status' => 'error', 'msg' => 'Usuário não encontrado.']);
     }
-
     // Fechar a declaração
     $stmt->close();
   } else {
@@ -1608,12 +1764,10 @@ if ($indicador == 'user_get') {
     echo json_encode(['status' => 'error', 'msg' => 'Erro na preparação da consulta.']);
   }
 }
-
 if ($indicador == 'archive_something') {
   // Pegar dados do formulário
   $bd = $_POST['bd'] ?? '';
   $id = $_POST['id'] ?? '';
-
   // Definir as tabelas permitidas e as mensagens de sucesso
   $tables_config = [
     'vehicles' => 'Veículo arquivado com sucesso!',
@@ -1622,7 +1776,6 @@ if ($indicador == 'archive_something') {
     'caravans' => 'Caravana arquivada com sucesso!',
     // Adicionar mais tabelas conforme necessário
   ];
-
   // Verificar se a tabela é permitida
   if (!array_key_exists($bd, $tables_config)) {
     echo json_encode([
@@ -1631,7 +1784,6 @@ if ($indicador == 'archive_something') {
     ]);
     exit;
   }
-
   // Preparar a query de atualização
   $stmt = $conn->prepare("UPDATE $bd SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?");
   if (!$stmt) {
@@ -1641,12 +1793,9 @@ if ($indicador == 'archive_something') {
     ]);
     exit;
   }
-
   $stmt->bind_param("s", $id);
-
   // Obter a mensagem de sucesso
   $success_msg = $tables_config[$bd];
-
   // Executar a query e retornar o resultado
   if ($stmt->execute()) {
     echo json_encode([
@@ -1659,9 +1808,7 @@ if ($indicador == 'archive_something') {
       'msg' => 'Erro ao atualizar o banco de dados: ' . $stmt->error
     ]);
   }
-
   $stmt->close(); // Fechar a declaração
 }
-
 // Fechar a conexão
 $conn->close();
