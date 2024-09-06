@@ -13,7 +13,7 @@ require_once ROOT_PATH . '/resources/functions.php';
 $user_id = checkUserLogin();
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, 'stake_lider');
+$user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -75,12 +75,14 @@ $user_role = checkUserRole($user_id, 'stake_lider');
               Relatórios</span>
             <i class="fa fa-chevron-right text-lg text-gray-500"></i>
           </a>
-          <a href="stake_users.php"
-             class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
-            <span><i class="fa fa-user-gear text-lg text-gray-500 fa-fw me-2"></i>
-              Lideres e Permissões</span>
-            <i class="fa fa-chevron-right text-lg text-gray-500"></i>
-          </a>
+          <?php if (in_array($user_role, ['stake_lider'])): ?>
+            <a href="stake_users.php"
+               class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
+              <span><i class="fa fa-user-gear text-lg text-gray-500 fa-fw me-2"></i>
+                Lideres e Permissões</span>
+              <i class="fa fa-chevron-right text-lg text-gray-500"></i>
+            </a>
+          <?php endif; ?>
           <a href="stake_users_reset.php"
              class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
             <span><i class="fa fa-key text-lg text-gray-500 fa-fw me-2"></i>

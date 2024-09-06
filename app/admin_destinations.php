@@ -15,7 +15,8 @@ $user_id = checkUserLogin();
 // $stake_id = getStake($user_id);
 // echo $stake_id;
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, 'admin');
+$user_role = checkUserRole($user_id, ['admin']);
+
 
 ?>
 <!DOCTYPE html>

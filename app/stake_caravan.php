@@ -15,7 +15,8 @@ require_once ROOT_PATH . '/resources/functions.php';
 $user_id = checkUserLogin();
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, 'stake_lider');
+$user_role = checkUserRole($user_id, ['stake_lider','stake_aux']);
+
 
 // Guarda o id da estaca
 $user_stake = checkStake($user_id);

@@ -15,7 +15,7 @@ $user_id = checkUserLogin();
 $stake_id = checkStake($user_id);
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, 'stake_lider');
+$user_role = checkUserRole($user_id, ['stake_lider']);
 
 $wards = getWardsByUserId($user_id);
 $activeWards = array_filter($wards, function ($ward) {
@@ -56,6 +56,7 @@ $activeWards = array_filter($wards, function ($ward) {
           <p class="text-gray-500">Gerencie permissões e controle acessos e funções dos usuários.</p>
         </div>
         <button type="button"
+                id="create_link"
                 data-modal-toggle="user_add_modal"
                 data-modal-target="user_add_modal"
                 class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full ">Criar Link de Permissão</button>
@@ -727,6 +728,11 @@ $activeWards = array_filter($wards, function ($ward) {
             }
           });
         }
+
+        $(document).on('click', '#create_link', function () {
+          // console.log("cliquei no botao")
+          $('#link_box').hide();
+        });
 
         updateUsersList();
 

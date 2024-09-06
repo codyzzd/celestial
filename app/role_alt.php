@@ -163,7 +163,7 @@ if ($status === 'noid') {
                     </div>
                   </div>
                   <button type="submit"
-                          class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full col-span-2">Criar conta e Aceitar Nova Permissão</button>
+                          class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full col-span-2">Aceitar Nova Permissão</button>
                 </form>
               </div>
             </div>

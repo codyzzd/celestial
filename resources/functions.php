@@ -91,11 +91,11 @@ function toLowerCase($input)
 }
 
 // Função para obter a role do usuário com base no ID
-function checkUserRole($user_id, $role = null)
+function checkUserRole($user_id, $roles = null)
 {
   $conn = getDatabaseConnection();
 
-  // Prepare a consulta para buscar a role do usuário
+  // Prepare a consulta para buscar o slug da role do usuário
   $stmt = $conn->prepare("SELECT r.slug FROM users u JOIN roles r ON u.role = r.id WHERE u.id = ?");
   $stmt->bind_param("s", $user_id);
 
@@ -107,13 +107,14 @@ function checkUserRole($user_id, $role = null)
   if ($row = $result->fetch_assoc()) {
     $role_slug = $row['slug'];
 
-    // Se um role for fornecido e não corresponder ao slug encontrado, redireciona para profile.php
-    if ($role !== null && $role !== $role_slug) {
+    // Se o parâmetro $roles for fornecido (array), faz a verificação
+    if ($roles !== null && !in_array($role_slug, $roles)) {
+      // Se o slug da role não estiver no array, redireciona para panel.php
       header("Location: panel.php");
-      exit(); // Para garantir que o script pare após o redirecionamento
+      exit();
     }
   } else {
-    $role_slug = null; // Role não encontrada
+    $role_slug = null; // Role não encontrada, pode retornar null
   }
 
   // Fecha a declaração

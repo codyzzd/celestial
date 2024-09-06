@@ -15,7 +15,7 @@ require_once ROOT_PATH . '/resources/functions.php';
 $user_id = checkUserLogin();
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, 'stake_lider');
+$user_role = checkUserRole($user_id, ['stake_lider','stake_aux']);
 
 // Obter as wards associadas ao usuário
 // $wards =  getWardsByUserId($user_id);
@@ -81,7 +81,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
               </h3>
               <button type="button"
                       class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                      data-modal-toggle="ward_add_modal">
+                      data-modal-hide="ward_add_modal">
                 <svg class="w-3 h-3"
                      aria-hidden="true"
                      xmlns="http://www.w3.org/2000/svg"
@@ -454,7 +454,7 @@ $user_role = checkUserRole($user_id, 'stake_lider');
                   $("#ward_add")[0].reset(); // Reseta o formulário
                   toast(jsonResponse.status, jsonResponse.msg);
                   updateWardsList(true);
-                  $('[data-modal-toggle="ward_add_modal"]').click();//fechar modal
+                  $('[data-modal-hide="ward_add_modal"]').click();//fechar modal
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
