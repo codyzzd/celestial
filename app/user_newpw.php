@@ -35,7 +35,7 @@ $profile = getProfile($user_id);
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
-    <title>Perfil - Caravana Celestial</title>
+    <title>Resetar Senha - Caravana Celestial</title>
     <link rel="manifest"
           href="manifest.json">
   </head>

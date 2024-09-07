@@ -38,7 +38,7 @@ $activeWards = array_filter($wards, function ($ward) {
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
-    <title>Estaca - Caravana Celestial</title>
+    <title>Lideres da Estaca - Caravana Celestial</title>
     <link rel="manifest"
           href="manifest.json">
   </head>
