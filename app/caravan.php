@@ -154,7 +154,7 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
               <button id="add-passenger-no-seat-<?= $index ?>"
                       class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700  add-no-seat-passenger"
                       data-vehicle-id="<?= $vehicle['id_cv'] ?>"
-                      data-vehicle-name="<?= htmlspecialchars($vehicle['name']) ?>"><i class="
+                      data-vehicle-name="<?= htmlspecialchars($vehicle['name']) ?> - <?= $vehicle['ordem'] ?>"><i class="
                       fa
                       fa-plus
                       me-2"></i>

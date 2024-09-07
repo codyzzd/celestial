@@ -159,6 +159,7 @@ $apiPath = "../resources/api.php";
             }
           });
         });
+        
       });
     </script>
   </body>

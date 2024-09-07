@@ -156,7 +156,58 @@ if ($indicador == 'user_login') {
   }
 }
 
-if ($indicador == 'user_resetpw') {
+if ($indicador == 'user_newpw') {
+  // Pegar dados do form
+  $user_id = $_POST['user_id'] ?? '';
+  $password = $_POST['password'] ?? '';
+
+  // Gerar um SALT aleatório
+  $salt = generateSalt();
+
+  // Hash a senha com o SALT
+  $hashed_password = hashPassword($password, $salt);
+
+  // Preparar a consulta SQL
+  $sql = "UPDATE users SET password = ?, salt = ? WHERE id = ?";
+
+  // Preparar a declaração
+  if ($stmt = $conn->prepare($sql)) {
+    // Vincular os parâmetros
+    $stmt->bind_param('sss', $hashed_password, $salt, $user_id);
+
+    // Executar a consulta
+    if ($stmt->execute()) {
+      // Retornar sucesso em JSON
+      echo json_encode(
+        [
+          'status' => 'success',
+          'msg' => 'Senha atualizada com sucesso!'
+        ]
+      );
+    } else {
+      // Retornar erro em JSON
+      echo json_encode(
+        [
+          'status' => 'error',
+          'msg' => 'Erro ao atualizar a senha: ' . $stmt->error
+        ]
+      );
+    }
+
+    // Fechar a declaração
+    $stmt->close();
+  } else {
+    // Retornar erro em JSON
+    echo json_encode(
+      [
+        'status' => 'error',
+        'msg' => 'Erro ao preparar a consulta: ' . $conn->error
+      ]
+    );
+  }
+}
+
+if ($indicador == 'user_resetpw') { //NOT IN USE
   // Pegar o e-mail do formulário
   $email = $_POST['email'] ?? '';
 
@@ -1764,6 +1815,7 @@ WHERE users.id = ?";
     echo json_encode(['status' => 'error', 'msg' => 'Erro na preparação da consulta.']);
   }
 }
+
 if ($indicador == 'archive_something') {
   // Pegar dados do formulário
   $bd = $_POST['bd'] ?? '';
