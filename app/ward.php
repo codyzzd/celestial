@@ -13,7 +13,7 @@ require_once ROOT_PATH . '/resources/functions.php';
 $user_id = checkUserLogin();
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
+$user_role = checkUserRole($user_id, ['ward_lider', 'ward_aux']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -31,7 +31,7 @@ $user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
-    <title>Estaca - Caravana Celestial</title>
+    <title>Ala - Caravana Celestial</title>
     <link rel="manifest"
           href="manifest.json">
   </head>
@@ -42,7 +42,7 @@ $user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
       <!-- header -->
       <div class="flex flex-col mb-4 md:flex-row space-y-4 md:space-x-4 md:justify-between ">
         <div class="flex-col gap-1">
-          <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Estaca</h1>
+          <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Ala</h1>
           <p class="text-gray-500">Aqui você pode ajustar configurações que influenciam o uso do app e seus acessos.</p>
         </div>
         <!-- <button type="button"
@@ -51,32 +51,14 @@ $user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
       <!-- tabela -->
       <div class="flex flex-col gap-4">
         <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y overflow-auto">
-          <a href="stake_wards.php"
-             class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
-            <span><i class="fa fa-tents text-lg text-gray-500 fa-fw me-2"></i>
-              Alas</span>
-            <i class="fa fa-chevron-right text-lg text-gray-500"></i>
-          </a>
-          <a href="stake_vehicles.php"
-             class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
-            <span><i class="fa fa-car-side text-lg text-gray-500 fa-fw me-2"></i>
-              Veiculos</span>
-            <i class="fa fa-chevron-right text-lg text-gray-500"></i>
-          </a>
-          <a href="stake_caravans.php"
-             class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
-            <span><i class="fa fa-place-of-worship text-lg text-gray-500 fa-fw me-2"></i>
-              Caravanas</span>
-            <i class="fa fa-chevron-right text-lg text-gray-500"></i>
-          </a>
-          <a href="stake_report.php"
+          <a href="ward_report.php"
              class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
             <span><i class="fa fa-print text-lg text-gray-500 fa-fw me-2"></i>
               Relatórios</span>
             <i class="fa fa-chevron-right text-lg text-gray-500"></i>
           </a>
-          <?php if (in_array($user_role, ['stake_lider'])): ?>
-            <a href="stake_users.php"
+          <?php if (in_array($user_role, ['ward_lider'])): ?>
+            <a href="ward_users.php"
                class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
               <span><i class="fa fa-user-gear text-lg text-gray-500 fa-fw me-2"></i>
                 Lideres e Permissões</span>

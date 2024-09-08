@@ -15,6 +15,7 @@ $user_id = checkUserLogin();
 $user_role = checkUserRole($user_id);
 // Guarda o id da estaca
 $user_stake = checkStake($user_id);
+
 // Pega as caravanas
 $caravans = getCaravans($user_id);
 $hasCaravans = empty($caravans);

@@ -15,7 +15,7 @@ $user_id = checkUserLogin();
 $stake_id = checkStake($user_id);
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, ['stake_lider']);
+$user_role = checkUserRole($user_id, ['ward_lider']);
 
 $wards = getWardsByUserId($user_id);
 $activeWards = array_filter($wards, function ($ward) {
@@ -38,7 +38,7 @@ $activeWards = array_filter($wards, function ($ward) {
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0<?php if (isMobile())
             echo ', user-scalable=no'; ?>">
-    <title>Lideres da Estaca - Caravana Celestial</title>
+    <title>Lideres da Ala - Caravana Celestial</title>
     <link rel="manifest"
           href="manifest.json">
   </head>
@@ -133,7 +133,7 @@ $activeWards = array_filter($wards, function ($ward) {
                          class="block mb-2 text-sm font-medium text-gray-900">Nivel de Hierarquia</label>
                   <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex">
                     <!-- Primeiro item: Estaca -->
-                    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r hidden">
                       <div class="flex items-center ps-3">
                         <input id="horizontal-list-radio-estaca"
                                type="radio"
@@ -359,7 +359,7 @@ $activeWards = array_filter($wards, function ($ward) {
                     <h3 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de Permissão</h3>
                     <ul class="space-y-1 text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownHelperRadioButton">
-                      <li>
+                      <li class="hidden">
                         <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                           <div class="flex items-center h-5">
                             <input id="stake_lider-radio_edit"
@@ -382,7 +382,7 @@ $activeWards = array_filter($wards, function ($ward) {
                           </div>
                         </div>
                       </li>
-                      <li>
+                      <li class="hidden">
                         <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                           <div class="flex items-center h-5">
                             <input id="stake_aux-radio_edit"

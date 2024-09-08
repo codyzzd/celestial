@@ -14,6 +14,7 @@ $user_id = checkUserLogin();
 // echo $user_id;
 // Guarda a role do usuário
 $user_role = checkUserRole($user_id);
+$stake_id = checkStake($user_id);
 
 // Pega profile
 $profile = getProfile($user_id);

@@ -1734,22 +1734,46 @@ if ($indicador === 'role_alt_edit_new') {
 if ($indicador == 'user_list_stake') {
   // Obter variáveis de POST
   $stake_id = $_POST['stake_id'];
+  $role = $_POST['role'];
+
   try {
-    // Preparar a consulta SQL com joins para trazer name da tabela users, name da tabela roles e name da tabela wards
-    $stmt = $conn->prepare("
-SELECT u.id,
-u.name AS user_name,
-r.name AS role_name,
-w.name AS ward_name
-FROM
-users u
-LEFT JOIN
-roles r ON u.role = r.id
-LEFT JOIN
-wards w ON u.id_ward = w.id
-WHERE
-u.id_stake = ? AND u.role IS NOT NULL AND u.role != 3
-");
+    // Verifica o valor de role para alterar a SQL conforme necessário
+    if ($role === 'stake_lider') {
+      // Consulta SQL para stake_lider
+      $sql = "
+          SELECT u.id,
+                 u.name AS user_name,
+                 r.name AS role_name,
+                 w.name AS ward_name
+          FROM users u
+          LEFT JOIN roles r ON u.role = r.id
+          LEFT JOIN wards w ON u.id_ward = w.id
+          WHERE u.id_stake = ?
+            AND u.role IS NOT NULL
+            AND u.role != 3
+          ";
+    } elseif ($role === 'ward_lider') {
+      // Consulta SQL para ward_lider
+      $sql = "
+          SELECT u.id,
+                 u.name AS user_name,
+                 r.name AS role_name,
+                 w.name AS ward_name
+          FROM users u
+          LEFT JOIN roles r ON u.role = r.id
+          LEFT JOIN wards w ON u.id_ward = w.id
+          WHERE u.id_stake = ?
+            AND u.role IS NOT NULL
+            AND u.role != 3
+            AND u.role != 1
+            AND u.role != 4
+          ";
+    } else {
+      throw new Exception('Tipo de role inválido.');
+    }
+
+    // Preparar a consulta SQL
+    $stmt = $conn->prepare($sql);
     // Associar os parâmetros
     $stmt->bind_param("s", $stake_id);
     // Executar a consulta
@@ -1768,8 +1792,7 @@ u.id_stake = ? AND u.role IS NOT NULL AND u.role != 3
     }
     // Fechar a declaração e a conexão
     $stmt->close();
-    // $conn->close();
-// Retornar o array de usuários como JSON
+    // Retornar o array de usuários como JSON
     echo json_encode([
       'status' => 'success',
       'data' => $users

@@ -281,10 +281,10 @@ if (!empty($id_stake)) {
                   // $("#stake_edit")[0].reset(); // Reseta o formulário
                   toast(jsonResponse.status, jsonResponse.msg);
                   // console.log(jsonResponse.status);
-                  // Após 2 segundos (2000 milissegundos), recarregar a página
+
                   setTimeout(function () {
-                    location.reload(); // Recarrega a página
-                  }, 3000); // 2000 milissegundos = 3 segundos
+                    window.location.href = 'profile.php'; // Redireciona para profile.php
+                  }, 3000); // 3000 milissegundos = ​⬤
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
