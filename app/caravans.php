@@ -16,6 +16,15 @@ $user_role = checkUserRole($user_id);
 // Guarda o id da estaca
 $user_stake = checkStake($user_id);
 
+// Pega os passageiros do usuário
+$passengers = getPassengers($user_id);
+
+if (empty($passengers)) {
+  // Redireciona o usuário para passengers.php se $passengers estiver vazio
+  header('Location: passengers.php');
+  exit(); // Certifique-se de parar a execução do script após o redirecionamento
+}
+
 // Pega as caravanas
 $caravans = getCaravans($user_id);
 $hasCaravans = empty($caravans);

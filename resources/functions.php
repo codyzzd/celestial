@@ -131,7 +131,7 @@ function checkStake($user_id)
 
   // Prepara a consulta para buscar o id_stake do usuário
   $stmt = $conn->prepare("SELECT id_stake FROM users WHERE id = ?");
-  $stmt->bind_param("i", $user_id);
+  $stmt->bind_param("s", $user_id);
 
   // Executa a consulta
   $stmt->execute();
