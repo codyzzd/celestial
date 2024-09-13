@@ -18,7 +18,7 @@ $user_id = checkUserLogin();
 $user_role = checkUserRole($user_id);
 // Guarda o id da estaca
 $user_stake = checkStake($user_id);
-// Pega as caravanas
+// Pega as caravana
 $caravan = getCaravan($id_caravan);
 //pega os veiculos da caravana
 $vehicles = getCaravanVehicles($id_caravan);
@@ -143,7 +143,7 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
               <p class="text-sm text-gray-500"><?= $caravan['obs']; ?></p>
             </div>
           <?php endif; ?>
-          <h2 class=" text-lg font-semibold text-gray-900 dark:text-white mx-4 mt-4">Escolha os lugares</h2>
+          <h2 class=" text-lg font-semibold text-gray-900 dark:text-white mx-4 md:mx-0 mt-4">Escolha os lugares</h2>
           <?php foreach ($vehicles as $index => $vehicle): ?>
             <div class="bg-white p-4 dark:bg-gray-800 dark:border-gray-700 md:rounded-lg md:shadow flex flex-col gap-2">
               <!-- <p class="text-sm text-gray-500 mb-4"> -->

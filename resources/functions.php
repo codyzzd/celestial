@@ -493,8 +493,74 @@ function getCaravans($user_id)
 
   // Passo 2: Buscar as caravanas onde id_stake corresponde e a data de partida é no futuro ou hoje
   $today = date('Y-m-d');
-  $stmt = $conn->prepare("SELECT * FROM caravans WHERE id_stake = ? AND start_date >= ?");
+  $stmt = $conn->prepare("SELECT * FROM caravans WHERE id_stake = ? AND start_date >= ? and deleted_at = null");
   $stmt->bind_param("ss", $id_stake, $today);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  // Passo 3: Armazenar os resultados em um array
+  $caravans = [];
+  while ($row = $result->fetch_assoc()) {
+    $caravans[] = $row;
+  }
+
+  // Fechar a conexão
+  $stmt->close();
+  $conn->close();
+
+  return $caravans;
+}
+
+function getCaravansApprove($user_id)
+{
+  // Conectar ao banco de dados
+  $conn = getDatabaseConnection();
+
+  // Passo 1: Obter o id_stake e id_ward do usuário
+  $stmt = $conn->prepare("SELECT id_stake, id_ward FROM users WHERE id = ?");
+  $stmt->bind_param("s", $user_id);
+  $stmt->execute();
+  $stmt->bind_result($id_stake, $id_ward);
+  $stmt->fetch();
+  $stmt->close();
+
+  // Verificar se encontrou o id_stake
+  if (!$id_stake || !$id_ward) {
+    return []; // Retorna array vazio se não encontrar id_stake
+  }
+
+  // Passo 2: Buscar as caravanas onde id_stake corresponde e a data de partida é no futuro ou hoje
+  $today = date('Y-m-d');
+  $stmt = $conn->prepare("
+  SELECT
+    c.id,
+    c.destination,
+    c.name,
+    c.start_date,
+    c.start_time,
+    c.return_date,
+    c.return_time,
+    c.obs,
+    c.id_stake,
+    c.deleted_at
+FROM
+    caravans c
+WHERE
+    c.id IN (
+        SELECT
+            b.id_caravan
+        FROM
+            seats b
+        JOIN
+            passengers a ON b.id_passenger = a.id
+        WHERE
+            a.id_ward = ?
+        GROUP BY
+            b.id_caravan
+    )
+    AND c.start_date >= ?
+");
+  $stmt->bind_param("ss", $id_ward, $today);
   $stmt->execute();
   $result = $stmt->get_result();
 

@@ -130,8 +130,8 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
                 <p class="text-sm text-gray-500 truncate"><?= $seat['is_approved'] ? 'Aprovado' : 'Pendente' ?></p>
               </div>
             </div>
-            <div class="flex flex-col text-end">
-              <p class="text-sm text-gray-500"><?= htmlspecialchars($seat['vehicle_name']) ?></p>
+            <div class="flex flex-col text-end truncate">
+              <p class="text-sm text-gray-500 truncate"><?= htmlspecialchars($seat['vehicle_name']) ?></p>
               <p class="text-sm text-gray-500">
                 <?= $seat['seat'] !== null ? "Banco " . htmlspecialchars($seat['seat']) : "Sem Banco" ?>
               </p>

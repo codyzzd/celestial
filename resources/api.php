@@ -1839,6 +1839,127 @@ WHERE users.id = ?";
   }
 }
 
+if ($indicador == 'reserv_list') {
+
+  // 1. Captura as variáveis vindas via POST
+  $user_id = $_POST['user_id'] ?? null;
+  $caravan_id = $_POST['caravan_id'] ?? null;
+
+  // 2. Verifica se os dados foram passados corretamente
+  if (!$user_id || !$caravan_id) {
+    echo json_encode(['status' => 'error', 'msg' => 'Dados incompletos.']);
+    exit;
+  }
+
+  // 3. Consulta para obter o ward_id do usuário
+  $sql_ward = "
+  SELECT id_ward  FROM users
+  WHERE id = ?
+  ";
+
+  $stmt_ward = $conn->prepare($sql_ward);
+  $stmt_ward->bind_param("s", $user_id);
+  $stmt_ward->execute();
+  $result_ward = $stmt_ward->get_result();
+  $user_data = $result_ward->fetch_assoc();
+  $stmt_ward->close();
+
+  // Se não encontrar o usuário
+  if (!$user_data) {
+    echo json_encode(['status' => 'error', 'msg' => 'Usuário não encontrado.']);
+    exit;
+  }
+
+  $ward_id = $user_data['id_ward'];
+
+  // 4. Consulta para buscar os passageiros da caravana
+  $sql = "
+  SELECT seats.id, passengers.name, seats.seat, seats.is_approved
+  FROM seats
+  JOIN passengers ON seats.id_passenger = passengers.id
+  WHERE seats.id_caravan = ? AND passengers.id_ward = ?
+  ";
+
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("ss", $caravan_id, $ward_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $stmt->close();
+
+  // 5. Formata a resposta
+  $passengers = $result->fetch_all(MYSQLI_ASSOC);
+
+  if (!$passengers) {
+    echo json_encode(['status' => 'error', 'msg' => 'Nenhum passageiro encontrado para essa caravana.']);
+  } else {
+    echo json_encode($passengers);
+  }
+}
+
+if ($indicador == 'reserv_toggle') {
+  $seat_id = $_POST['seat_id'];
+
+  // Verifica se o seat_id foi passado
+  if ($seat_id) {
+    // Query para alternar o valor de is_approved diretamente
+    $sql = "UPDATE seats SET is_approved = NOT is_approved WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $seat_id);
+
+    if ($stmt->execute()) {
+      // Sucesso ao atualizar
+      echo json_encode(['status' => 'success', 'msg' => 'Status alterado com sucesso.']);
+    } else {
+      // Erro ao atualizar
+      echo json_encode(['status' => 'error', 'msg' => 'Erro ao atualizar o status.']);
+    }
+
+    // Fecha a declaração
+    $stmt->close();
+  } else {
+    // Caso o seat_id não seja passado corretamente
+    echo json_encode(['status' => 'error', 'msg' => 'ID do assento não fornecido.']);
+  }
+}
+
+if ($indicador == 'reserv_delete') {
+  $seat_id = $_POST['id'];
+
+  // Prepara a query para deletar o assento com um parâmetro
+  $sql = "DELETE FROM seats WHERE id = ?";
+
+  // Prepara a statement
+  if ($stmt = mysqli_prepare($conn, $sql)) {
+    // Liga o parâmetro ao statement
+    mysqli_stmt_bind_param($stmt, "s", $seat_id);
+
+    // Executa o statement
+    if (mysqli_stmt_execute($stmt)) {
+      // Caso a deleção tenha sido bem-sucedida, retorna sucesso
+      echo json_encode([
+        'status' => 'success',
+        'msg' => 'Reserva deletada com sucesso.'
+      ]);
+    } else {
+      // Caso contrário, retorna um erro
+      echo json_encode([
+        'status' => 'error',
+        'msg' => 'Erro ao deletar reserva.'
+      ]);
+    }
+
+    // Fecha o statement
+    mysqli_stmt_close($stmt);
+  } else {
+    // Caso a preparação do statement falhe, retorna um erro
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao preparar a consulta.'
+    ]);
+  }
+}
+
+
 if ($indicador == 'archive_something') {
   // Pegar dados do formulário
   $bd = $_POST['bd'] ?? '';

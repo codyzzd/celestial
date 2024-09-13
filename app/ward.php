@@ -51,7 +51,7 @@ $user_role = checkUserRole($user_id, ['ward_lider', 'ward_aux']);
       <!-- tabela -->
       <div class="flex flex-col gap-4">
         <div class="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white divide-y overflow-auto">
-          <a href="ward_caravan_approve.php"
+          <a href="ward_caravans_approve.php"
              class="block w-full px-4 py-2  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between">
             <span><i class="fa fa-check-to-slot text-lg text-gray-500 fa-fw me-2"></i>
               Aprovar Reservas</span>
