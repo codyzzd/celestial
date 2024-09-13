@@ -13,6 +13,7 @@ require_once ROOT_PATH . '/resources/functions.php';
 $user_id = checkUserLogin();
 // Guarda a role do usuário
 $user_role = checkUserRole($user_id);
+
 // Guarda o id da estaca
 $user_stake = checkStake($user_id);
 
@@ -21,6 +22,7 @@ $passengers = getPassengers($user_id);
 
 // Pega as caravanas
 $caravans = getCaravans($user_id);
+
 // echo json_encode($caravans);
 $hasCaravans = !empty($caravans);
 ?>
