@@ -156,7 +156,14 @@ if ($indicador == 'user_login') {
   }
 }
 
-if ($indicador == 'user_newpw') {
+// if ($indicador == 'user_newpw_reset') { // para lider trocar senha de usuário
+//   //pegar variaveis
+//   $user_id = $_POST['user_id'];
+//   $pw = $_POST['password'];
+// }
+
+
+if ($indicador == 'user_newpw') { // para ele mesmo resetar a senha
   // Pegar dados do form
   $user_id = $_POST['user_id'] ?? '';
   $password = $_POST['password'] ?? '';

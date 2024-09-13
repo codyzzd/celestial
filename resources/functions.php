@@ -939,15 +939,16 @@ function getMyCaravans($user_id)
 
   // Define a consulta SQL
   $sql = "SELECT DISTINCT s.id_caravan,
-                        c.id,
-                        c.name,
-                        c.start_date,
-                        c.start_time,
-                        c.return_date,
-                        c.return_time
-            FROM seats s
-            JOIN caravans c ON s.id_caravan = c.id
-            WHERE s.created_by = ?";
+  c.id,
+  c.name,
+  c.start_date,
+  c.start_time,
+  c.return_date,
+  c.return_time
+FROM seats s
+JOIN caravans c ON s.id_caravan = c.id
+WHERE s.created_by = ? AND c.deleted_at IS NULL;
+";
 
   // Prepara a consulta
   $stmt = $conn->prepare($sql);
