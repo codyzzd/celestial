@@ -32,13 +32,13 @@ if (isset($_GET['term'])) {
   // Executar a query
   $result = $conn->query($sql);
 
-  $stakes = [];
+  $users = [];
   while ($row = $result->fetch_assoc()) {
-    $stakes[] = $row;
+    $users[] = $row;
   }
 
   // Retornar o resultado como JSON
-  echo json_encode($stakes);
+  echo json_encode($users);
   $conn->close();
   exit;
 }

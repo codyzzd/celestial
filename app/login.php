@@ -106,8 +106,8 @@ if (isset($_COOKIE['caravana_remember_token'])) {
                      data-popper-arrow></div>
               </div>
             </div>
-            <!-- <a href="reset_password.php"
-               class="text-sm text-purple-700 hover:underline dark:text-purple-500">Esqueci a senha</a> -->
+            <a href="reset_password.php"
+               class="text-sm text-purple-700 hover:underline dark:text-purple-500">Esqueci a senha</a>
           </div>
           <button type="submit"
                   class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 w-full ">Entrar</button>
