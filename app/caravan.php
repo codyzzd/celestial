@@ -93,6 +93,17 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
         background-color: #581c87 !important;
         color: white;
       }
+
+      .separator {
+        flex: 1;
+        height: 40px;
+        background-color: #d3d3d3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
 
@@ -340,6 +351,29 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
           updateSubmitButtonState();
         });
 
+        // Função para adicionar um separador
+        function addSeparator() {
+          let separatorRow = $('<div>').addClass('separator-row');
+
+          let separator = $(`
+    <div class="separator flex-1">Divisão</div>
+  `);
+
+          let removeBtn = $(`
+          <button class="w-10 h-10 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm remove-btn">
+    <i class="fa fa-times text-xl"></i>
+</button>
+  `);
+          removeBtn.on('click', function () {
+            $(this).parent().remove();
+            updateSeatMapInput();
+          });
+
+          separatorRow.append(separator).append(removeBtn);
+          $('#seat-layout').append(separatorRow);
+        }
+
+
         <?php foreach ($vehicles as $index => $vehicle): ?>
           var seatMapJson<?= $index ?> = <?= json_encode($vehicle['seat_map'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
           var seatMap<?= $index ?> = JSON.parse(seatMapJson<?= $index ?>);
@@ -350,39 +384,50 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
 
             // Percorre cada linha do mapa de assentos
             seatMap.forEach(function (row) {
-              let seatRow = $('<div>').addClass('seat-row');
+              // Verifica se a linha é um "separator"
+              if (row === 'separator') {
+                addSeparator(seatLayout); // Adiciona um separador visual
+              } else {
+                let seatRow = $('<div>').addClass('seat-row');
 
-              // Percorre cada assento na linha
-              row.forEach(function (seat) {
-                let seatElement = $('<div>').addClass('seat');
-                seatElement.attr('data-vehicle-id', vehicleId);
-                seatElement.attr('data-vehicle-name', vehicleName);
+                // Percorre cada assento na linha
+                row.forEach(function (seat) {
+                  let seatElement = $('<div>').addClass('seat');
+                  seatElement.attr('data-vehicle-id', vehicleId);
+                  seatElement.attr('data-vehicle-name', vehicleName);
 
-                if (seat === 'space' || !seat) {
-                  seatElement.addClass('empty').attr('data-seat', '');
-                } else {
-                  seatElement.attr('data-seat', seat).text(seat);
+                  if (seat === 'space' || !seat) {
+                    seatElement.addClass('empty').attr('data-seat', '');
+                  } else {
+                    seatElement.attr('data-seat', seat).text(seat);
 
-                  // Verifica se o assento está reservado para o mesmo veículo
-                  const isReserved = reserveds.some(reserved =>
-                    reserved.seat_number === seat && reserved.vehicles === vehicleId
-                  );
-                  if (isReserved) {
-                    seatElement.addClass('reserved');
+                    // Verifica se o assento está reservado para o mesmo veículo
+                    const isReserved = reserveds.some(reserved =>
+                      reserved.seat_number === seat && reserved.vehicles === vehicleId
+                    );
+                    if (isReserved) {
+                      seatElement.addClass('reserved');
+                    }
                   }
-                }
 
-                seatRow.append(seatElement);
-              });
+                  seatRow.append(seatElement);
+                });
 
-              seatLayout.append(seatRow);
+                seatLayout.append(seatRow);
+              }
             });
           }
 
-
+          // Função para adicionar um separador visual
+          function addSeparator(seatLayout) {
+            const separator = $('<div>').addClass('separator').text('Divisão'); // Customize o texto conforme necessário
+            seatLayout.append(separator);
+          }
 
           renderSeatMap(seatMap<?= $index ?>, '#seat-layout-<?= $index ?>', '<?= $vehicle['id_cv'] ?>', '<?= $vehicle['name'] ?> - <?= $vehicle['ordem'] ?>');
         <?php endforeach; ?>
+
+
 
         $('#reserva_bancos').on('submit', function (event) {
           event.preventDefault();
@@ -481,6 +526,9 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
           }
         }
         updateSubmitButtonState();
+
+
+
       });
     </script>
   </body>

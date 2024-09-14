@@ -15,7 +15,7 @@ $user_id = checkUserLogin();
 $stake_id = getStake($user_id);
 // echo $stake_id;
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, ['stake_lider','stake_aux']);
+$user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
 
 $vehicle = getVehicle($_GET['id']);
 // Dados do veículo
