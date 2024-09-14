@@ -312,7 +312,7 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
           let separatorRow = $('<div>').addClass('separator-row');
 
           let separator = $(`
-    <div class="separator flex-1">separator</div>
+    <div class="separator flex-1">Divisão</div>
   `);
 
           let removeBtn = $(`
