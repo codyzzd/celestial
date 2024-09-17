@@ -1966,6 +1966,92 @@ if ($indicador == 'reserv_delete') {
   }
 }
 
+if ($indicador == 'download_list') {
+  $vehicle = $_POST['vehicleId']; //id cv do veiculo
+  // $filetype = $_POST['fileType']; //xls ou pdf
+  $reportType = $_POST['reportType']; //simples ou completo
+
+  // Preparar a query SQL
+  $sql_completo = "SELECT
+  IFNULL(s.seat, '#') AS Banco, -- Substitui NULL por '#'
+  p.name AS Nome,
+  TIMESTAMPDIFF(YEAR, p.nasc_date, CURDATE()) AS Idade,
+  d.name AS `Tipo Doc.`,
+  p.document AS `Doc.`,
+  p.obs AS Obs
+FROM
+  seats s
+JOIN
+  passengers p ON s.id_passenger = p.id
+JOIN
+  documents d ON d.id = p.id_document
+JOIN
+  caravan_vehicles v ON v.id = s.id_caravan_vehicle
+JOIN
+  vehicles ve ON ve.id = v.id_vehicle
+JOIN
+  wards w ON w.id = p.id_ward -- Adiciona o join com a tabela wards
+WHERE
+  s.id_caravan_vehicle = ? -- Alterado para usar s.id_caravan_vehicle
+ORDER BY
+  v.id, CAST(s.seat AS UNSIGNED) ASC;";
+
+  $sql_simples = "SELECT
+
+IFNULL(s.seat, '#') AS Banco, -- Substitui NULL por '#'
+p.name AS Nome,
+TIMESTAMPDIFF(YEAR, p.nasc_date, CURDATE()) AS Idade,
+
+p.obs as Obs,
+
+w.name AS Ala -- Adiciona o nome do ward
+FROM
+seats s
+JOIN
+passengers p ON s.id_passenger = p.id
+JOIN
+documents d ON d.id = p.id_document
+JOIN
+caravan_vehicles v ON v.id = s.id_caravan_vehicle
+JOIN
+vehicles ve ON ve.id = v.id_vehicle
+JOIN
+wards w ON w.id = p.id_ward -- Adiciona o join com a tabela wards
+WHERE
+s.id_caravan_vehicle = ? -- Alterado para usar s.id_caravan_vehicle
+ORDER BY
+v.id, CAST(s.seat AS UNSIGNED) ASC;";
+
+  // Seleciona a query SQL com base no tipo de relatório
+  if ($reportType == 'completo') {
+    $sql = $sql_completo;
+  } else if ($reportType == 'simples') {
+    $sql = $sql_simples;
+  } else {
+    // Caso o valor de $reportType não seja reconhecido, retorna um erro
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Tipo de relatório não reconhecido']);
+    exit;
+  }
+
+  // Preparar e executar a query SQL
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param('s', $vehicle);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  // Coletar os dados
+  $data = [];
+  while ($row = $result->fetch_assoc()) {
+    $data[] = $row;
+  }
+
+  // Enviar dados como JSON
+  header('Content-Type: application/json');
+  echo json_encode($data);
+
+  $stmt->close();
+}
 
 if ($indicador == 'archive_something') {
   // Pegar dados do formulário

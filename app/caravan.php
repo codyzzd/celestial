@@ -17,9 +17,9 @@ $user_id = checkUserLogin();
 // Guarda a role do usuário
 $user_role = checkUserRole($user_id);
 // Guarda o id da estaca
-$user_stake = checkStake($user_id);
+$user_stake = checkStake(user_id: $user_id);
 // Pega as caravana
-$caravan = getCaravan($id_caravan);
+$caravan = getCaravan(caravan_id: $id_caravan);
 //pega os veiculos da caravana
 $vehicles = getCaravanVehicles($id_caravan);
 //pega os passageiros disponiveis do usuario
@@ -146,6 +146,16 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
               <div class="h-2 <?= $formattedPercentage >= 80 ? 'bg-red-600' : 'bg-purple-600' ?>"
                    style="width:<?= $formattedPercentage ?>%;"></div>
             </div>
+            <?php if ($user_role == 'stake_lider'): ?>
+              <div class="mt-3"
+                   id="caravan_list">
+                <a href="caravan_list.php?id=<?= $id_caravan ?>"
+                   class="block w-full px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 text-center">
+                  <i class="fa fa-table me-2"></i>
+                  Lista de passageiros
+                </a>
+              </div>
+            <?php endif; ?>
           </div>
           <?php if (!empty($caravan['obs'])): ?>
             <div class="bg-white  p-4 dark:bg-gray-800 dark:border-gray-700 md:rounded-lg md:shadow  "
@@ -466,11 +476,11 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
 
                 }
               } catch (e) {
-                toast('error', 'Bancos podem já estar ocupados, recarregando em 3 segundos...');
+                toast('error', 'Bancos podem já estar ocupados, recarregando em 2 segundos...');
                 // toast('error', 'Erro ao processar a resposta do servidor.');
                 setTimeout(function () {
-                  window.location.href = "caravans.php"; // Redirecionar para a página após o login
-                }, 3000); // 3000 milissegundos = 3 segundos
+                  window.location.reload(); // Recarrega a página atual
+                }, 2000); // 2000 milissegundos = 2 segundos
               }
             },
             error: function (xhr, status, error) {
