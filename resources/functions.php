@@ -438,7 +438,7 @@ function getVehicles($user_stake)
   $conn = getDatabaseConnection(); // Supondo que getDatabaseConnection() retorne um objeto mysqli
 
   // Preparar a consulta SQL
-  $stmt = $conn->prepare("SELECT id, capacity, name FROM vehicles WHERE id_stake = ?");
+  $stmt = $conn->prepare("SELECT id, capacity, name FROM vehicles WHERE id_stake = ? AND deleted_at IS NULL");
 
   // Verifica se a preparação da consulta foi bem-sucedida
   if ($stmt === false) {
