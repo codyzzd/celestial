@@ -318,6 +318,62 @@ $relations = getRelations();
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
+                <div class="col-span-2">
+                  <div class="inline-flex items-center justify-center w-full">
+                    <p class="text-lg font-bold dark:text-white hidden">Recomendação</p>
+                    <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+                    <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900 uppercase">Recomendação</span>
+                  </div>
+                </div>
+                <div class="col-span-2">
+                  <label for="barcode"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código de barra</label>
+                  <input type="text"
+                         id="barcode"
+                         name="barcode"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                         placeholder="ex: 8869481203" />
+                </div>
+                <div>
+                  <label for="mes"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mês</label>
+                  <select id="mes"
+                          name="mes"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                    <option value="">Selecione...</option>
+                    <?php
+                    $meses = [
+                      1 => 'Jan',
+                      2 => 'Fev',
+                      3 => 'Mar',
+                      4 => 'Abr',
+                      5 => 'Mai',
+                      6 => 'Jun',
+                      7 => 'Jul',
+                      8 => 'Ago',
+                      9 => 'Set',
+                      10 => 'Out',
+                      11 => 'Nov',
+                      12 => 'Dez'
+                    ];
+                    foreach ($meses as $numero => $abreviacao):
+                      ?>
+                      <option value="<?php echo $numero; ?>"><?php echo $abreviacao; ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div>
+                  <label for="ano"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ano</label>
+                  <input type="number"
+                         id="ano"
+                         name="ano"
+                         min="1000"
+                         max="9999"
+                         inputmode="numeric"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                         placeholder="0000">
+                </div>
               </div>
               <!-- Modal footer -->
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 justify-end gap-3">
@@ -513,6 +569,63 @@ $relations = getRelations();
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
+                <div class="col-span-2">
+                  <div class="inline-flex items-center justify-center w-full">
+                    <p class="text-lg font-bold dark:text-white hidden">Recomendação</p>
+                    <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+                    <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900 uppercase">Recomendação</span>
+                  </div>
+                </div>
+                <div class="col-span-2">
+                  <label for="barcode"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código de barra</label>
+                  <input type="text"
+                         id="barcode"
+                         name="barcode"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                         placeholder="ex: 8869481203" />
+                </div>
+                <div>
+                  <label for="mes"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mês</label>
+                  <select id="mes"
+                          name="mes"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                    <option value=""
+                            selected>Selecione...</option>
+                    <?php
+                    $meses = [
+                      1 => 'Jan',
+                      2 => 'Fev',
+                      3 => 'Mar',
+                      4 => 'Abr',
+                      5 => 'Mai',
+                      6 => 'Jun',
+                      7 => 'Jul',
+                      8 => 'Ago',
+                      9 => 'Set',
+                      10 => 'Out',
+                      11 => 'Nov',
+                      12 => 'Dez'
+                    ];
+                    foreach ($meses as $numero => $abreviacao):
+                      ?>
+                      <option value="<?php echo $numero; ?>"><?php echo $abreviacao; ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div>
+                  <label for="ano"
+                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ano</label>
+                  <input type="number"
+                         id="ano"
+                         name="ano"
+                         min="1000"
+                         max="9999"
+                         inputmode="numeric"
+                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                         placeholder="0000">
+                </div>
                 <input type="hidden"
                        id="id"
                        name="id" />
@@ -606,6 +719,21 @@ $relations = getRelations();
                 $('#passenger_edit #id').val(passenger.id || '');
                 $('#passenger_edit #id_church').val(passenger.id_church || '');
 
+                $('#passenger_edit #barcode').val(passenger.barcode || '');
+
+                if (passenger.expiration_date) {
+                  // Supondo que 'passenger' é um objeto com a propriedade expiration_date
+                  const expirationDate = passenger.expiration_date;
+                  const [year, month] = expirationDate.split('-'); // Divide a string em ano e mês
+
+                  // Atribuindo os valores aos campos correspondentes
+                  $('#passenger_edit #mes').val(parseInt(month, 10) || ''); // Mês deve ser o segundo elemento
+                  $('#passenger_edit #ano').val(year || '');  // Ano deve ser o primeiro elemento
+                } else {
+                  // Limpa os campos de mês e ano se expiration_date não estiver definido
+                  $('#passenger_edit #mes').val(''); // Define o campo de mês como vazio
+                  $('#passenger_edit #ano').val('');  // Define o campo de ano como vazio
+                }
                 // console.log('Dados dos passageiros:', passenger);
 
                 // Inicializa e exibe o modal após os dados terem sido carregados

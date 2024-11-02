@@ -519,14 +519,33 @@ if ($indicador == 'passenger_add') {
   $id_relationship = $_POST['id_relationship'] ?? ''; // Coleta o ID do usuário
   $id_church = $_POST['id_church'] ?? '';
 
+  $barcode = $_POST['barcode'] ?? null;
+  $mes = $_POST['mes'] ?? null;
+  $ano = $_POST['ano'] ?? null;
+
+  // Verifica se o mês e o ano estão preenchidos
+  if (!empty($mes) && !empty($ano)) {
+    // Criar uma data com o primeiro dia do mês
+    $expiration_date = DateTime::createFromFormat('Y-m-d', "$ano-$mes-01");
+
+    // Ajustar para o último dia do mês
+    $expiration_date->modify('last day of this month');
+
+    // Formatar a data para YYYY-MM-DD
+    $expiration_date = $expiration_date->format('Y-m-d');
+  } else {
+    // Se mês ou ano estiver vazio, define expiration_date como NULL ou uma data padrão
+    $expiration_date = null; // ou qualquer outra lógica que você queira implementar
+  }
+
   // Converter as datas
   // $nasc_date = convertDateFormat($nasc_date);
   $nasc_date = formatDateOrTime($nasc_date, 'date_BR_EN');
   // $fever_date = $fever_date ? convertDateFormat($fever_date) : null;
 
   // Preparar a query de inserção com UUID() diretamente
-  $stmt = $conn->prepare("INSERT INTO passengers (id, name, nasc_date, sex, id_ward, id_document, document, obs, created_by, id_relationship, id_church) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssisssisss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_user, $id_relationship, $id_church);
+  $stmt = $conn->prepare("INSERT INTO passengers (id, name, nasc_date, sex, id_ward, id_document, document, obs, created_by, id_relationship, id_church,barcode,expiration_date) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)");
+  $stmt->bind_param("ssisssisssss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_user, $id_relationship, $id_church, $barcode, $expiration_date);
 
 
   // Executar a query
@@ -558,7 +577,26 @@ if ($indicador == 'passenger_edit') {
   $obs = $_POST['obs'] ?? null; // Campo opcional
   $id_user = $_POST['user_id'] ?? ''; // Coleta o ID do usuário
   $id_relationship = $_POST['id_relationship'] ?? ''; // Coleta o ID do relacionamento
-  $id_church = $_POST['id_church'] ?? ''; // Coleta o ID do usuário
+  $id_church = $_POST['id_church'] ?? ''; // Coleta o ID da igreja
+
+  $barcode = $_POST['barcode'] ?? '';
+  $mes = $_POST['mes'] ?? '';
+  $ano = $_POST['ano'] ?? '';
+
+  // Verifica se o mês e o ano estão preenchidos
+  if (!empty($mes) && !empty($ano)) {
+    // Criar uma data com o primeiro dia do mês
+    $expiration_date = DateTime::createFromFormat('Y-m-d', "$ano-$mes-01");
+
+    // Ajustar para o último dia do mês
+    $expiration_date->modify('last day of this month');
+
+    // Formatar a data para YYYY-MM-DD
+    $expiration_date = $expiration_date->format('Y-m-d');
+  } else {
+    // Se mês ou ano estiver vazio, define expiration_date como NULL ou uma data padrão
+    $expiration_date = null; // ou qualquer outra lógica que você queira implementar
+  }
 
   // Converter as datas
   // $nasc_date = convertDateFormat($nasc_date);
@@ -566,8 +604,10 @@ if ($indicador == 'passenger_edit') {
   // $fever_date = $fever_date ? convertDateFormat($fever_date) : null;
 
   // Preparar a query de atualização
-  $stmt = $conn->prepare("UPDATE passengers SET name = ?, nasc_date = ?, sex = ?, id_ward = ?, id_document = ?, document = ?, obs = ?, id_relationship = ?, id_church = ? WHERE id = ?");
-  $stmt->bind_param("ssississss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_relationship, $id_church, $id);
+  $stmt = $conn->prepare("UPDATE passengers SET name = ?, nasc_date = ?, sex = ?, id_ward = ?, id_document = ?, document = ?, obs = ?, id_relationship = ?, id_church = ?, barcode = ?, expiration_date = ? WHERE id = ?");
+
+  // A ordem dos parâmetros e tipos deve ser corrigida
+  $stmt->bind_param("ssississssss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_relationship, $id_church, $barcode, $expiration_date, $id);
 
   // Executar a query
   if ($stmt->execute()) {
@@ -584,6 +624,7 @@ if ($indicador == 'passenger_edit') {
 
   $stmt->close(); // Fechar a declaração
 }
+
 
 if ($indicador == 'passenger_list') {
   // Pegar dados do form
@@ -1965,6 +2006,60 @@ if ($indicador == 'reserv_delete') {
     ]);
   }
 }
+
+if ($indicador == 'recomendation_get') {
+  $id_member = $_POST['memberId'];
+
+  // Prepara a consulta SQL
+  $sql = "SELECT
+  passengers.name,
+  passengers.id_church,
+  passengers.id_ward,
+  passengers.sex,
+  sexs.name AS sex_name,
+  passengers.barcode,
+  passengers.expiration_date,
+  wards.name AS ward_name,
+  stakes.name AS stake_name
+FROM passengers
+JOIN wards ON passengers.id_ward = wards.id
+JOIN sexs ON passengers.sex = sexs.id
+JOIN stakes ON wards.id_stake = stakes.id
+WHERE passengers.id = ?";
+
+  // Prepara a declaração
+  if ($stmt = $conn->prepare($sql)) {
+    // Liga os parâmetros
+    $stmt->bind_param("s", $id_member);
+
+    // Executa a declaração
+    $stmt->execute();
+
+    // Obtém o resultado
+    $result = $stmt->get_result();
+
+    // Verifica se há resultados
+    if ($result->num_rows > 0) {
+      // Obtém o único resultado
+      $member = $result->fetch_assoc();
+
+      // Codifica o resultado em JSON e envia como resposta
+      echo json_encode($member);
+    } else {
+      // Se nenhum resultado, retorna uma mensagem de erro
+      echo json_encode([
+        'error' => 'Nenhum membro encontrado para o ID fornecido.'
+      ]);
+    }
+
+    // Fecha a declaração
+    $stmt->close();
+  } else {
+    // Erro ao preparar a declaração
+    echo json_encode(['error' => 'Erro ao preparar a declaração SQL.']);
+  }
+}
+
 
 if ($indicador == 'download_list') {
   $vehicle = $_POST['vehicleId']; //id cv do veiculo

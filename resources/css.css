@@ -9,6 +9,9 @@
   background-color: black;
   color: white;
 } */
+.serif {
+  font-family: "Times New Roman", Times, serif;
+}
 
 .appshare {
   background-image: url("../app/i/appshare.png");
