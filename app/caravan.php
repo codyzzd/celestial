@@ -179,7 +179,7 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
                       fa
                       fa-plus
                       me-2"></i>
-                Adicionar Passageiro Sem Banco
+                Adicionar Passageiro Sem Banco (Criança de colo)
               </button>
             </div>
           <?php endforeach; ?>
