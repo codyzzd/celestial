@@ -493,7 +493,7 @@ function getCaravans($user_id)
 
   // Passo 2: Buscar as caravanas onde id_stake corresponde e a data de partida é no futuro ou hoje
   $today = date('Y-m-d');
-  $stmt = $conn->prepare("SELECT * FROM caravans WHERE id_stake = ? AND start_date >= ? AND deleted_at IS NULL order by start_date desc");
+  $stmt = $conn->prepare("SELECT * FROM caravans WHERE id_stake = ? AND start_date >= ? AND deleted_at IS NULL order by start_date asc");
   $stmt->bind_param("ss", $id_stake, $today);
   $stmt->execute();
   $result = $stmt->get_result();
