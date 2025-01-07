@@ -335,7 +335,7 @@ $reserveds = getSeatsReserved($id_caravan);
       <i class="text-lg text-gray-500 me-2 fa min-w-[20px] text-center ${reserva.is_approved ? 'fa-circle-check text-green-600' : 'fa-hourglass-start text-yellow-600'}"></i>
       <div class="flex flex-col truncate">
         <p class="truncate seat-name">${reserva.name}</p>
-        <p class="truncate seat-name">Banco ${reserva.seat}</p>
+        <p class="truncate text-sm text-gray-500">Banco ${reserva.seat}</p>
         <p class="text-sm text-gray-500 truncate">${reserva.is_approved ? 'Aprovado' : 'Pendente'}</p>
       </div>
     </div>
