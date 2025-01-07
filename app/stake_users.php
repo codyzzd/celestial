@@ -258,7 +258,7 @@ $activeWards = array_filter($wards, function ($ward) {
                                 <div>Líder da Ala</div>
                                 <p id="ward_lider-description"
                                    class="text-xs font-normal text-gray-500 dark:text-gray-300">
-                                  Pode resetar senhas, gerar relatórios de nível ala e adicionar usuários no nível de ala.
+                                  Pode resetar senhas, gerar relatórios de nível ala, aprovar reservas e adicionar usuários no nível de ala.
                                 </p>
                               </label>
                             </div>
