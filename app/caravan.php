@@ -128,7 +128,7 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
             <div class="flex-1 text-left">
               <p class="text-xs font-medium tracking-wider text-gray-600 uppercase truncate">Partida</p>
               <p class="text-2xl"><?= formatDateOrTime($caravan['start_time'], 'time_Hi'); ?></p>
-              <p class="text-sm text-gray-500"><?= formatDateOrTime($caravan['return_date'], 'date_EN_dMY'); ?></p>
+              <p class="text-sm text-gray-500"><?= formatDateOrTime($caravan['start_date'], 'date_EN_dMY'); ?></p>
             </div>
             <div class="flex-1 text-left">
               <p class="text-xs font-medium tracking-wider text-gray-600 uppercase truncate">Retorno</p>
