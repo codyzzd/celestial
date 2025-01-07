@@ -1930,28 +1930,16 @@ if ($indicador == 'reserv_list') {
   $ward_id = $user_data['id_ward'];
   $slug_role = $user_data['slug'];
 
-
-  // 4. Monta a query com ou sem a condição dependendo do slug
-  if ($slug_role === 'stake_lider' || $slug_role === 'stake_aux') {
-    $sql = "
-  SELECT seats.id, passengers.name, seats.seat, seats.is_approved
-  FROM seats
-  JOIN passengers ON seats.id_passenger = passengers.id
-  WHERE seats.id_caravan = ?
-  ";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $caravan_id);
-  } else {
-    $sql = "
+  // 4. Consulta para buscar os passageiros da caravana
+  $sql = "
   SELECT seats.id, passengers.name, seats.seat, seats.is_approved
   FROM seats
   JOIN passengers ON seats.id_passenger = passengers.id
   WHERE seats.id_caravan = ? AND passengers.id_ward = ?
   ";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $caravan_id, $ward_id);
-  }
 
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("ss", $caravan_id, $ward_id);
   $stmt->execute();
   $result = $stmt->get_result();
   $stmt->close();
