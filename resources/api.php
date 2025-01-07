@@ -1174,7 +1174,7 @@ if ($indicador == 'caravan_list') {
     // Verificar se stake_id foi recebido
     if (isset($stake_id) && !empty($stake_id)) {
       // Construir a consulta SQL base para a tabela caravans
-      $sql = "SELECT * FROM caravans WHERE id_stake = ? order by start_date desc";
+      $sql = "SELECT * FROM caravans WHERE id_stake = ? order by start_date asc";
 
       // Adicionar condição para registros não excluídos (soft delete)
       if ($status === 'not_deleted') {
