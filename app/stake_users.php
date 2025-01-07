@@ -205,7 +205,7 @@ $activeWards = array_filter($wards, function ($ward) {
                               <div>Líder da Estaca</div>
                               <p id="stake_lider-description"
                                  class="text-xs font-normal text-gray-500 dark:text-gray-300">
-                                Permissão total: adicionar usuários no nível de ala e estaca.
+                                Permissão total: adicionar usuários no nível de ala e estaca e aprovar reservas.
                               </p>
                             </label>
                           </div>
@@ -226,7 +226,7 @@ $activeWards = array_filter($wards, function ($ward) {
                               <div>Auxiliar da Estaca</div>
                               <p id="stake_aux-description"
                                  class="text-xs font-normal text-gray-500 dark:text-gray-300">
-                                Pode resetar senhas, gerar relatórios de nível estaca, administrar caravanas e veículos.
+                                Pode resetar senhas, gerar relatórios de nível estaca, e aprovar reservas administrar caravanas e veículos.
                               </p>
                             </label>
                           </div>
@@ -376,7 +376,7 @@ $activeWards = array_filter($wards, function ($ward) {
                               <div>Líder da Estaca</div>
                               <p id="stake_lider-description"
                                  class="text-xs font-normal text-gray-500 dark:text-gray-300">
-                                Permissão total: adicionar usuários no nível de ala e estaca.
+                                Permissão total: adicionar usuários no nível de ala e estaca e aprovar reservas.
                               </p>
                             </label>
                           </div>
@@ -399,7 +399,7 @@ $activeWards = array_filter($wards, function ($ward) {
                               <div>Auxiliar da Estaca</div>
                               <p id="stake_aux-description"
                                  class="text-xs font-normal text-gray-500 dark:text-gray-300">
-                                Pode resetar senhas, gerar relatórios de nível estaca, administrar caravanas e veículos.
+                                Pode resetar senhas, gerar relatórios de nível estaca, aprovar reservas e administrar caravanas e veículos.
                               </p>
                             </label>
                           </div>
