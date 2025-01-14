@@ -416,12 +416,16 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
                     seatElement.attr('data-seat', seat).text(seat);
 
                     // Verifica se o assento está reservado para o mesmo veículo
-                    const isReserved = reserveds.some(reserved =>
-                      reserved.seat_number === seat && reserved.vehicles === vehicleId
-                    );
-                    if (isReserved) {
-                      seatElement.addClass('reserved');
-                    }
+                    const isReserved = reserveds.some(reserved => {
+                      if (reserved.seat_number === seat && reserved.vehicles === vehicleId) {
+                        seatElement.addClass('reserved');
+
+                        // Adiciona o title com o nome do passageiro
+                        seatElement.attr('title', `${reserved.passenger_name || 'Nome não disponível'}`);
+                        return true;
+                      }
+                      return false;
+                    });
                   }
 
                   seatRow.append(seatElement);
