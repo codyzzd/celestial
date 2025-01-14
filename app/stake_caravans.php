@@ -15,7 +15,7 @@ require_once ROOT_PATH . '/resources/functions.php';
 $user_id = checkUserLogin();
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, ['stake_lider','stake_aux']);
+$user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
 
 // Guarda o id da estaca
 $user_stake = checkStake($user_id);
@@ -454,10 +454,15 @@ $destinations = getDestinations();
                   $('#caravan_list').removeClass('hidden').addClass('block');
 
                   function formatDate(dateString) {
+                    const [year, month, day] = dateString.split('-').map(Number); // Supondo formato ISO (YYYY-MM-DD)
+                    const date = new Date(year, month - 1, day); // Mês começa em 0 no JS
+
                     const options = { day: '2-digit', month: 'short', year: 'numeric' };
-                    const date = new Date(dateString);
-                    // Remove qualquer "de " que pode aparecer, remove também os pontos e espaços extras
-                    return date.toLocaleDateString('pt-BR', options).replace(/de\s/g, '').replace(/\./g, '').trim();
+                    return date
+                      .toLocaleDateString('pt-BR', options)
+                      .replace(/de\s/g, '') // Remove "de "
+                      .replace(/\./g, '') // Remove pontos
+                      .trim(); // Remove espaços extras
                   }
 
                   function formatTime(timeString) {
@@ -472,10 +477,12 @@ $destinations = getDestinations();
                     container.empty();
 
                     paginatedItems.forEach(function (caravan) {
+                      // console.log('start1 ' + caravan.start_date);
                       var formattedStartDate = formatDate(caravan.start_date);
                       var formattedStartTime = formatTime(caravan.start_time);
                       var formattedReturnDate = formatDate(caravan.return_date);
                       var formattedReturnTime = formatTime(caravan.return_time);
+                      // console.log('start2 ' + formattedStartDate);
 
                       var caravanItem = `
                 <a href="stake_caravan.php?id=${caravan.id}"
