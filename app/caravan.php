@@ -41,8 +41,12 @@ $totalReservedSeats = count($reserveds);
 // Calcular a capacidade disponível
 $availableSeats = $totalCapacity - $totalReservedSeats;
 
-// Calcular a porcentagem de ocupação
-$occupiedPercentage = ($totalCapacity - $availableSeats) / $totalCapacity * 100;
+// Calcular a porcentagem de ocupação com proteção
+if ($totalCapacity > 0) {
+  $occupiedPercentage = ($totalCapacity - $availableSeats) / $totalCapacity * 100;
+} else {
+  $occupiedPercentage = 0; // Ou outra lógica para tratar casos sem capacidade
+}
 
 // Formatar a porcentagem com duas casas decimais
 $formattedPercentage = number_format($occupiedPercentage, 2);
