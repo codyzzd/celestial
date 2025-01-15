@@ -1781,10 +1781,16 @@ if ($indicador === 'role_alt_edit_new') {
 
 if ($indicador == 'user_list_stake') {
   // Obter variáveis de POST
-  $stake_id = $_POST['stake_id'];
-  $role = $_POST['role'];
+  $stake_id = $_POST['stake_id'] ?? '';
+  $ward_id = $_POST['ward_id'] ?? '';
+  $role = $_POST['role'] ?? '';
 
   try {
+    // Inicializa as variáveis para a consulta
+    $sql = "";
+    $params = [];
+    $types = ""; // Para os tipos dos parâmetros no bind_param
+
     // Verifica o valor de role para alterar a SQL conforme necessário
     if ($role === 'stake_lider') {
       // Consulta SQL para stake_lider
@@ -1800,6 +1806,8 @@ if ($indicador == 'user_list_stake') {
             AND u.role IS NOT NULL
             AND u.role != 3
           ";
+      $params = [$stake_id];
+      $types = "s"; // Um parâmetro do tipo string
     } elseif ($role === 'ward_lider') {
       // Consulta SQL para ward_lider
       $sql = "
@@ -1811,19 +1819,27 @@ if ($indicador == 'user_list_stake') {
           LEFT JOIN roles r ON u.role = r.id
           LEFT JOIN wards w ON u.id_ward = w.id
           WHERE u.id_stake = ?
+            AND u.id_ward = ?
             AND u.role IS NOT NULL
             AND u.role != 3
             AND u.role != 1
             AND u.role != 4
           ";
+      $params = [$stake_id, $ward_id];
+      $types = "ss"; // Dois parâmetros do tipo string
     } else {
       throw new Exception('Tipo de role inválido.');
     }
 
     // Preparar a consulta SQL
     $stmt = $conn->prepare($sql);
-    // Associar os parâmetros
-    $stmt->bind_param("s", $stake_id);
+
+    // Verificar se existem parâmetros a serem vinculados
+    if (!empty($params)) {
+      // Usa a função spread para passar os parâmetros ao bind_param
+      $stmt->bind_param($types, ...$params);
+    }
+
     // Executar a consulta
     $stmt->execute();
     // Obter os resultados
@@ -1853,6 +1869,7 @@ if ($indicador == 'user_list_stake') {
     ]);
   }
 }
+
 if ($indicador == 'user_get') {
   // Armazenar o valor de $_POST['user_id'] em uma variável
   $user_id = $_POST['user_id'];

@@ -92,7 +92,6 @@ if (isset($_COOKIE['caravana_remember_token'])) {
                        name="remember_token"
                        value="remember_token"
                        checked
-                       data-tooltip-target="tooltip-remember-token"
                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
               </div>
               <label for="remember_token"

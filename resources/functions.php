@@ -157,6 +157,39 @@ function checkStake($user_id)
   return $id_stake;
 }
 
+function checkWard($user_id)
+{
+  // Obtém a conexão com o banco de dados
+  $conn = getDatabaseConnection();
+
+  // Prepara a consulta para buscar o id_ward do usuário
+  $stmt = $conn->prepare("SELECT id_ward FROM users WHERE id = ?");
+  $stmt->bind_param("s", $user_id);
+
+  // Executa a consulta
+  $stmt->execute();
+
+  // Armazena o resultado
+  $stmt->bind_result($id_ward);
+  $stmt->fetch();
+
+  // Fecha a declaração
+  $stmt->close();
+
+  // Fecha a conexão com o banco de dados
+  $conn->close();
+
+  // Verifica se o id_ward é NULL
+  if ($id_ward === null) {
+    // Redireciona para ward_select.php se id_ward for NULL
+    header("Location: ward_select.php");
+    exit();
+  }
+
+  // Retorna o valor do id_ward
+  return $id_ward;
+}
+
 function getDatabaseConnection()
 {
   $config = require 'dbcon.php';

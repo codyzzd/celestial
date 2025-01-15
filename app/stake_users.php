@@ -693,7 +693,7 @@ $activeWards = array_filter($wards, function ($ward) {
                                 <div class="flex flex-row items-center truncate">
                                     <div class="flex flex-col truncate w-full">
                                         <p class="truncate">${user.user_name}</p>
-                                        <p class="text-sm text-gray-500">${user.role_name}</p>
+                                        <p class="text-sm text-gray-500">${user.role_name} - ${user.ward_name}</p>
                                     </div>
                                 </div>
                                 <i class="fa fa-chevron-right text-lg text-gray-500"></i>

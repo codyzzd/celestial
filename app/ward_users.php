@@ -16,6 +16,9 @@ $stake_id = checkStake($user_id);
 
 // Guarda a role do usuário
 $user_role = checkUserRole($user_id, ['ward_lider']);
+// Guarda a ward do usuario
+$user_ward = checkWard($user_id);
+
 
 $wards = getWardsByUserId($user_id);
 $activeWards = array_filter($wards, function ($ward) {
@@ -531,6 +534,7 @@ $activeWards = array_filter($wards, function ($ward) {
         // Defina o user_id a partir do PHP
         var userId = "<?php echo $user_id; ?>";
         var stakeId = "<?php echo $stake_id; ?>";
+        var wardId = "<?php echo $user_ward; ?>";
         var roleName = "<?php echo $user_role; ?>";
 
         // gerar link de permissão
@@ -671,7 +675,7 @@ $activeWards = array_filter($wards, function ($ward) {
 
         function updateUsersList() {
           // Serializar os campos do formulário
-          var formData = "user_id=" + encodeURIComponent(userId) + "&stake_id=" + encodeURIComponent(stakeId) + "&indicador=user_list_stake" + "&role=" + encodeURIComponent(roleName);
+          var formData = "user_id=" + encodeURIComponent(userId) + "&stake_id=" + encodeURIComponent(stakeId) + "&ward_id=" + encodeURIComponent(wardId) + "&indicador=user_list_stake" + "&role=" + encodeURIComponent(roleName);
 
           $.ajax({
             type: "POST",
