@@ -421,24 +421,24 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
                         seatElement.addClass('reserved');
 
                         // Adiciona o nome do passageiro como título (para uma alternativa de tooltip)
-                        // seatElement.attr('title', `${reserved.passenger_name || 'Nome não disponível'}`);
+                        seatElement.attr('title', `${reserved.passenger_name || 'Nome não disponível'}`);
 
                         // Gera um ID único para cada assento
                         const uniqueTooltipId = `${reserved.vehicles}-${reserved.seat_number}`;
 
                         // Adiciona o data-tooltip-target com um valor único
-                        seatElement.attr('data-tooltip-target', `tooltip-${uniqueTooltipId}`);
+                        // seatElement.attr('data-tooltip-target', `tooltip-${uniqueTooltipId}`);
 
                         // Adiciona o data-tooltip-trigger com o valor "click"
-                        seatElement.attr('data-tooltip-trigger', 'hover');
+                        // seatElement.attr('data-tooltip-trigger', 'hover');
 
                         // Renderiza o conteúdo do tooltip diretamente dentro do seatElement
-                        seatElement.append(`
-                                      <div id="tooltip-${uniqueTooltipId}"
-                                           role="tooltip"
-                                           class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">${reserved.passenger_name || 'Nome não disponível'}<div class="tooltip-arrow" data-popper-arrow></div>
-                                      </div>
-                                    `);
+                        // seatElement.append(`
+                        //               <div id="tooltip-${uniqueTooltipId}"
+                        //                    role="tooltip"
+                        //                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">${reserved.passenger_name || 'Nome não disponível'}<div class="tooltip-arrow" data-popper-arrow></div>
+                        //               </div>
+                        //             `);
 
                         return true;
                       }
