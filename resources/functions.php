@@ -544,7 +544,7 @@ function getCaravans($user_id)
   return $caravans;
 }
 
-function getCaravansApprove($user_id)
+function getCaravansApprove($user_id, $user_role)
 {
   // Conectar ao banco de dados
   $conn = getDatabaseConnection();
@@ -557,47 +557,84 @@ function getCaravansApprove($user_id)
   $stmt->fetch();
   $stmt->close();
 
-  // Verificar se encontrou o id_stake
+  // Verificar se encontrou o id_stake e id_ward
   if (!$id_stake || !$id_ward) {
-    return []; // Retorna array vazio se não encontrar id_stake
+    return []; // Retorna array vazio se não encontrar id_stake ou id_ward
   }
 
-  // Passo 2: Buscar as caravanas onde id_stake corresponde e a data de partida é no futuro ou hoje
+  // Passo 2: Se for stake_lider ou stake_aux, buscar todas as wards relacionadas ao id_stake
+  $wards = [];
+  if (in_array($user_role, ['stake_lider', 'stake_aux'])) {
+    $stmt = $conn->prepare("SELECT id FROM wards WHERE id_stake = ?");
+    $stmt->bind_param("s", $id_stake);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+      $wards[] = $row['id'];
+    }
+    $stmt->close();
+
+    // Verificar se encontrou wards
+    if (empty($wards)) {
+      return []; // Retorna array vazio se nenhuma ward for encontrada
+    }
+  }
+
+  // Passo 3: Configurar a SQL com base no filtro escolhido
   $today = date('Y-m-d');
-  $stmt = $conn->prepare("
-  SELECT
-    c.id,
-    c.destination,
-    c.name,
-    c.start_date,
-    c.start_time,
-    c.return_date,
-    c.return_time,
-    c.obs,
-    c.id_stake,
-    c.deleted_at
-FROM
-    caravans c
-WHERE
-    c.id IN (
+  $query = "
         SELECT
-            b.id_caravan
+            c.id,
+            c.destination,
+            c.name,
+            c.start_date,
+            c.start_time,
+            c.return_date,
+            c.return_time,
+            c.obs,
+            c.id_stake,
+            c.deleted_at
         FROM
-            seats b
-        JOIN
-            passengers a ON b.id_passenger = a.id
+            caravans c
         WHERE
-            a.id_ward = ?
-        GROUP BY
-            b.id_caravan
-    )
-    AND c.start_date >= ?
-");
-  $stmt->bind_param("ss", $id_ward, $today);
+            c.id IN (
+                SELECT
+                    b.id_caravan
+                FROM
+                    seats b
+                JOIN
+                    passengers a ON b.id_passenger = a.id
+                WHERE ";
+
+  // Adicionar a condição dinâmica baseada no $user_role
+  if (in_array($user_role, ['stake_lider', 'stake_aux'])) {
+    // Para stake_lider e stake_aux, filtrar por todas as wards relacionadas ao id_stake
+    $query .= "a.id_ward IN (" . implode(',', array_fill(0, count($wards), '?')) . ")";
+    $filter_params = $wards;
+  } elseif (in_array($user_role, ['ward_lider', 'ward_aux'])) {
+    // Para ward_lider e ward_aux, filtrar diretamente pelo id_ward
+    $query .= "a.id_ward = ?";
+    $filter_params = [$id_ward];
+  } else {
+    return []; // Retorna array vazio se o user_role não for válido
+  }
+
+  $query .= "
+                GROUP BY
+                    b.id_caravan
+            )
+            AND c.start_date >= ?";
+
+  // Passo 4: Preparar e executar a consulta
+  $stmt = $conn->prepare($query);
+
+  // Combinar os parâmetros dinâmicos com a data
+  $filter_params[] = $today;
+  $stmt->bind_param(str_repeat('s', count($filter_params)), ...$filter_params);
   $stmt->execute();
   $result = $stmt->get_result();
 
-  // Passo 3: Armazenar os resultados em um array
+  // Passo 5: Armazenar os resultados em um array
   $caravans = [];
   while ($row = $result->fetch_assoc()) {
     $caravans[] = $row;
