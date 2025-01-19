@@ -16,10 +16,15 @@ $deleted_rows = $select_stmt->get_result();
 // Exibir os registros que seriam excluídos (se necessário)
 $deleted_data = $deleted_rows->fetch_all(MYSQLI_ASSOC);
 
-// Usando var_dump para mostrar os dados que seriam excluídos
-echo "<pre>";
-var_dump($deleted_data);
-echo "</pre>";
+// Verifica se existem dados para excluir
+if (empty($deleted_data)) {
+  echo "Nenhum registro encontrado para exclusão.";
+} else {
+  // Usando var_dump para mostrar os dados que seriam excluídos
+  echo "<pre>";
+  var_dump($deleted_data);
+  echo "</pre>";
+}
 
 // Agora, executar a query para deletar registros com expire_at anterior à data de hoje
 $query = "DELETE FROM role_alt WHERE expire_at < CURDATE()";
@@ -32,7 +37,11 @@ $success = $stmt->execute();
 $affected_rows = $stmt->affected_rows;
 
 // Exibir a quantidade de registros excluídos
-echo "Registros excluídos: " . $affected_rows;
+if ($affected_rows > 0) {
+  echo "Registros excluídos: " . $affected_rows;
+} else {
+  echo "Nenhum registro foi excluído.";
+}
 
 // Fechar as conexões
 $stmt->close();
