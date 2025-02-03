@@ -101,29 +101,34 @@ if ($indicador == 'user_login') {
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-      // Email existe, vamos verificar a senha
+      // Email existe, verificar a senha
       $stmt->bind_result($id, $stored_password, $stored_salt);
       $stmt->fetch();
 
-      // Verificar a senha fornecida usando a função verifyPassword
       if (verifyPassword($password, $stored_password, $stored_salt)) {
-        session_start(); // Iniciar a sessão
-        session_regenerate_id(true); // Regenerar o ID da sessão por segurança
-        $_SESSION['user_id'] = $id; // Definir a variável de sessão
+        session_start();
+        session_regenerate_id(true);
+        $_SESSION['user_id'] = $id;
 
-        // Verifique se o usuário quer permanecer logado
-        if (isset($_POST['remember_token']) && $_POST['remember_token'] === 'remember_token') {
-          // Crie um token seguro
+        // Verificar se o usuário quer permanecer logado
+        if (!empty($_POST['remember_token']) && $_POST['remember_token'] === 'remember_token') {
+          // Criar e salvar um novo token seguro
           $token = bin2hex(random_bytes(16));
 
-          // Salve o token no banco de dados associado ao usuário
-          $stmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
-          $stmt->bind_param("si", $token, $id);
-          $stmt->execute();
+          $updateStmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+          $updateStmt->bind_param("si", $token, $id);
+          $updateStmt->execute();
+          $updateStmt->close();
 
-          // Crie um cookie que expira em, por exemplo, 30 dias
-          // setcookie('caravana_remember_token', $token, time() + (86400 * 30), "/");
-          setcookie('caravana_remember_token', $token, time() + (86400 * 365 * 50), "/");
+          // Criar um cookie seguro que expira em 50 anos
+          setcookie('caravana_remember_token', $token, [
+            'expires' => time() + (86400 * 365 * 50), // 50 anos
+            'path' => '/',
+            'domain' => $_SERVER['HTTP_HOST'],
+            'secure' => true, // Apenas HTTPS
+            'httponly' => true, // Impede acesso via JavaScript
+            'samesite' => 'Lax' // Protege contra CSRF
+          ]);
         }
 
         echo json_encode([
@@ -132,27 +137,15 @@ if ($indicador == 'user_login') {
           'user_id' => $id
         ]);
       } else {
-        // Senha incorreta
-        echo json_encode([
-          'status' => 'error',
-          'msg' => 'Email ou senha incorretos!'
-        ]);
+        echo json_encode(['status' => 'error', 'msg' => 'Email ou senha incorretos!']);
       }
     } else {
-      // Email não encontrado ou senha incorreta
-      echo json_encode([
-        'status' => 'error',
-        'msg' => 'Email ou senha incorretos!'
-      ]);
+      echo json_encode(['status' => 'error', 'msg' => 'Email ou senha incorretos!']);
     }
 
-    $stmt->close(); // Fechar a declaração
+    $stmt->close();
   } else {
-    // Falha ao preparar a declaração
-    echo json_encode([
-      'status' => 'error',
-      'msg' => 'Erro no servidor. Por favor, tente novamente mais tarde.'
-    ]);
+    echo json_encode(['status' => 'error', 'msg' => 'Erro no servidor. Por favor, tente novamente mais tarde.']);
   }
 }
 
