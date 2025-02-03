@@ -948,6 +948,7 @@ function getSeatsReserved($id_caravan)
   s.id_caravan_vehicle AS vehicles,
   s.seat AS seat_number,
   p.name AS passenger_name,
+  p.sex as passenger_sex,
   w.name AS ward_name
 FROM
   seats s

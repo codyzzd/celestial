@@ -98,6 +98,18 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
         color: white;
       }
 
+      .reserved-1 {
+        background-color: #1d4ed8 !important;
+        /* blue-700 do Tailwind */
+        color: white;
+      }
+
+      .reserved-2 {
+        background-color: #d1006d !important;
+        /* pink-700 em hexadecimal */
+        color: white;
+      }
+
       .separator {
         flex: 1;
         height: 40px;
@@ -418,7 +430,12 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
                     // Verifica se o assento está reservado para o mesmo veículo
                     const isReserved = reserveds.some(reserved => {
                       if (reserved.seat_number === seat && reserved.vehicles === vehicleId) {
-                        seatElement.addClass('reserved');
+                        // seatElement.addClass('reserved');
+                        if (reserved.passenger_sex === 1) {
+                          seatElement.addClass('reserved-1');
+                        } else if (reserved.passenger_sex === 2) {
+                          seatElement.addClass('reserved-2');
+                        }
 
                         // Adiciona o nome do passageiro como título (para uma alternativa de tooltip)
                         seatElement.attr('title', `${reserved.passenger_name || 'Nome não disponível'}`);
