@@ -113,7 +113,9 @@ if ($indicador == 'user_login') {
         // Verificar se o usuário quer permanecer logado
         if (!empty($_POST['remember_token']) && $_POST['remember_token'] === 'remember_token') {
           // Criar e salvar um novo token seguro
-          $token = bin2hex(random_bytes(16));
+          // $token = bin2hex(random_bytes(16));
+          // Criar um token único usando uniqid() + random_bytes()
+          $token = hash('sha256', uniqid(bin2hex(random_bytes(8)), true));
 
           $updateStmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
           $updateStmt->bind_param("si", $token, $id);
