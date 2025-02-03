@@ -15,6 +15,8 @@ $user_id = checkUserLogin();
 // echo $user_id;
 // Guarda a role do usuário
 $user_role = checkUserRole($user_id, ['stake_lider', 'ward_lider']);
+$user_stake = getStake($user_id); //pega estaca
+$user_ward = checkWard($user_id); //pega ala
 
 // Pega profile
 // $profile = getProfile($user_id);
@@ -129,6 +131,8 @@ $user_role = checkUserRole($user_id, ['stake_lider', 'ward_lider']);
         // Defina o user_id a partir do PHP
         var userId = "<?php echo $user_id; ?>";
         var roleSlug = "<?php echo $user_role; ?>";
+        var userStake = "<?php echo $user_stake; ?>";
+        var userWard = "<?php echo $user_ward; ?>";
 
         // Dropdown e campos relacionados
         const $input = $('#email');
@@ -148,7 +152,7 @@ $user_role = checkUserRole($user_id, ['stake_lider', 'ward_lider']);
 
             $.ajax({
               url: '../resources/fetch_users.php',
-              data: { term: query, role_slug: roleSlug, },
+              data: { term: query, role_slug: roleSlug, stake_id: userStake, ward_id: userWard },
               dataType: 'json',
               success: function (data) {
                 $dropdownMenu.empty();
