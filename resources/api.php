@@ -118,7 +118,7 @@ if ($indicador == 'user_login') {
           $token = hash('sha256', uniqid(bin2hex(random_bytes(8)), true));
 
           $updateStmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
-          $updateStmt->bind_param("si", $token, $id);
+          $updateStmt->bind_param("ss", $token, $id);
           $updateStmt->execute();
           $updateStmt->close();
 

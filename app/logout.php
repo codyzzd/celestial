@@ -21,7 +21,7 @@ if (!empty($_SESSION['user_id'])) {
   $user_id = $_SESSION['user_id'];
 
   $stmt = $conn->prepare("UPDATE users SET remember_token = NULL WHERE id = ?");
-  $stmt->bind_param("i", $user_id);
+  $stmt->bind_param("s", $user_id);
   $stmt->execute();
   $stmt->close();
 }
