@@ -1,4 +1,12 @@
+# Ignorar arquivos de conexão de banco de dados
 resources/dbcon.php
+
+# Ignorar o banco de dados principal e backup
 db.dbs
 db.dbs.bak
+
+# Ignorar arquivos SQL de backup
 dbsql19ago.sql
+
+# Ignorar todos os arquivos .txt dentro da pasta cron/
+cron/*.txt

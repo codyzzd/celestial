@@ -50,6 +50,15 @@
 			</fk>
 			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci]]></options>
 		</table>
+		<table name="destinations" spec="" >
+			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="name" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="photo" type="VARCHAR" length="255" jt="12" />
+			<index name="pk_destinations" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci]]></options>
+		</table>
 		<table name="documents" row_count="5" spec="" >
 			<column name="id" type="INT" length="11" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTO_INCREMENT]]></identity>
@@ -139,21 +148,29 @@
 		</table>
 		<table name="seats" row_count="0" spec="" >
 			<column name="id" type="VARCHAR" length="36" jt="12" mandatory="y" />
-			<column name="id_vehicle" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="id_caravan_vehicle" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_caravan" type="VARCHAR" length="36" jt="12" mandatory="y" />
 			<column name="id_passenger" type="VARCHAR" length="36" jt="12" mandatory="y" />
-			<column name="seat" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="created_by" type="VARCHAR" length="36" jt="12" mandatory="y" />
+			<column name="created_at" type="TIMESTAMP" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+			</column>
+			<column name="updated_at" type="TIMESTAMP" jt="93" mandatory="y" >
+				<defo><![CDATA[current_timestamp()]]></defo>
+				<column_options><![CDATA[ON UPDATE current_timestamp]]></column_options>
+			</column>
+			<column name="seat" type="VARCHAR" length="255" jt="12" />
 			<index name="pk_seats" unique="PRIMARY_KEY" >
 				<column name="id" />
-			</index>
-			<index name="id_vehicle" unique="NORMAL" >
-				<column name="id_vehicle" />
 			</index>
 			<index name="idx_id_caravan" unique="NORMAL" >
 				<column name="id_caravan" />
 			</index>
-			<fk name="seats_ibfk_1" to_schema="u821249804_caravana" to_table="vehicles" options="" >
-				<fk_column name="id_vehicle" pk="id" />
+			<index name="id_caravan_vehicle" unique="NORMAL" >
+				<column name="id_caravan_vehicle" />
+			</index>
+			<fk name="seats_ibfk_1" to_schema="u821249804_caravana" to_table="caravan_vehicles" options="" >
+				<fk_column name="id_caravan_vehicle" pk="id" />
 			</fk>
 			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci]]></options>
 		</table>
@@ -286,16 +303,17 @@
 	<layout name="Main Layout" id="Layout-1354" show_column_type="y" show_relation="columns" >
 		<entity schema="u821249804_caravana" name="caravan_vehicles" color="C7F4BE" x="884" y="646" />
 		<entity schema="u821249804_caravana" name="caravans" color="C7F4BE" x="612" y="493" />
+		<entity schema="u821249804_caravana" name="destinations" color="C7F4BE" x="1377" y="442" />
 		<entity schema="u821249804_caravana" name="documents" color="BED3F4" x="323" y="442" />
 		<entity schema="u821249804_caravana" name="passengers" color="BED3F4" x="51" y="442" />
 		<entity schema="u821249804_caravana" name="relationship" color="BED3F4" x="323" y="561" />
 		<entity schema="u821249804_caravana" name="roles" color="E6CCFF" x="340" y="85" />
 		<entity schema="u821249804_caravana" name="seats" color="C7F4BE" x="867" y="459" />
 		<entity schema="u821249804_caravana" name="sexs" color="BED3F4" x="323" y="680" />
-		<entity schema="u821249804_caravana" name="stakes" color="BED3F4" x="918" y="85" />
+		<entity schema="u821249804_caravana" name="stakes" color="F4E6BE" x="918" y="85" />
 		<entity schema="u821249804_caravana" name="users" color="E6CCFF" x="51" y="85" />
 		<entity schema="u821249804_caravana" name="vehicles" color="C7F4BE" x="1156" y="510" />
-		<entity schema="u821249804_caravana" name="wards" color="BED3F4" x="629" y="85" />
+		<entity schema="u821249804_caravana" name="wards" color="F4E6BE" x="629" y="85" />
 		<group name="church" color="FFCCB3" >
 			<entity schema="u821249804_caravana" name="wards" />
 			<entity schema="u821249804_caravana" name="stakes" />
@@ -309,6 +327,7 @@
 			<entity schema="u821249804_caravana" name="vehicles" />
 			<entity schema="u821249804_caravana" name="caravans" />
 			<entity schema="u821249804_caravana" name="seats" />
+			<entity schema="u821249804_caravana" name="destinations" />
 		</group>
 		<group name="passengers" color="ECF0F7" >
 			<entity schema="u821249804_caravana" name="passengers" />
