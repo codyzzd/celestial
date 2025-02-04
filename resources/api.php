@@ -1800,7 +1800,7 @@ if ($indicador == 'user_list_stake') {
           WHERE u.id_stake = ?
             AND u.role IS NOT NULL
             AND u.role != 3
-            ORDER BY u.name , r.name, w.name
+            ORDER BY r.name , u.name, w.name
           ";
       $params = [$stake_id];
       $types = "s"; // Um parâmetro do tipo string
