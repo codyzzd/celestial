@@ -206,7 +206,7 @@ $destinations = getDestinations();
                     </tfoot>
                   </table>
                   <div class="col-span-2">
-                    <a href="caravan_list.php?id=<?= $caravan ?>" target="_blank"
+                    <a href="caravan_list.php?id=<?= $caravan['id'] ?>" target="_blank"
                        class="block w-full px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 text-center">
                       <i class="fa fa-table me-2"></i>
                       Lista de passageiros
