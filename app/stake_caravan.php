@@ -15,7 +15,7 @@ require_once ROOT_PATH . '/resources/functions.php';
 $user_id = checkUserLogin();
 
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, ['stake_lider','stake_aux']);
+$user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
 
 
 // Guarda o id da estaca
@@ -205,6 +205,13 @@ $destinations = getDestinations();
                       </tr>
                     </tfoot>
                   </table>
+                  <div class="col-span-2">
+                    <a href="caravan_list.php?id=<?= $id_caravan ?>"
+                       class="block w-full px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 text-center">
+                      <i class="fa fa-table me-2"></i>
+                      Lista de passageiros
+                    </a>
+                  </div>
                 </div>
               </div>
               <!-- Campo oculto para armazenar o layout dos assentos em JSON -->
