@@ -80,11 +80,10 @@ foreach ($seats as $seat) {
             // Encontra o índice da coluna
             let columnIndex;
             switch (column) {
-              case "banco": columnIndex = 1; break;
-              case "nome": columnIndex = 2; break;
-              case "idade": columnIndex = 3; break;
-              case "ala": columnIndex = 4; break;
-
+              case "banco": columnIndex = 0; break; // Adicionado banco
+              case "nome": columnIndex = 1; break;
+              case "idade": columnIndex = 2; break;
+              case "ala": columnIndex = 3; break;
               default: return;
             }
 
@@ -93,8 +92,8 @@ foreach ($seats as $seat) {
               let cellA = a.children[columnIndex].textContent.trim().toLowerCase();
               let cellB = b.children[columnIndex].textContent.trim().toLowerCase();
 
-              // Se for a coluna de idade, converte para número
-              if (column === "idade") {
+              // Converte para número se for a coluna "banco" ou "idade"
+              if (column === "banco" || column === "idade") {
                 cellA = parseInt(cellA) || 0;
                 cellB = parseInt(cellB) || 0;
               }
