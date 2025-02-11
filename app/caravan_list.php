@@ -80,7 +80,7 @@ foreach ($seats as $seat) {
             // Encontra o índice da coluna
             let columnIndex;
             switch (column) {
-              case "banco"columnIndex = 1; break;
+              case "banco": columnIndex = 1; break;
               case "nome": columnIndex = 2; break;
               case "idade": columnIndex = 3; break;
               case "ala": columnIndex = 4; break;
