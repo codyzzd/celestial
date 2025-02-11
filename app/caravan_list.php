@@ -63,6 +63,55 @@ foreach ($seats as $seat) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".sort").forEach(function (element) {
+          element.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            let table = document.querySelector("table tbody");
+            let rows = Array.from(table.querySelectorAll("tr"));
+            let column = this.getAttribute("data-column");
+            let order = this.getAttribute("data-order") === "asc" ? "desc" : "asc"; // Alterna a ordem
+
+            // Atualiza o atributo para refletir a nova ordem
+            this.setAttribute("data-order", order);
+
+            // Encontra o índice da coluna
+            let columnIndex;
+            switch (column) {
+              case "nome": columnIndex = 1; break;
+              case "idade": columnIndex = 2; break;
+              case "ala": columnIndex = 3; break;
+              default: return;
+            }
+
+            // Ordenação lógica
+            rows.sort((a, b) => {
+              let cellA = a.children[columnIndex].textContent.trim().toLowerCase();
+              let cellB = b.children[columnIndex].textContent.trim().toLowerCase();
+
+              // Se for a coluna de idade, converte para número
+              if (column === "idade") {
+                cellA = parseInt(cellA) || 0;
+                cellB = parseInt(cellB) || 0;
+              }
+
+              return order === "asc" ? (cellA > cellB ? 1 : -1) : (cellA < cellB ? 1 : -1);
+            });
+
+            // Atualiza os ícones de ordenação
+            document.querySelectorAll(".sort i").forEach(i => i.classList.remove("fa-sort-up", "fa-sort-down"));
+            let icon = this.querySelector("i");
+            icon.classList.add(order === "asc" ? "fa-sort-up" : "fa-sort-down");
+
+            // Reinsere as linhas na tabela
+            table.innerHTML = "";
+            rows.forEach(row => table.appendChild(row));
+          });
+        });
+      });
+    </script>
   </head>
 
   <body class="bg-gray-100">
@@ -209,21 +258,30 @@ foreach ($seats as $seat) {
                 <th scope="col"
                     class="p-3 text-nowrap text-left">
                   <div class="d-flex justify-content-between align-items-center">
-                    Nome <a href="#"><i class="fa fa-sort"></i></a>
-                  </div>
-                </th><th scope="col"
-                    class="p-3 text-nowrap text-left">
-                  <div class="d-flex justify-content-between align-items-center">
-                    Idade <a href="#"><i class="fa fa-sort"></i></a>
+                    Nome <a href="#"
+                       class="sort"
+                       data-column="nome"
+                       data-order="asc"><i class="fa fa-sort"></i></a>
                   </div>
                 </th>
                 <th scope="col"
                     class="p-3 text-nowrap text-left">
                   <div class="d-flex justify-content-between align-items-center">
-                    Ala <a href="#"><i class="fa fa-sort"></i></a>
+                    Idade <a href="#"
+                       class="sort"
+                       data-column="idade"
+                       data-order="asc"><i class="fa fa-sort"></i></a>
                   </div>
                 </th>
-
+                <th scope="col"
+                    class="p-3 text-nowrap text-left">
+                  <div class="d-flex justify-content-between align-items-center">
+                    Ala <a href="#"
+                       class="sort"
+                       data-column="ala"
+                       data-order="asc"><i class="fa fa-sort"></i></a>
+                  </div>
+                </th>
                 <th scope="col"
                     class="p-3 text-nowrap ">Tipo Doc.</th>
                 <th scope="col"
