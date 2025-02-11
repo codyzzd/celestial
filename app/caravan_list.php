@@ -80,9 +80,11 @@ foreach ($seats as $seat) {
             // Encontra o índice da coluna
             let columnIndex;
             switch (column) {
-              case "nome": columnIndex = 1; break;
-              case "idade": columnIndex = 2; break;
-              case "ala": columnIndex = 3; break;
+              case "banco"columnIndex = 1; break;
+              case "nome": columnIndex = 2; break;
+              case "idade": columnIndex = 3; break;
+              case "ala": columnIndex = 4; break;
+
               default: return;
             }
 
@@ -254,7 +256,14 @@ foreach ($seats as $seat) {
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col"
-                    class="p-3 text-nowrap">#</th>
+                    class="p-3 text-nowrap text-left">
+                  <div class="d-flex justify-content-between align-items-center">
+                    # <a href="#"
+                       class="sort"
+                       data-column="banco"
+                       data-order="asc"><i class="fa fa-sort"></i></a>
+                  </div>
+                </th>
                 <th scope="col"
                     class="p-3 text-nowrap text-left">
                   <div class="d-flex justify-content-between align-items-center">
