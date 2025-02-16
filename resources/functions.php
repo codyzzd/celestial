@@ -582,7 +582,8 @@ function getCaravansApprove($user_id, $user_role)
   }
 
   // Passo 3: Configurar a SQL com base no filtro escolhido
-  $today = date('Y-m-d');
+  // $today = date('Y-m-d');
+  $today = date('Y-m-d', strtotime('-3 months'));
   $query = "
         SELECT
             c.id,
