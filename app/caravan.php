@@ -162,7 +162,7 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
               <div class="h-2 <?= $formattedPercentage >= 80 ? 'bg-red-600' : 'bg-purple-600' ?>"
                    style="width:<?= $formattedPercentage ?>%;"></div>
             </div>
-            <?php if ($user_role == 'stake_lider'): ?>
+            <?php if ($user_role == 'stake_lider' || $user_role == 'ward_lider'): ?>
               <div class="mt-3"
                    id="caravan_list">
                 <a href="caravan_list.php?id=<?= $id_caravan ?>"
