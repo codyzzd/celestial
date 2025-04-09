@@ -2041,6 +2041,62 @@ if ($indicador == 'reserv_delete') {
   }
 }
 
+if ($indicador == 'reserv_switch') {
+  $new_seat_number = $_POST['id_new_seat']; // ex: 3
+  $old_seat_id = $_POST['id_old_seat']; // ex: UUID
+  $caravan_id = $_POST['caravan_id'];
+
+  // 1. Obter seat_number atual do assento antigo
+  $query1 = "SELECT seat FROM seats WHERE id = ?"; //40
+  $stmt1 = mysqli_prepare($conn, $query1);
+  mysqli_stmt_bind_param($stmt1, "s", $old_seat_id);
+  mysqli_stmt_execute($stmt1);
+  mysqli_stmt_bind_result($stmt1, $old_seat_number);
+  mysqli_stmt_fetch($stmt1);
+  mysqli_stmt_close($stmt1);
+
+  // 2. Obter ID do assento que tem o novo seat_number e pertence à mesma caravana
+  $query2 = "SELECT id FROM seats WHERE seat = ? AND id_caravan = ?";
+  $stmt2 = mysqli_prepare($conn, $query2);
+  mysqli_stmt_bind_param($stmt2, "ss", $new_seat_number, $caravan_id);
+  mysqli_stmt_execute($stmt2);
+  mysqli_stmt_bind_result($stmt2, $new_seat_id);
+  mysqli_stmt_fetch($stmt2);
+  mysqli_stmt_close($stmt2);
+
+  // 3. Trocar seat_number entre os dois registros
+  $conn->begin_transaction();
+
+  try {
+    // Atualiza o antigo para o novo número
+    $update1 = "UPDATE seats SET seat = ? WHERE id = ?";
+    $stmt3 = mysqli_prepare($conn, $update1);
+    mysqli_stmt_bind_param($stmt3, "ss", $new_seat_number, $old_seat_id);
+    mysqli_stmt_execute($stmt3);
+    mysqli_stmt_close($stmt3);
+
+    // Atualiza o outro para o número antigo
+    $update2 = "UPDATE seats SET seat = ? WHERE id = ?";
+    $stmt4 = mysqli_prepare($conn, $update2);
+    mysqli_stmt_bind_param($stmt4, "ss", $old_seat_number, $new_seat_id);
+    mysqli_stmt_execute($stmt4);
+    mysqli_stmt_close($stmt4);
+
+    $conn->commit();
+
+    echo json_encode([
+      'status' => 'success',
+      'msg' => 'Assentos trocados com sucesso.'
+    ]);
+  } catch (Exception $e) {
+    $conn->rollback();
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Erro ao trocar assentos.'
+    ]);
+  }
+}
+
 if ($indicador == 'recomendation_get') {
   $id_member = $_POST['memberId'];
 

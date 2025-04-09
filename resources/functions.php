@@ -961,6 +961,7 @@ LEFT JOIN
 WHERE
   s.id_caravan = ?
   AND s.seat IS NOT NULL
+  ORDER BY CAST(seat_number AS UNSIGNED)
     ";
 
   // Preparar a declaração SQL
