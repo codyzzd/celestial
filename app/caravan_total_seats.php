@@ -254,13 +254,13 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
             url: apiPath,
             data: data, // Passa o objeto data no request
             success: function (response) {
-              try {
-                var reservas = JSON.parse(response);
-                $('#reserv_list').empty();
 
-                // Adicionar novos reserv_list aos containers com base na relação
-                reservas.forEach(function (reserva) {
-                  var reservaItem = `
+              var reservas = JSON.parse(response);
+              $('#reserv_list').empty();
+
+              // Adicionar novos reserv_list aos containers com base na relação
+              reservas.forEach(function (reserva) {
+                var reservaItem = `
 <div class="block w-full px-4 py-2 border-gray-200 flex justify-between items-center">
 <div class="flex flex-row text-start truncate items-center">
 <i class="text-lg text-gray-500 me-2 fa min-w-[20px] text-center ${reserva.is_approved ? 'fa-circle-check text-green-600' : 'fa-hourglass-start text-yellow-600'}"></i>
@@ -287,13 +287,11 @@ class="switch-btn text-blue-700 border border-blue-700 hover:bg-blue-700 hover:t
 </div>
 </div>
 `;
-                  $('#reserv_list').append(reservaItem);
-                });
+                $('#reserv_list').append(reservaItem);
+              });
 
 
-              } catch (e) {
-                toast('error', 'Erro ao processar a resposta do servidor.');
-              }
+
             },
             error: function (xhr, status, error) {
               toast('error', 'Erro ao enviar a solicitação: ' + error);

@@ -2062,7 +2062,7 @@ if ($indicador == 'reserv_list') {
   $passengers = $result->fetch_all(MYSQLI_ASSOC);
 
   if (!$passengers) {
-    // echo json_encode(['status' => 'error', 'msg' => 'Nenhum passageiro encontrado para essa caravana.']);
+    echo json_encode(['status' => 'error', 'msg' => 'Nenhum passageiro encontrado para essa caravana.']);
   } else {
     echo json_encode($passengers);
   }
