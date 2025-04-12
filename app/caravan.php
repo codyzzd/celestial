@@ -180,7 +180,7 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
               <p class="text-sm text-gray-500"><?= $caravan['obs']; ?></p>
             </div>
           <?php endif; ?>
-          <h2 class=" text-lg font-semibold text-gray-900 dark:text-white mx-4 md:mx-0 mt-4">Escolha os lugares</h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mx-4 mt-4">Escolha os lugares</h2>
           <?php foreach ($vehicles as $index => $vehicle): ?>
             <div class="bg-white p-4 dark:bg-gray-800 dark:border-gray-700 md:rounded-lg md:shadow flex flex-col gap-2">
               <!-- <p class="text-sm text-gray-500 mb-4"> -->
@@ -451,11 +451,11 @@ $formattedPercentage = number_format($occupiedPercentage, 2);
 
                         // Renderiza o conteúdo do tooltip diretamente dentro do seatElement
                         // seatElement.append(`
-                        //               <div id="tooltip-${uniqueTooltipId}"
-                        //                    role="tooltip"
-                        //                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">${reserved.passenger_name || 'Nome não disponível'}<div class="tooltip-arrow" data-popper-arrow></div>
-                        //               </div>
-                        //             `);
+                      //               <div id="tooltip-${uniqueTooltipId}"
+                      //                    role="tooltip"
+                      //                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">${reserved.passenger_name || 'Nome não disponível'}<div class="tooltip-arrow" data-popper-arrow></div>
+                      //               </div>
+                      //             `);
 
                         return true;
                       }

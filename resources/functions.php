@@ -939,30 +939,37 @@ function getPassengers($user_id, $date = null)
   return $passengers;
 }
 
-function getSeatsReserved($id_caravan)
+function getSeatsReserved($id_caravan, $noVehicle = false)
 {
   // Obter a conexão com o banco de dados
   $conn = getDatabaseConnection();
 
-  // Escrever a consulta SQL
+  // Base da query
   $sql = "
-  SELECT
-  s.id_caravan_vehicle AS vehicles,
-  s.seat AS seat_number,
-  p.name AS passenger_name,
-  p.sex as passenger_sex,
-  w.name AS ward_name
-FROM
-  seats s
-JOIN
-  passengers p ON s.id_passenger = p.id
-LEFT JOIN
-  wards w ON p.id_ward = w.id
-WHERE
-  s.id_caravan = ?
-  AND s.seat IS NOT NULL
-  ORDER BY CAST(seat_number AS UNSIGNED)
-    ";
+    SELECT
+      s.id_caravan_vehicle AS vehicles,
+      s.seat AS seat_number,
+      p.name AS passenger_name,
+      p.sex as passenger_sex,
+      w.name AS ward_name
+    FROM
+      seats s
+    JOIN
+      passengers p ON s.id_passenger = p.id
+    LEFT JOIN
+      wards w ON p.id_ward = w.id
+    WHERE
+      s.id_caravan = ?
+  ";
+
+  // Substitui a condição dependendo do modo
+  if ($noVehicle) {
+    $sql .= " AND s.no_seat = 0";
+  } else {
+    $sql .= " AND s.seat IS NOT NULL";
+  }
+
+  $sql .= " ORDER BY CAST(seat_number AS UNSIGNED)";
 
   // Preparar a declaração SQL
   $stmt = $conn->prepare($sql);
@@ -1073,10 +1080,10 @@ function getMyCaravans($user_id)
   c.start_date,
   c.start_time,
   c.return_date,
-  c.return_time
+  c.return_time, c.total_seats
 FROM seats s
 JOIN caravans c ON s.id_caravan = c.id
-WHERE s.created_by = ? AND c.deleted_at IS NULL order by c.start_date desc;
+WHERE s.created_by = ? AND c.deleted_at IS NULL order by c.start_date desc
 ";
 
   // Prepara a consulta

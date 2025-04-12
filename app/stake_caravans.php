@@ -110,6 +110,43 @@ $destinations = getDestinations();
                   id="caravan_add">
               <div class="grid gap-4 grid-cols-2 p-4">
                 <div class="col-span-2">
+                  <label for="inline-radio-group"
+                         class="block mb-2 text-sm font-medium text-gray-900">Tipo de Caravana</label>
+                  <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex">
+                    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                      <div class="flex items-center ps-3">
+                        <input id="horizontal-list-edit-radio-com-veiculos"
+                               type="radio"
+                               value="com_veiculos"
+                               name="type_caravan"
+                               class="w-4 h-4 text-neutral-600 bg-gray-100 border-gray-300 focus:ring-neutral-600 focus:ring-2"
+                               required
+                               checked>
+                        <label for="horizontal-list-edit-radio-com-veiculos"
+                               class="w-full py-3 ms-2 text-sm font-medium text-gray-900 flex items-center gap-2">
+                          <i class="fa-solid fa-car-side text-neutral-600"></i>
+                          Com veículos
+                        </label>
+                      </div>
+                    </li>
+                    <li class="w-full sm:border-r">
+                      <div class="flex items-center ps-3">
+                        <input id="horizontal-list-edit-radio-sem-veiculos"
+                               type="radio"
+                               value="sem_veiculos"
+                               name="type_caravan"
+                               class="w-4 h-4 text-neutral-600 bg-gray-100 border-gray-300 focus:ring-neutral-600 focus:ring-2"
+                               required>
+                        <label for="horizontal-list-edit-radio-sem-veiculos"
+                               class="w-full py-3 ms-2 text-sm font-medium text-gray-900 flex items-center gap-2">
+                          <i class="fa-solid fa-people-group text-neutral-600"></i>
+                          Sem veículos
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-span-2">
                   <label for="name"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome da Caravana</label>
                   <input type="text"
@@ -187,68 +224,85 @@ $destinations = getDestinations();
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
-                <div class="col-span-2">
-                  <div class="flex items-start p-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800"
-                       role="alert">
-                    <i class="fa fa-exclamation-triangle text-lg fa-fw me-3"></i>
-                    <span class="sr-only">Info</span>
-                    <div>
-                      Os veículos cadastrados em uma caravana não poderão ser removidos após a confirmação do salvamento.
+                <div id="seats_alone"
+                     class="col-span-2"> <!-- seção somente numero de bancos -->
+                  <div class="col-span-2">
+                    <label for="total_seats"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total de Assentos</label>
+                    <input type="number"
+                           id="total_seats"
+                           name="total_seats"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                           placeholder="ex: 60"
+                           required
+                           autocomplete="off" />
+                  </div>
+                </div>
+                <div id="seats_vehicles"
+                     class="col-span-2 grid gap-4"> <!-- seção somente com veiculos -->
+                  <div class="col-span-2">
+                    <div class="flex items-start p-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800"
+                         role="alert">
+                      <i class="fa fa-exclamation-triangle text-lg fa-fw me-3"></i>
+                      <span class="sr-only">Info</span>
+                      <div>
+                        Os veículos cadastrados em uma caravana não poderão ser removidos após a confirmação do salvamento.
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-span-2 flex flex-row gap-3 items-end justify-end">
-                  <div class="w-full">
-                    <label for="vehicles"
-                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar Veículo</label>
-                    <select id="vehicles"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                      <!-- <option selected>Selecione...</option> -->
-                      <?php foreach ($vehicles as $vehicle): ?>
-                        <option value="<?php echo htmlspecialchars($vehicle['id']); ?>"
-                                data-capacity="<?php echo htmlspecialchars($vehicle['capacity']); ?>">
-                          <?php echo htmlspecialchars($vehicle['name']); ?>
-                        </option>
-                      <?php endforeach; ?>
-                    </select>
+                  <div class="col-span-2 flex flex-row gap-3 items-end justify-end">
+                    <div class="w-full">
+                      <label for="vehicles"
+                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar Veículo</label>
+                      <select id="vehicles"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <!-- <option selected>Selecione...</option> -->
+                        <?php foreach ($vehicles as $vehicle): ?>
+                          <option value="<?php echo htmlspecialchars($vehicle['id']); ?>"
+                                  data-capacity="<?php echo htmlspecialchars($vehicle['capacity']); ?>">
+                            <?php echo htmlspecialchars($vehicle['name']); ?>
+                          </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <a href="stake_vehicles.php"
+                       class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-fit h-fit text-center">Gestão de Veículo</a>
                   </div>
-                  <a href="stake_vehicles.php"
-                     class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-fit h-fit text-center">Gestão de Veículo</a>
-                </div>
-                <div class="col-span-2">
-                  <button type="button"
-                          id="addVehicle"
-                          class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">Adicionar Veículo</button>
-                </div>
-                <div class="col-span-2">
-                  <div class="relative overflow-x-auto">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                      <thead class="text-xs text-gray-900 uppercase dark:text-gray-400">
-                        <tr>
-                          <th scope="col"
-                              class="p-2">
-                            Lista de Veículo
-                          </th>
-                          <th scope="col"
-                              class="p-2">
-                          </th>
-                          <th scope="col"
-                              class="p-2">
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody id="vehicleTableBody">
-                      </tbody>
-                      <tfoot>
-                        <tr class="font-semibold text-gray-900 dark:text-white">
-                          <th scope="row"
-                              class="p-2 text-base">Total</th>
-                          <td class="p-2"
-                              id="totalCapacity">0</td>
-                          <td class="p-2"></td>
-                        </tr>
-                      </tfoot>
-                    </table>
+                  <div class="col-span-2">
+                    <button type="button"
+                            id="addVehicle"
+                            class="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full">Adicionar Veículo</button>
+                  </div>
+                  <div class="col-span-2">
+                    <div class="relative overflow-x-auto">
+                      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-900 uppercase dark:text-gray-400">
+                          <tr>
+                            <th scope="col"
+                                class="p-2">
+                              Lista de Veículo
+                            </th>
+                            <th scope="col"
+                                class="p-2">
+                            </th>
+                            <th scope="col"
+                                class="p-2">
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody id="vehicleTableBody">
+                        </tbody>
+                        <tfoot>
+                          <tr class="font-semibold text-gray-900 dark:text-white">
+                            <th scope="row"
+                                class="p-2 text-base">Total</th>
+                            <td class="p-2"
+                                id="totalCapacity">0</td>
+                            <td class="p-2"></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -352,6 +406,25 @@ $destinations = getDestinations();
         $('#caravan_add #start_time').mask('00:00');
         $('#caravan_add #return_date').mask('00/00/0000');
         $('#caravan_add #return_time').mask('00:00');
+
+        // trocador de modo de caravana
+        function toggleSeatsSection() {
+          if ($('#horizontal-list-edit-radio-com-veiculos').is(':checked')) {
+            $('#seats_vehicles').show();
+            $('#seats_alone').hide();
+            $('#total_seats').removeAttr('required');
+          } else if ($('#horizontal-list-edit-radio-sem-veiculos').is(':checked')) {
+            $('#seats_vehicles').hide();
+            $('#seats_alone').show();
+            $('#total_seats').attr('required', 'required');
+          }
+        }
+        // Executa no carregamento da página
+        toggleSeatsSection();
+
+        // Escuta mudanças nos radios
+        $('input[name="type_caravan"]').on('change', toggleSeatsSection);
+
 
 
         const select = document.getElementById('vehicles'); // Defina a variável select aqui
@@ -571,7 +644,7 @@ $destinations = getDestinations();
         }
 
 
-        // Adicionar ward
+        // Adicionar caravana
         $("#caravan_add").submit(function (event) {
           event.preventDefault(); // Impedir que o formulário seja enviado tradicionalmente
 
@@ -589,7 +662,8 @@ $destinations = getDestinations();
             "&user_id=" + encodeURIComponent(userId) +
             "&indicador=caravan_add" +
             "&stake_id=" + encodeURIComponent(userStake) +
-            "&vehicle_ids=" + encodeURIComponent(JSON.stringify(vehicleIds)); // Adicione os IDs dos veículos
+            "&vehicle_ids=" + encodeURIComponent(JSON.stringify(vehicleIds)) + // Adicione os IDs dos veículos
+            "total_seats=" + encodeURIComponent($('#total_seats').val());
 
           $.ajax({
             type: "POST",

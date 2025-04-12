@@ -1029,95 +1029,127 @@ if ($indicador == 'caravan_add') {
     $start_date = $start_date ? formatDateOrTime($start_date, 'date_BR_EN') : null;
     $return_date = $return_date ? formatDateOrTime($return_date, 'date_BR_EN') : null;
 
-    // Prepara a consulta para inserção na tabela caravans com UUID()
-    $stmt = $conn->prepare("
-      INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs,destination)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)
-    ");
+    if (!empty($total_seats)) {
+      // Cadastro sem veículos, com total_seats
+      $stmt = $conn->prepare("
+        INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs, destination, total_seats)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ");
+      $stmt->bind_param("ssssssssss", $uuid, $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs, $destination, $total_seats);
 
-    // Associa os parâmetros
-    $stmt->bind_param("sssssssss", $uuid, $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs, $destination);
+      if ($stmt->execute()) {
+        $conn->commit();
+        echo json_encode([
+          'status' => 'success',
+          'msg' => 'Caravana adicionada com sucesso!'
+        ]);
+      } else {
+        throw new Exception('Erro ao adicionar a caravana: ' . $stmt->error);
+      }
+    } else {
+      // Cadastro com veículos
+      $stmt = $conn->prepare("
+        INSERT INTO caravans (id, id_stake, name, start_date, start_time, return_date, return_time, obs, destination)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ");
+      $stmt->bind_param("sssssssss", $uuid, $stake_id, $name, $start_date, $start_time, $return_date, $return_time, $obs, $destination);
 
-    // Executa a consulta para inserir a caravana
-    if ($stmt->execute()) {
-      // Verifica se há IDs de veículos e se não está vazio
-      if (!empty($_POST['vehicle_ids'])) {
-        $vehicleIds = json_decode($_POST['vehicle_ids'], true);
+      if ($stmt->execute()) {
+        if (!empty($_POST['vehicle_ids'])) {
+          $vehicleIds = json_decode($_POST['vehicle_ids'], true);
 
-        if (!empty($vehicleIds)) {
-          // Prepara a inserção na tabela caravan_vehicle
-          $stmt = $conn->prepare("INSERT INTO caravan_vehicles (id, id_caravan, id_vehicle) VALUES (UUID(), ?, ?)");
+          if (!empty($vehicleIds)) {
+            $stmt = $conn->prepare("INSERT INTO caravan_vehicles (id, id_caravan, id_vehicle) VALUES (UUID(), ?, ?)");
 
-          foreach ($vehicleIds as $vehicleId) {
-            $stmt->bind_param("ss", $uuid, $vehicleId);
-            $stmt->execute();
+            foreach ($vehicleIds as $vehicleId) {
+              $stmt->bind_param("ss", $uuid, $vehicleId);
+              $stmt->execute();
+            }
+
+            $conn->commit();
+            echo json_encode([
+              'status' => 'success',
+              'msg' => 'Caravana e veículos adicionados com sucesso!'
+            ]);
+          } else {
+            throw new Exception('Nenhum veículo selecionado.');
           }
-
-          // Confirma a transação se tudo deu certo
-          $conn->commit();
-
-          echo json_encode([
-            'status' => 'success',
-            'msg' => 'Caravana e veículos adicionados com sucesso!'
-          ]);
         } else {
           throw new Exception('Nenhum veículo selecionado.');
         }
       } else {
-        throw new Exception('Nenhum veículo selecionado.');
+        throw new Exception('Erro ao adicionar a caravana: ' . $stmt->error);
       }
-    } else {
-      throw new Exception('Erro ao adicionar a caravana: ' . $stmt->error);
     }
   } catch (Exception $e) {
-    // Algo deu errado, desfaz a transação
     $conn->rollback();
-
     echo json_encode([
       'status' => 'error',
       'msg' => $e->getMessage()
     ]);
   }
 
-  // Fecha a declaração e a conexão com o banco de dados
-  $stmt->close();
+  if (isset($stmt)) {
+    $stmt->close();
+  }
 }
 
+
 if ($indicador == 'caravan_edit') {
-  // Pega valores do POST
   if (!empty($_POST)) {
     foreach ($_POST as $key => $value) {
-      // Remove possíveis tags HTML e espaços em branco
       ${$key} = $value;
     }
   }
 
-  // Inicia a transação
   $conn->begin_transaction();
 
   try {
-    // Converte as datas (caso seja necessário)
     $start_date = $start_date ? formatDateOrTime($start_date, 'date_BR_EN') : null;
     $return_date = $return_date ? formatDateOrTime($return_date, 'date_BR_EN') : null;
 
-    // Prepara a consulta para atualizar a tabela caravans
-    $stmt = $conn->prepare("
-      UPDATE caravans
-      SET  name = ?, start_date = ?, start_time = ?, return_date = ?, return_time = ?, obs = ?
-      WHERE id = ?
-    ");
+    // Se vier total_seats, valida antes de atualizar
+    if (isset($_POST['total_seats'])) {
+      // Consulta para contar assentos já reservados
+      $stmt_check = $conn->prepare("SELECT COUNT(*) FROM seats WHERE id_caravan = ?");
+      $stmt_check->bind_param("s", $id);
+      $stmt_check->execute();
+      $stmt_check->bind_result($current_seats);
+      $stmt_check->fetch();
+      $stmt_check->close();
 
-    // Associa os parâmetros
-    $stmt->bind_param("sssssss", $name, $start_date, $start_time, $return_date, $return_time, $obs, $id);
+      // Verifica se o novo total é suficiente
+      if ((int) $total_seats <= (int) $current_seats || (int) $total_seats <= 0) {
+        $conn->rollback();
+        echo json_encode([
+          'status' => 'error',
+          'msg' => 'O número total de vagas não pode ser menor que o total de reservas já realizadas.'
+        ]);
+        exit;
+      }
 
-    // Executa a consulta para atualizar a caravana
+      // UPDATE com total_seats
+      $stmt = $conn->prepare("
+        UPDATE caravans
+        SET name = ?, start_date = ?, start_time = ?, return_date = ?, return_time = ?, obs = ?, total_seats = ?
+        WHERE id = ?
+      ");
+      $stmt->bind_param("ssssssss", $name, $start_date, $start_time, $return_date, $return_time, $obs, $total_seats, $id);
+    } else {
+      // UPDATE normal sem total_seats
+      $stmt = $conn->prepare("
+        UPDATE caravans
+        SET name = ?, start_date = ?, start_time = ?, return_date = ?, return_time = ?, obs = ?
+        WHERE id = ?
+      ");
+      $stmt->bind_param("sssssss", $name, $start_date, $start_time, $return_date, $return_time, $obs, $id);
+    }
+
     if ($stmt->execute()) {
-      // Verifica se há IDs de veículos e se não está vazio
-      if (!empty($_POST['vehicle_ids'])) {
+      if (empty($total_seats) && !empty($_POST['vehicle_ids'])) {
         $vehicleIds = json_decode($_POST['vehicle_ids'], true);
 
         if (!empty($vehicleIds)) {
-          // Prepara a inserção na tabela caravan_vehicles
           $stmt = $conn->prepare("INSERT INTO caravan_vehicles (id, id_caravan, id_vehicle) VALUES (UUID(), ?, ?)");
 
           foreach ($vehicleIds as $vehicle) {
@@ -1127,7 +1159,6 @@ if ($indicador == 'caravan_edit') {
         }
       }
 
-      // Confirma a transação se tudo deu certo
       $conn->commit();
 
       echo json_encode([
@@ -1138,16 +1169,13 @@ if ($indicador == 'caravan_edit') {
       throw new Exception('Erro ao atualizar a caravana: ' . $stmt->error);
     }
   } catch (Exception $e) {
-    // Algo deu errado, desfaz a transação
     $conn->rollback();
-
     echo json_encode([
       'status' => 'error',
       'msg' => $e->getMessage()
     ]);
   }
 
-  // Fecha a declaração e a conexão com o banco de dados
   $stmt->close();
 }
 
@@ -1308,6 +1336,68 @@ if ($indicador == 'seat_add') {
     // $conn->close();
 
     // Retornar erro em formato JSON
+    echo json_encode([
+      'status' => 'error',
+      'msg' => $e->getMessage()
+    ]);
+  }
+}
+
+
+if ($indicador == 'seat_add_novehicle') {
+  $id_user = $_POST['user_id'] ?? null;
+  $id_caravan = $_POST['id_caravan'] ?? null;
+  $id_passenger = $_POST['passenger_id'] ?? null;
+  $no_seat = isset($_POST['no_seat']) && $_POST['no_seat'] == '1' ? 1 : 0;
+
+  try {
+    // Busca o total de assentos da caravana
+    $queryTotal = "SELECT total_seats FROM caravans WHERE id = ?";
+    $stmt = $conn->prepare($queryTotal);
+    $stmt->bind_param("s", $id_caravan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $caravan = $result->fetch_assoc();
+    $stmt->close();
+
+    if (!$caravan) {
+      throw new Exception('Caravana não encontrada.');
+    }
+
+    $totalSeats = (int) $caravan['total_seats'];
+
+    // Só checa assentos se for reserva com assento
+    if (!$no_seat) {
+      $queryCount = "SELECT COUNT(*) AS total FROM seats WHERE id_caravan = ? AND no_seat = 0 ";
+      $stmt = $conn->prepare($queryCount);
+      $stmt->bind_param("s", $id_caravan);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      $row = $result->fetch_assoc();
+      $usedSeats = (int) $row['total'];
+      $stmt->close();
+
+      if ($usedSeats >= $totalSeats) {
+        echo json_encode([
+          'status' => 'error',
+          'msg' => 'A caravana já está com todos os assentos ocupados.'
+        ]);
+        exit;
+      }
+    }
+
+    // Insere a nova reserva
+    $queryInsert = "INSERT INTO seats (id, id_caravan, id_passenger, no_seat, created_by) VALUES (UUID(), ?, ?, ?, ?)";
+    $stmt = $conn->prepare($queryInsert);
+    $stmt->bind_param("ssis", $id_caravan, $id_passenger, $no_seat, $id_user);
+    $stmt->execute();
+    $stmt->close();
+
+    echo json_encode([
+      'status' => 'success',
+      'msg' => 'Reserva registrada com sucesso.'
+    ]);
+  } catch (Exception $e) {
     echo json_encode([
       'status' => 'error',
       'msg' => $e->getMessage()

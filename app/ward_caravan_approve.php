@@ -20,6 +20,9 @@ $user_role = checkUserRole($user_id);
 $user_stake = checkStake($user_id);
 // Pega as caravana
 $caravan = getCaravan($id_caravan);
+
+$total_seats_status = ($caravan['total_seats'] !== null && $caravan['total_seats'] > 0);
+// echo $total_seats_status;
 //pega os veiculos da caravana
 // $vehicles = getCaravanVehicles($id_caravan);
 //pega os passageiros disponiveis do usuario
@@ -115,7 +118,7 @@ $reserveds = getSeatsReserved($id_caravan);
             <p class="text-sm text-gray-500"><?= $caravan['obs']; ?></p>
           </div>
         <?php endif; ?>
-        <h2 class=" text-lg font-semibold text-gray-900 dark:text-white mx-4 md:mx-0 mt-4">Reservas</h2>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mx-4 mt-4">Reservas</h2>
         <div class="md:w-full md:mx-0 text-gray-900 bg-white border border-gray-200 rounded-lg divide-y overflow-auto mx-4"
              id="reserv_list">
         </div>
@@ -467,7 +470,9 @@ $reserveds = getSeatsReserved($id_caravan);
       <i class="text-lg text-gray-500 me-2 fa min-w-[20px] text-center ${reserva.is_approved ? 'fa-circle-check text-green-600' : 'fa-hourglass-start text-yellow-600'}"></i>
       <div class="flex flex-col truncate">
         <p class="truncate seat-name">${reserva.name}</p>
-        <p class="truncate text-sm text-gray-500">Banco ${reserva.seat}</p>
+       <p class="truncate text-sm text-gray-500">
+  ${reserva.seat ? `Banco ${reserva.seat}` : 'Qualquer banco'}
+</p>
         <p class="text-sm text-gray-500 truncate">${reserva.is_approved ? 'Aprovado' : 'Pendente'}</p>
       </div>
     </div>
@@ -481,10 +486,12 @@ $reserveds = getSeatsReserved($id_caravan);
         class="delete-btn text-red-700 border border-red-700 hover:bg-red-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
         <i class="text-lg fa text-center fa-trash"></i>
       </button>
-      <button type="button" data-id="${reserva.id}" data-modal-target="reserv_switch" data-modal-toggle="reserv_switch"
+      <?php if (!$total_seats_status): ?>
+  <button type="button" data-id="<?= $reserva['id'] ?>" data-modal-target="reserv_switch" data-modal-toggle="reserv_switch"
         class="switch-btn text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
         <i class="text-lg fa text-center fa-right-left"></i>
-      </button>
+  </button>
+<?php endif; ?>
     </div>
   </div>
 `;
