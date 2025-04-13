@@ -696,55 +696,80 @@ function getCaravanList($caravan_id)
   // Conectar ao banco de dados
   $conn = getDatabaseConnection();
 
-  // Preparar a query SQL
-  $sql = "SELECT
-  ve.name AS vehicle_name,
-  IFNULL(s.seat, '#') AS seat, -- Substitui NULL por '#'
-  p.name AS passenger_name,
-  p.nasc_date,
-  d.name AS document_name,
-  p.document,
-  p.obs,
-  TIMESTAMPDIFF(YEAR, p.nasc_date, CURDATE()) AS age,
-  v.id AS vehicle_id,
-  w.name AS ward_name -- Adiciona o nome do ward
-FROM
-  seats s
-JOIN
-  passengers p ON s.id_passenger = p.id
-JOIN
-  documents d ON d.id = p.id_document
-JOIN
-  caravan_vehicles v ON v.id = s.id_caravan_vehicle
-JOIN
-  vehicles ve ON ve.id = v.id_vehicle
-JOIN
-  wards w ON w.id = p.id_ward -- Adiciona o join com a tabela wards
-WHERE
-  s.id_caravan = ?
-ORDER BY
-  v.id, CAST(s.seat AS UNSIGNED) asc;";
+  // Primeiro, verifica o campo total_seats
+  $checkSql = "SELECT total_seats FROM caravans WHERE id = ?";
+  $checkStmt = $conn->prepare($checkSql);
+  $checkStmt->bind_param('s', $caravan_id);
+  $checkStmt->execute();
+  $checkResult = $checkStmt->get_result();
+  $caravan = $checkResult->fetch_assoc();
+  $checkStmt->close();
 
+  // Decide qual query usar com base no total_seats
+  if ($caravan && $caravan['total_seats'] !== null) {
+    // Caravana SEM veículos (usa query simplificada)
+    $sql = "SELECT
+      p.name AS passenger_name,
+      p.nasc_date,
+      d.name AS document_name,
+      p.document,
+      p.obs,
+      TIMESTAMPDIFF(YEAR, p.nasc_date, CURDATE()) AS age,
+      w.name AS ward_name
+    FROM
+      seats s
+    JOIN
+      passengers p ON s.id_passenger = p.id
+    JOIN
+      documents d ON d.id = p.id_document
+    JOIN
+      wards w ON w.id = p.id_ward
+    WHERE
+      s.id_caravan = ?
+    ORDER BY
+      p.name ASC
+    ";
+  } else {
+    // Caravana COM veículos (query original)
+    $sql = "SELECT
+      ve.name AS vehicle_name,
+      IFNULL(s.seat, '#') AS seat,
+      p.name AS passenger_name,
+      p.nasc_date,
+      d.name AS document_name,
+      p.document,
+      p.obs,
+      TIMESTAMPDIFF(YEAR, p.nasc_date, CURDATE()) AS age,
+      v.id AS vehicle_id,
+      w.name AS ward_name
+    FROM
+      seats s
+    JOIN
+      passengers p ON s.id_passenger = p.id
+    JOIN
+      documents d ON d.id = p.id_document
+    JOIN
+      caravan_vehicles v ON v.id = s.id_caravan_vehicle
+    JOIN
+      vehicles ve ON ve.id = v.id_vehicle
+    JOIN
+      wards w ON w.id = p.id_ward
+    WHERE
+      s.id_caravan = ?
+    ORDER BY
+      v.id, CAST(s.seat AS UNSIGNED) ASC;";
+  }
 
-  // Prepara a declaração
+  // Executa a query escolhida
   $stmt = $conn->prepare($sql);
-
-  // Vincula o parâmetro e executa
-  $stmt->bind_param('s', $caravan_id); // 'i' indica que o parâmetro é um inteiro
+  $stmt->bind_param('s', $caravan_id);
   $stmt->execute();
-
-  // Obtém o resultado
   $result = $stmt->get_result();
-
-  // Busca todos os dados
   $seats = $result->fetch_all(MYSQLI_ASSOC);
-
-  // Fecha a declaração e a conexão
   $stmt->close();
   $conn->close();
 
   return $seats;
-
 }
 function getVehicle($vehicle_id)
 {

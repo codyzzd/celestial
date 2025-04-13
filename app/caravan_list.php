@@ -22,20 +22,25 @@ $user_stake = checkStake(user_id: $user_id);
 $caravan = getCaravan(caravan_id: $id_caravan);
 // Pega a lista total da situação da caravana
 $seats = getCaravanList($id_caravan);
+// print_r($seats);
 
-// organizando seats
-// Supondo que $seats é um array com todos os assentos
-$groupedSeats = [];
+// Verifica se a primeira linha tem a chave 'vehicle_name'
+$novehicles = !isset($seats[0]['vehicle_name']);
+// echo $novehicles;
 
-// Agrupa os assentos por veículo
-foreach ($seats as $seat) {
-  $vehicleName = $seat['vehicle_name'];
+if (!$novehicles) {
+  // Organiza os seats por veículo
+  $groupedSeats = [];
 
-  if (!isset($groupedSeats[$vehicleName])) {
-    $groupedSeats[$vehicleName] = [];
+  foreach ($seats as $seat) {
+    $vehicleName = $seat['vehicle_name'];
+
+    if (!isset($groupedSeats[$vehicleName])) {
+      $groupedSeats[$vehicleName] = [];
+    }
+
+    $groupedSeats[$vehicleName][] = $seat;
   }
-
-  $groupedSeats[$vehicleName][] = $seat;
 }
 ?>
 <!DOCTYPE html>
@@ -126,23 +131,194 @@ foreach ($seats as $seat) {
           <h1 class="text-2xl font-semibold tracking-tight text-gray-900"><?= $caravan['name']; ?></h1>
         </div>
       </div>
-      <!-- tabela -->
-      <?php foreach ($groupedSeats as $vehicleName => $vehicleSeats): ?>
+      <!-- tabela com veiculos -->
+      <?php if (!$novehicles): ?>
+        <?php foreach ($groupedSeats as $vehicleName => $vehicleSeats): ?>
+          <div class="header-list flex flex-col md:flex-row md:justify-between mb-2 gap-2 md:items-center">
+            <p class="text-sm text-gray-500">Lista: <?= htmlspecialchars($vehicleName) ?></p>
+            <button id="dropdownDefaultButton-<?= htmlspecialchars($vehicleName) ?>"
+                    data-dropdown-toggle="multi-dropdown-<?= htmlspecialchars($vehicleName) ?>"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-fit"
+                    type="button">Baixar <svg class="w-2.5 h-2.5 ms-3"
+                   aria-hidden="true"
+                   xmlns="http://www.w3.org/2000/svg"
+                   fill="none"
+                   viewBox="0 0 10 6">
+                <path stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 1 4 4 4-4" />
+              </svg>
+            </button>
+            <!-- Dropdown menu -->
+            <div id="multi-dropdown-<?= htmlspecialchars($vehicleName) ?>"
+                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                  aria-labelledby="multiLevelDropdownButton">
+                <!-- Completo -->
+                <li>
+                  <button id="completeDropdownButton-<?= htmlspecialchars($vehicleName) ?>"
+                          data-dropdown-toggle="completeDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                          data-dropdown-placement="right-start"
+                          type="button"
+                          class="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    Completo
+                    <svg class="w-2.5 h-2.5 ms-3 rtl:rotate-180"
+                         aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 6 10">
+                      <path stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                  </button>
+                  <div id="completeDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                       class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="completeDropdownButton-<?= htmlspecialchars($vehicleName) ?>">
+                      <li>
+                        <a href="#"
+                           data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                           data-file="xls"
+                           data-type="completo"
+                           data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">XLS</a>
+                      </li>
+                      <li>
+                        <a href="#"
+                           data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                           data-file="pdf"
+                           data-type="completo"
+                           data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">PDF</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <!-- Simples -->
+                <li>
+                  <button id="simpleDropdownButton-<?= htmlspecialchars($vehicleName) ?>"
+                          data-dropdown-toggle="simpleDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                          data-dropdown-placement="right-start"
+                          type="button"
+                          class="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    Simples
+                    <svg class="w-2.5 h-2.5 ms-3 rtl:rotate-180"
+                         aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 6 10">
+                      <path stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                  </button>
+                  <div id="simpleDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                       class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="simpleDropdownButton-<?= htmlspecialchars($vehicleName) ?>">
+                      <li>
+                        <a href="#"
+                           data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                           data-file="xls"
+                           data-type="simples"
+                           data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">XLS</a>
+                      </li>
+                      <li>
+                        <a href="#"
+                           data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                           data-file="pdf"
+                           data-type="simples"
+                           data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">PDF</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="relative overflow-x-auto rounded-lg mb-8">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col"
+                      class="p-3 text-nowrap text-left">
+                    <div class="d-flex justify-content-between align-items-center">
+                      # <a href="#"
+                         class="sort"
+                         data-column="banco"
+                         data-order="asc"><i class="fa fa-sort"></i></a>
+                    </div>
+                  </th>
+                  <th scope="col"
+                      class="p-3 text-nowrap text-left">
+                    <div class="d-flex justify-content-between align-items-center">
+                      Nome <a href="#"
+                         class="sort"
+                         data-column="nome"
+                         data-order="asc"><i class="fa fa-sort"></i></a>
+                    </div>
+                  </th>
+                  <th scope="col"
+                      class="p-3 text-nowrap text-left">
+                    <div class="d-flex justify-content-between align-items-center">
+                      Idade <a href="#"
+                         class="sort"
+                         data-column="idade"
+                         data-order="asc"><i class="fa fa-sort"></i></a>
+                    </div>
+                  </th>
+                  <th scope="col"
+                      class="p-3 text-nowrap text-left">
+                    <div class="d-flex justify-content-between align-items-center">
+                      Ala <a href="#"
+                         class="sort"
+                         data-column="ala"
+                         data-order="asc"><i class="fa fa-sort"></i></a>
+                    </div>
+                  </th>
+                  <th scope="col"
+                      class="p-3 text-nowrap ">Tipo Doc.</th>
+                  <th scope="col"
+                      class="p-3 text-nowrap ">Doc.</th>
+                  <th scope="col"
+                      class="p-3 text-nowrap ">Tel.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($vehicleSeats as $index => $seat): ?>
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="p-3 text-nowrap min-w-4 w-4 max-w-4"><?= htmlspecialchars($seat['seat']) ?></td>
+                    <th scope="row"
+                        class="p-3 font-medium text-gray-900 whitespace-nowrap dark:text-white text-nowrap min-w-24 w-24 max-w-24 truncate">
+                      <?= htmlspecialchars($seat['passenger_name']) ?>
+                    </th>
+                    <td class="p-3 text-nowrap min-w-16 w-16 max-w-16"><?= htmlspecialchars($seat['age']) ?></td>
+                    <td class="p-3 text-nowrap min-w-24 w-24 max-w-24 truncate"><?= htmlspecialchars($seat['ward_name']) ?></td>
+                    <td class="p-3 text-nowrap min-w-16 w-16 max-w-16 truncate"><?= htmlspecialchars($seat['document_name']) ?></td>
+                    <td class="p-3 text-nowrap min-w-32 w-32 max-w-32"><?= htmlspecialchars($seat['document']) ?></td>
+                    <td class="p-3 text-nowrap min-w-32 w-32 max-w-32"><?= htmlspecialchars($seat['obs']) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        <?php endforeach; ?>
+      <?php endif; ?>
+      <!-- tabela sem veiculos -->
+      <?php if ($novehicles): ?>
         <div class="header-list flex flex-col md:flex-row md:justify-between mb-2 gap-2 md:items-center">
-          <p class="text-sm text-gray-500">Lista: <?= htmlspecialchars($vehicleName) ?></p>
-          <!-- <div class=" flex flex-row gap-3"
-               id="downs">
-            <button class="downxls text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 w-fit"
-                    data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
-                    data-file="xls">
-              <i class="fa fa-download me-2"></i>XLS</button>
-            <button class="downpdf text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 w-fit"
-                    data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
-                    data-file="pdf">
-              <i class="fa fa-download me-2"></i>PDF</button>
-          </div> -->
-          <button id="dropdownDefaultButton-<?= htmlspecialchars($vehicleName) ?>"
-                  data-dropdown-toggle="multi-dropdown-<?= htmlspecialchars($vehicleName) ?>"
+          <p class="text-sm text-gray-500">Lista</p>
+          <button id="dropdownDefaultButton-veiculo"
+                  data-dropdown-toggle="multi-dropdown-veiculo"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-fit"
                   type="button">Baixar <svg class="w-2.5 h-2.5 ms-3"
                  aria-hidden="true"
@@ -157,14 +333,14 @@ foreach ($seats as $seat) {
             </svg>
           </button>
           <!-- Dropdown menu -->
-          <div id="multi-dropdown-<?= htmlspecialchars($vehicleName) ?>"
+          <div id="multi-dropdown-veiculo"
                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                 aria-labelledby="multiLevelDropdownButton">
               <!-- Completo -->
               <li>
-                <button id="completeDropdownButton-<?= htmlspecialchars($vehicleName) ?>"
-                        data-dropdown-toggle="completeDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                <button id="completeDropdownButton-veiculo"
+                        data-dropdown-toggle="completeDropdown-veiculo"
                         data-dropdown-placement="right-start"
                         type="button"
                         class="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
@@ -181,24 +357,26 @@ foreach ($seats as $seat) {
                           d="m1 9 4-4-4-4" />
                   </svg>
                 </button>
-                <div id="completeDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                <div id="completeDropdown-veiculo"
                      class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                   <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                      aria-labelledby="completeDropdownButton-<?= htmlspecialchars($vehicleName) ?>">
+                      aria-labelledby="completeDropdownButton-veiculo">
                     <li>
                       <a href="#"
-                         data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                         data-cv="<?= htmlspecialchars($id_caravan) ?>"
+                         data-vh
                          data-file="xls"
                          data-type="completo"
-                         data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                         data-vehicle-name="veiculo"
                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">XLS</a>
                     </li>
                     <li>
                       <a href="#"
-                         data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                         data-cv="<?= htmlspecialchars($id_caravan) ?>"
+                         data-vh
                          data-file="pdf"
                          data-type="completo"
-                         data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                         data-vehicle-name="veiculo"
                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">PDF</a>
                     </li>
                   </ul>
@@ -206,8 +384,8 @@ foreach ($seats as $seat) {
               </li>
               <!-- Simples -->
               <li>
-                <button id="simpleDropdownButton-<?= htmlspecialchars($vehicleName) ?>"
-                        data-dropdown-toggle="simpleDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                <button id="simpleDropdownButton-veiculo"
+                        data-dropdown-toggle="simpleDropdown-veiculo"
                         data-dropdown-placement="right-start"
                         type="button"
                         class="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
@@ -224,24 +402,26 @@ foreach ($seats as $seat) {
                           d="m1 9 4-4-4-4" />
                   </svg>
                 </button>
-                <div id="simpleDropdown-<?= htmlspecialchars($vehicleName) ?>"
+                <div id="simpleDropdown-veiculo"
                      class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                   <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                      aria-labelledby="simpleDropdownButton-<?= htmlspecialchars($vehicleName) ?>">
+                      aria-labelledby="simpleDropdownButton-veiculo">
                     <li>
                       <a href="#"
-                         data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                         data-cv="<?= htmlspecialchars($id_caravan) ?>"
+                         data-vh
                          data-file="xls"
                          data-type="simples"
-                         data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                         data-vehicle-name="veiculo"
                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">XLS</a>
                     </li>
                     <li>
                       <a href="#"
-                         data-cv="<?= htmlspecialchars($seat['vehicle_id']) ?>"
+                         data-cv="<?= htmlspecialchars($id_caravan) ?>"
+                         data-vh
                          data-file="pdf"
                          data-type="simples"
-                         data-vehicle-name="<?= htmlspecialchars($vehicleName) ?>"
+                         data-vehicle-name="veiculo"
                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">PDF</a>
                     </li>
                   </ul>
@@ -299,9 +479,9 @@ foreach ($seats as $seat) {
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($vehicleSeats as $index => $seat): ?>
+              <?php foreach ($seats as $index => $seat): ?>
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td class="p-3 text-nowrap min-w-4 w-4 max-w-4"><?= htmlspecialchars($seat['seat']) ?></td>
+                  <td class="p-3 text-nowrap min-w-4 w-4 max-w-4"><?= $index + 1 ?></td>
                   <th scope="row"
                       class="p-3 font-medium text-gray-900 whitespace-nowrap dark:text-white text-nowrap min-w-24 w-24 max-w-24 truncate">
                     <?= htmlspecialchars($seat['passenger_name']) ?>
@@ -316,7 +496,7 @@ foreach ($seats as $seat) {
             </tbody>
           </table>
         </div>
-      <?php endforeach; ?>
+      <?php endif; ?>
     </section>
     <?php require_once ROOT_PATH . '/section/normal_menu_bottom.php'; ?>
     <?php
@@ -340,10 +520,11 @@ foreach ($seats as $seat) {
         $('a[data-cv]').on('click', function (e) {
           e.preventDefault(); // Evita o comportamento padrão do link
 
-          var vehicleId = $(this).data('cv');    // ID do veículo
+          var vehicleId = $(this).data('cv');    // ID do veículo ou caravana
           var fileType = $(this).data('file');   // Tipo de arquivo (xls/pdf)
           var reportType = $(this).data('type'); // Tipo de relatório (completo/simples)
           var vehicleName = $(this).data('vehicle-name');
+          var hasVH = $(this).is('[data-vh]');
 
           // Captura a data atual formatada
           var currentDate = getCurrentDateFormatted();
@@ -355,6 +536,7 @@ foreach ($seats as $seat) {
             data: {
               vehicleId: vehicleId,
               reportType: reportType,
+              novehicles: hasVH,
               indicador: 'download_list'
             },
             success: function (data) {
