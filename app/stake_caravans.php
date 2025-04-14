@@ -663,7 +663,7 @@ $destinations = getDestinations();
             "&indicador=caravan_add" +
             "&stake_id=" + encodeURIComponent(userStake) +
             "&vehicle_ids=" + encodeURIComponent(JSON.stringify(vehicleIds)) + // Adicione os IDs dos veículos
-            "total_seats=" + encodeURIComponent($('#total_seats').val());
+            "&total_seats=" + encodeURIComponent($('#total_seats').val());
 
           $.ajax({
             type: "POST",
