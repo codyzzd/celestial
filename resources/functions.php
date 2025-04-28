@@ -1335,3 +1335,124 @@ function checkRoleAltValidity($id)
   // Se tudo estiver válido, retorna 'valid'
   return 'valid';
 }
+
+function getTop10passengers($stake_id)
+{
+  // Conectar ao banco de dados
+  $conn = getDatabaseConnection();
+
+  // Preparar a consulta SQL
+  $sql = "SELECT
+    s.id_passenger,
+    p.name AS passenger_name,
+    w.name AS ward_name,
+    st.name AS stake_name,
+    COUNT(*) AS total_seats
+  FROM
+    seats s
+  INNER JOIN
+    passengers p ON s.id_passenger = p.id
+  INNER JOIN
+    wards w ON p.id_ward = w.id
+  INNER JOIN
+    stakes st ON w.id_stake = st.id
+  INNER JOIN
+    caravans c ON s.id_caravan = c.id
+  WHERE
+    w.id_stake = ?
+    AND c.deleted_at IS NULL
+    AND c.return_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+    -- AND c.return_date <= CURDATE()
+  GROUP BY
+    s.id_passenger, p.name, w.name, st.name
+  ORDER BY
+    total_seats DESC,
+    p.name ASC
+  LIMIT 5";
+
+  // Preparar a declaração
+  $stmt = $conn->prepare($sql);
+
+  // Verificar se a preparação foi bem-sucedida
+  if (!$stmt) {
+    throw new Exception("Erro ao preparar a consulta: " . $conn->error);
+  }
+
+  // Bind do parâmetro
+  $stmt->bind_param("s", $stake_id);
+
+  // Executar a declaração
+  $stmt->execute();
+
+  // Obter o resultado
+  $result = $stmt->get_result();
+
+  // Armazenar os resultados em um array
+  $topPassengers = [];
+  while ($row = $result->fetch_assoc()) {
+    $topPassengers[] = $row;
+  }
+
+  // Fechar a declaração e a conexão
+  $stmt->close();
+  $conn->close();
+
+  return $topPassengers;
+}
+
+function getTopWardsViajantes($stake_id)
+{
+  // Conectar ao banco de dados
+  $conn = getDatabaseConnection();
+
+  // Preparar a consulta SQL
+  $sql = "SELECT
+    w.name AS ward_name,
+    COUNT(DISTINCT s.id_passenger) AS total_passengers
+FROM
+    seats s
+INNER JOIN
+    passengers p ON s.id_passenger = p.id
+INNER JOIN
+    wards w ON p.id_ward = w.id
+INNER JOIN
+    caravans c ON s.id_caravan = c.id
+WHERE
+    w.id_stake = ?
+    AND c.deleted_at IS NULL
+    AND c.return_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+   -- AND c.start_date <= CURDATE()
+GROUP BY
+    w.name
+ORDER BY
+    total_passengers DESC;";
+
+  // Preparar a declaração
+  $stmt = $conn->prepare($sql);
+
+  // Verificar se a preparação foi bem-sucedida
+  if (!$stmt) {
+    throw new Exception("Erro ao preparar a consulta: " . $conn->error);
+  }
+
+  // Bind do parâmetro
+  $stmt->bind_param("s", $stake_id);
+
+  // Executar a declaração
+  $stmt->execute();
+
+  // Obter o resultado
+  $result = $stmt->get_result();
+
+  // Armazenar os resultados em um array
+  $topWards = [];
+  while ($row = $result->fetch_assoc()) {
+    $topWards[] = $row;
+  }
+
+  // Fechar a declaração e a conexão
+  $stmt->close();
+  $conn->close();
+
+  return $topWards;
+}

@@ -415,7 +415,7 @@ $reserveds = getSeatsReserved($id_caravan);
           });
         });
 
-        // atualizar lista
+        // atualizar aprovacao
         $('#reserv_list').on('click', '.approve-btn', function () {
           var seatId = $(this).data('id');
 
@@ -426,6 +426,34 @@ $reserveds = getSeatsReserved($id_caravan);
           let data = {
             seat_id: seatId,
             indicador: "reserv_toggle", // Indicador para buscar as pessoas
+          };
+
+          $.ajax({
+            type: "POST",
+            url: apiPath,
+            data: data,
+            success: function (response) {
+              // console.log(response);
+
+              updateReservList();
+            },
+            error: function (error) {
+              // console.log("Erro ao aprovar/desaprovar passageiro: " + error);
+            }
+          });
+        });
+
+        // atualizar aprovacao
+        $('#reserv_list').on('click', '.pay-btn', function () {
+          var seatId = $(this).data('id');
+
+          // Lógica para aprovar/desaprovar passageiro
+          // console.log("Aprovação/Desaprovação para passageiro com ID: " + seatId);
+
+          // Criar o objeto data com os parâmetros padrão
+          let data = {
+            seat_id: seatId,
+            indicador: "pay_toggle", // Indicador para buscar as pessoas
           };
 
           $.ajax({
@@ -464,12 +492,15 @@ $reserveds = getSeatsReserved($id_caravan);
 
                 // Adicionar novos reserv_list aos containers com base na relação
                 reservas.forEach(function (reserva) {
+                  var nameParts = reserva.name.trim().split(' ');
+                  var formattedName = nameParts[0] + ' ' + nameParts[nameParts.length - 1];
+
                   var reservaItem = `
   <div class="block w-full px-4 py-2 border-gray-200 flex justify-between items-center">
     <div class="flex flex-row text-start truncate items-center">
       <i class="text-lg text-gray-500 me-2 fa min-w-[20px] text-center ${reserva.is_approved ? 'fa-circle-check text-green-600' : 'fa-hourglass-start text-yellow-600'}"></i>
       <div class="flex flex-col truncate">
-        <p class="truncate seat-name">${reserva.name}</p>
+    <p class="truncate seat-name">${formattedName}</p>
        <p class="truncate text-sm text-gray-500">
   ${reserva.seat ? `Banco ${reserva.seat}` : 'Qualquer banco'}
 </p>
@@ -479,18 +510,24 @@ $reserveds = getSeatsReserved($id_caravan);
     <div class="flex flex-row gap-2 ms-2">
       <button type="button" data-id="${reserva.id}"
         class="approve-btn border font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center
-        ${reserva.is_approved ? 'text-yellow-700 border-yellow-700 hover:bg-yellow-700 hover:text-white focus:ring-yellow-300' : 'text-green-700 border-green-700 hover:bg-green-700 hover:text-white focus:ring-green-300'}">
-        <i class="text-lg fa text-center ${reserva.is_approved ? 'fa-thumbs-down' : 'fa-thumbs-up'}"></i>
+        ${reserva.is_approved ? 'text-green-700 border-green-700 hover:bg-green-700 hover:text-white focus:ring-green-300' : 'text-yellow-700 border-yellow-700 hover:bg-yellow-700 hover:text-white focus:ring-yellow-300'}">
+        <i class="text-lg fa text-center ${reserva.is_approved ? 'fa-thumbs-up' : 'fa-thumbs-up'}"></i>
       </button>
-      <button type="button" data-id="${reserva.id}" data-modal-target="reserv_archive" data-modal-toggle="reserv_archive"
-        class="delete-btn text-red-700 border border-red-700 hover:bg-red-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
-        <i class="text-lg fa text-center fa-trash"></i>
+      <button type="button" data-id="${reserva.id}"
+        class="pay-btn border font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center
+        ${reserva.is_payed ? 'text-green-700 border-green-700 hover:bg-green-700 hover:text-white focus:ring-green-300' : 'text-yellow-700 border-yellow-700 hover:bg-yellow-700 hover:text-white focus:ring-yellow-300'}">
+        <i class="text-lg fa text-center ${reserva.is_payed ? 'fa-dollar-sign' : 'fa-dollar-sign'}"></i>
       </button>
+
       <?php if (!$total_seats_status): ?>
   <button type="button" data-id="<?= $reserva['id'] ?>" data-modal-target="reserv_switch" data-modal-toggle="reserv_switch"
         class="switch-btn text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
         <i class="text-lg fa text-center fa-right-left"></i>
   </button>
+   <button type="button" data-id="${reserva.id}" data-modal-target="reserv_archive" data-modal-toggle="reserv_archive"
+        class="delete-btn text-red-700 border border-red-700 hover:bg-red-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
+        <i class="text-lg fa text-center fa-trash"></i>
+      </button>
 <?php endif; ?>
     </div>
   </div>

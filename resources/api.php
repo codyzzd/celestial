@@ -2036,7 +2036,7 @@ if ($indicador == 'reserv_list') {
   // 4. Monta a query com ou sem a condição dependendo do slug
   if ($slug_role === 'stake_lider' || $slug_role === 'stake_aux') {
     $sql = "
-  SELECT seats.id, passengers.name, seats.seat, seats.is_approved
+  SELECT seats.id, passengers.name, seats.seat, seats.is_approved, seats.is_payed
   FROM seats
   JOIN passengers ON seats.id_passenger = passengers.id
   WHERE seats.id_caravan = ?
@@ -2045,7 +2045,7 @@ if ($indicador == 'reserv_list') {
     $stmt->bind_param("s", $caravan_id);
   } else {
     $sql = "
-  SELECT seats.id, passengers.name, seats.seat, seats.is_approved
+  SELECT seats.id, passengers.name, seats.seat, seats.is_approved, seats.is_payed
   FROM seats
   JOIN passengers ON seats.id_passenger = passengers.id
   WHERE seats.id_caravan = ? AND passengers.id_ward = ?
@@ -2075,6 +2075,32 @@ if ($indicador == 'reserv_toggle') {
   if ($seat_id) {
     // Query para alternar o valor de is_approved diretamente
     $sql = "UPDATE seats SET is_approved = NOT is_approved WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $seat_id);
+
+    if ($stmt->execute()) {
+      // Sucesso ao atualizar
+      echo json_encode(['status' => 'success', 'msg' => 'Status alterado com sucesso.']);
+    } else {
+      // Erro ao atualizar
+      echo json_encode(['status' => 'error', 'msg' => 'Erro ao atualizar o status.']);
+    }
+
+    // Fecha a declaração
+    $stmt->close();
+  } else {
+    // Caso o seat_id não seja passado corretamente
+    echo json_encode(['status' => 'error', 'msg' => 'ID do assento não fornecido.']);
+  }
+}
+
+if ($indicador == 'pay_toggle') {
+  $seat_id = $_POST['seat_id'];
+
+  // Verifica se o seat_id foi passado
+  if ($seat_id) {
+    // Query para alternar o valor de is_approved diretamente
+    $sql = "UPDATE seats SET is_payed = NOT is_payed WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $seat_id);
 
