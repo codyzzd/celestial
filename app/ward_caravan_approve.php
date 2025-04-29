@@ -510,15 +510,14 @@ $reserveds = getSeatsReserved($id_caravan);
     <div class="flex flex-row gap-2 ms-2">
       <button type="button" data-id="${reserva.id}"
         class="approve-btn border font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center
-        ${reserva.is_approved ? 'text-green-700 border-green-700 hover:bg-green-700 hover:text-white focus:ring-green-300' : 'text-yellow-700 border-yellow-700 hover:bg-yellow-700 hover:text-white focus:ring-yellow-300'}">
+        ${reserva.is_approved ? 'text-white border-green-700 bg-green-700 hover:bg-green-800 focus:ring-green-300' : 'text-gray-700 border-gray-700 hover:bg-gray-700 hover:text-white focus:ring-gray-300'}">
         <i class="text-lg fa text-center ${reserva.is_approved ? 'fa-thumbs-up' : 'fa-thumbs-up'}"></i>
       </button>
       <button type="button" data-id="${reserva.id}"
         class="pay-btn border font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center
-        ${reserva.is_payed ? 'text-green-700 border-green-700 hover:bg-green-700 hover:text-white focus:ring-green-300' : 'text-yellow-700 border-yellow-700 hover:bg-yellow-700 hover:text-white focus:ring-yellow-300'}">
+        ${reserva.is_payed ? 'text-white border-green-700 bg-green-700 hover:bg-green-800 focus:ring-green-300' : 'text-gray-700 border-gray-700 hover:bg-gray-700 hover:text-white focus:ring-gray-300'}">
         <i class="text-lg fa text-center ${reserva.is_payed ? 'fa-dollar-sign' : 'fa-dollar-sign'}"></i>
       </button>
-
       <?php if (!$total_seats_status): ?>
   <button type="button" data-id="<?= $reserva['id'] ?>" data-modal-target="reserv_switch" data-modal-toggle="reserv_switch"
         class="switch-btn text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
