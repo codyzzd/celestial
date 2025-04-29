@@ -2,7 +2,7 @@
 //pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //echo ROOT_PATH;
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_reserv.php";
 ?>
 <?php
 session_start(); // Inicia ou continua a sessão atual
@@ -15,7 +15,7 @@ $user_id = checkUserLogin();
 $stake_id = getStake($user_id);
 // echo $stake_id;
 // Guarda a role do usuário
-$user_role = checkUserRole($user_id, ['stake_lider','stake_aux']);
+$user_role = checkUserRole($user_id, ['stake_lider', 'stake_aux']);
 
 ?>
 <!DOCTYPE html>

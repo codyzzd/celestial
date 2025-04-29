@@ -2,7 +2,7 @@
 //pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //echo ROOT_PATH;
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_reserv.php";
 ?>
 <?php
 session_start(); // Inicia ou continua a sessão atual
@@ -408,7 +408,7 @@ $seat_map = isset($vehicle['seat_map']) ? htmlspecialchars($vehicle['seat_map'])
 
           // Realiza a ação de arquivamento via AJAX
           $.ajax({
-            url: apiPath,
+            url: "../resources/api_geral.php",
             type: 'POST',
             data: formData,
             success: function (response) {

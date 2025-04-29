@@ -1,8 +1,7 @@
 <?php
 // Pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
-// $apiPath = ROOT_PATH . '/resources/api.php';
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_user.php";
 session_start(); // Inicia ou continua a sessão
 
 // Inclui as funções necessárias

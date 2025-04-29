@@ -2,7 +2,7 @@
 //pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //echo ROOT_PATH;
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_user.php";
 ?>
 <?php
 // Chamando as funções

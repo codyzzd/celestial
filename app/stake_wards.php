@@ -2,7 +2,7 @@
 //pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //echo ROOT_PATH;
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_stake.php";
 ?>
 <?php
 session_start(); // Inicia ou continua a sessão atual
@@ -299,7 +299,7 @@ $user_role = checkUserRole($user_id, ['stake_lider','stake_aux']);
 
             // Realiza a ação de arquivamento via AJAX
             $.ajax({
-              url: apiPath,
+              url: "../resources/api_geral.php",
               type: 'POST',
               data: formData, // Enviar os dados com o indicador e wardId
               success: function (response) {

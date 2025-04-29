@@ -2,7 +2,7 @@
 //pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //echo ROOT_PATH;
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_reserv.php";
 ?>
 <?php
 session_start(); // Inicia ou continua a sessão atual
@@ -434,10 +434,12 @@ $reserveds = getSeatsReserved($id_caravan);
             data: data,
             success: function (response) {
               // console.log(response);
-
+              // var jsonResponse = JSON.parse(response);
+              // toast(jsonResponse.status, jsonResponse.msg);
               updateReservList();
             },
             error: function (error) {
+
               // console.log("Erro ao aprovar/desaprovar passageiro: " + error);
             }
           });
@@ -466,6 +468,7 @@ $reserveds = getSeatsReserved($id_caravan);
               updateReservList();
             },
             error: function (error) {
+
               // console.log("Erro ao aprovar/desaprovar passageiro: " + error);
             }
           });

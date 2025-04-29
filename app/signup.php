@@ -2,7 +2,7 @@
 //pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //$apiPath = ROOT_PATH . '/resources/api.php';
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_user.php";
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -159,7 +159,7 @@ $apiPath = "../resources/api.php";
             }
           });
         });
-        
+
       });
     </script>
   </body>

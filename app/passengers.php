@@ -2,7 +2,7 @@
 //pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 //echo ROOT_PATH;
-$apiPath = "../resources/api.php";
+$apiPath = "../resources/api_passenger.php";
 ?>
 <?php
 session_start(); // Inicia ou continua a sessão atual
@@ -429,7 +429,7 @@ $relations = getRelations();
                   <label for="inline-radio-group"
                          class="block mb-2 text-sm font-medium text-gray-900">Relação</label>
                   <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex">
-                    <?php 
+                    <?php
                     // Iterar sobre os relations
                     foreach ($relations as $relation): ?>
                       <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
@@ -845,7 +845,7 @@ $relations = getRelations();
 
           // Realiza a ação de arquivamento via AJAX
           $.ajax({
-            url: apiPath,
+            url: "../resources/api_geral.php",
             type: 'POST',
             data: formData,
             success: function (response) {
