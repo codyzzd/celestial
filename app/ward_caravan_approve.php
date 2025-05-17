@@ -521,7 +521,7 @@ $reserveds = getSeatsReserved($id_caravan);
         ${reserva.is_payed ? 'text-white border-green-700 bg-green-700 hover:bg-green-800 focus:ring-green-300' : 'text-gray-700 border-gray-700 hover:bg-gray-700 hover:text-white focus:ring-gray-300'}">
         <i class="text-lg fa text-center ${reserva.is_payed ? 'fa-dollar-sign' : 'fa-dollar-sign'}"></i>
       </button>
-      <?php if (!$total_seats_status): ?>
+      <?php /*if (!$total_seats_status): */ ?>
   <button type="button" data-id="<?= $reserva['id'] ?>" data-modal-target="reserv_switch" data-modal-toggle="reserv_switch"
         class="switch-btn text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
         <i class="text-lg fa text-center fa-right-left"></i>
@@ -530,7 +530,7 @@ $reserveds = getSeatsReserved($id_caravan);
         class="delete-btn text-red-700 border border-red-700 hover:bg-red-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center h-[40px] w-[40px] justify-center">
         <i class="text-lg fa text-center fa-trash"></i>
       </button>
-<?php endif; ?>
+<?php /*endif; */ ?>
     </div>
   </div>
 `;
