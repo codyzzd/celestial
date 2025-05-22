@@ -381,7 +381,7 @@ $destinations = getDestinations();
             "&stake_id=" + encodeURIComponent(userStake) +
             "&vehicle_ids=" + encodeURIComponent(JSON.stringify(vehicleData)) + // Adicione os IDs dos veículos
             // "&id=" + encodeURIComponent(formId) + // Adicione o id do formulário
-            "total_seats=" + encodeURIComponent($('#total_seats').val());
+            "&total_seats=" + encodeURIComponent($('#total_seats').val());
 
           $.ajax({
             type: "POST",
