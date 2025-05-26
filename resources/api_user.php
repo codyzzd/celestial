@@ -545,7 +545,7 @@ if ($indicador == 'user_list_stake') {
       // Consulta SQL para stake_lider
       $sql = "
           SELECT u.id,
-                 u.name AS user_name,
+                 u.name AS user_name,u.email AS user_email,
                  r.name AS role_name,
                  w.name AS ward_name
           FROM users u
@@ -562,7 +562,7 @@ if ($indicador == 'user_list_stake') {
       // Consulta SQL para ward_lider
       $sql = "
           SELECT u.id,
-                 u.name AS user_name,
+                 u.name AS user_name,u.email AS user_email,
                  r.name AS role_name,
                  w.name AS ward_name
           FROM users u
