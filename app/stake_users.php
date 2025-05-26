@@ -692,9 +692,10 @@ $activeWards = array_filter($wards, function ($ward) {
                             <button class="block w-full px-4 py-2 border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:text-purple-700 flex justify-between items-center text-left" data-modal-target="user_edit_modal" data-id="${user.id}">
                                 <div class="flex flex-row items-center truncate">
                                     <div class="flex flex-col truncate w-full">
-                                        <p class="truncate">${user.user_name}</p>
-                                        <p class="text-sm text-gray-500>${user.user_email}</p>
-                                        <p class="text-sm text-gray-500">${user.role_name} - ${user.ward_name}</p>
+                                       <p class="truncate">${user.user_name}</p>
+            <p class="text-sm text-gray-500">${user.user_email}</p>
+            <p class="text-sm text-gray-500">${user.role_name} - ${user.ward_name}</p>
+        </div>
                                     </div>
                                 </div>
                                 <i class="fa fa-chevron-right text-lg text-gray-500"></i>
