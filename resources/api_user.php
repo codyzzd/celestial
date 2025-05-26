@@ -602,7 +602,8 @@ if ($indicador == 'user_list_stake') {
         'id' => $row['id'],
         'user_name' => $row['user_name'],
         'role_name' => $row['role_name'],
-        'ward_name' => $row['ward_name']
+        'ward_name' => $row['ward_name'],
+        'user_email' => $row['user_email']
       ];
     }
     // Fechar a declaração e a conexão
