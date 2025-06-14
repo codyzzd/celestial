@@ -407,22 +407,39 @@ if ($indicador == 'user_login') {
         // Verificar se o usuário quer permanecer logado
         if (!empty($_POST['remember_token']) && $_POST['remember_token'] === 'remember_token') {
           // Criar e salvar um novo token seguro
-          $token = hash('sha256', uniqid(bin2hex(random_bytes(8)), true));
+          $token = hash('sha256', uniqid(bin2hex(random_bytes(16)), true) . time());
 
           $updateStmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
           $updateStmt->bind_param("ss", $token, $id);
           $updateStmt->execute();
           $updateStmt->close();
 
-          // Criar um cookie seguro que expira em 50 anos
-          setcookie('caravana_remember_token', $token, [
-            'expires' => time() + (86400 * 365 * 50), // 50 anos
+          // Detectar se é ambiente local ou produção
+          $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+          $domain = $_SERVER['HTTP_HOST'];
+
+          // Para ambiente local, não definir domínio específico
+          if (strpos($domain, 'localhost') !== false || strpos($domain, '127.0.0.1') !== false) {
+            $domain = '';
+          }
+
+          // Criar um cookie seguro que expira em 30 dias (mais realista que 50 anos)
+          $cookieOptions = [
+            'expires' => time() + (86400 * 30), // 30 dias
             'path' => '/',
-            'domain' => $_SERVER['HTTP_HOST'],
-            'secure' => true, // Apenas HTTPS
             'httponly' => true, // Impede acesso via JavaScript
             'samesite' => 'Lax' // Protege contra CSRF
-          ]);
+          ];
+
+          // Só adicionar 'secure' e 'domain' se não for ambiente local
+          if ($isSecure) {
+            $cookieOptions['secure'] = true;
+          }
+          if (!empty($domain)) {
+            $cookieOptions['domain'] = $domain;
+          }
+
+          setcookie('caravana_remember_token', $token, $cookieOptions);
         }
 
         echo json_encode([

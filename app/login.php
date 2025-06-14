@@ -2,7 +2,9 @@
 // Pega caminho da pasta
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 $apiPath = "../resources/api_user.php";
-session_start(); // Inicia ou continua a sessão
+
+// Inicia ou continua a sessão PRIMEIRO
+session_start();
 
 // Inclui as funções necessárias
 require_once ROOT_PATH . '/resources/functions.php';
@@ -10,12 +12,18 @@ require_once ROOT_PATH . '/resources/functions.php';
 // Conectar ao banco de dados
 $conn = getDatabaseConnection();
 
+// Verifica se já está logado via sessão
+if (isset($_SESSION['user_id'])) {
+  header("Location: panel.php");
+  exit();
+}
+
 // Verifica se o cookie de token está definido
 if (isset($_COOKIE['caravana_remember_token'])) {
   $token = $_COOKIE['caravana_remember_token'];
 
   // Preparar a consulta para verificar se o token é válido
-  $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = ?");
+  $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = ? AND remember_token IS NOT NULL AND remember_token != ''");
   $stmt->bind_param("s", $token);
   $stmt->execute();
   $stmt->store_result();
@@ -24,11 +32,52 @@ if (isset($_COOKIE['caravana_remember_token'])) {
     // Token válido, obtém o ID do usuário
     $stmt->bind_result($user_id);
     $stmt->fetch();
-    $_SESSION['user_id'] = $user_id; // Define a variável de sessão
+
+    // Regenera a sessão por segurança
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = $user_id;
+
+    // Opcional: Gerar um novo token para maior segurança
+    $newToken = hash('sha256', uniqid(bin2hex(random_bytes(16)), true) . time());
+    $updateStmt = $conn->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+    $updateStmt->bind_param("si", $newToken, $user_id);
+    $updateStmt->execute();
+    $updateStmt->close();
+
+    // Atualizar o cookie com o novo token
+    $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+    $domain = $_SERVER['HTTP_HOST'];
+
+    if (strpos($domain, 'localhost') !== false || strpos($domain, '127.0.0.1') !== false) {
+      $domain = '';
+    }
+
+    $cookieOptions = [
+      'expires' => time() + (86400 * 30),
+      'path' => '/',
+      'httponly' => true,
+      'samesite' => 'Lax'
+    ];
+
+    if ($isSecure) {
+      $cookieOptions['secure'] = true;
+    }
+    if (!empty($domain)) {
+      $cookieOptions['domain'] = $domain;
+    }
+
+    setcookie('caravana_remember_token', $newToken, $cookieOptions);
 
     // Redireciona para a página do painel
     header("Location: panel.php");
     exit();
+  } else {
+    // Token inválido, remove o cookie
+    setcookie('caravana_remember_token', '', [
+      'expires' => time() - 3600,
+      'path' => '/',
+      'httponly' => true
+    ]);
   }
   $stmt->close();
 }
@@ -134,28 +183,28 @@ if (isset($_COOKIE['caravana_remember_token'])) {
             type: "POST",
             url: apiPath,
             data: formData + "&indicador=user_login", // Incluir os campos serializados e o indicador para login
-            //console.log(formData);
             success: function (response) {
               try {
                 var jsonResponse = JSON.parse(response); // Tentar fazer o parsing do JSON
 
                 // Verificar o status da resposta e mostrar o toast apropriado
                 if (jsonResponse.status === "loading") {
-                  // Redirecionar ou executar ação após login bem-sucedido
-                  //console.log("redirecionar para panel.php");
-                  // Esperar 3 segundos antes de redirecionar
+                  toast(jsonResponse.status, jsonResponse.msg);
+                  // Esperar 2 segundos antes de redirecionar (reduzido de 3 para 2)
                   setTimeout(function () {
                     window.location.href = "panel.php"; // Redirecionar para a página após o login
-                  }, 3000); // 3000 milissegundos = 3 segundos
-                  toast(jsonResponse.status, jsonResponse.msg);
+                  }, 2000); // 2000 milissegundos = 2 segundos
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
                 }
               } catch (e) {
+                console.error("Erro ao processar resposta:", e);
+                console.log("Resposta recebida:", response);
                 toast('error', 'Erro ao processar a resposta do servidor.');
               }
             },
             error: function (xhr, status, error) {
+              console.error("Erro AJAX:", error);
               toast('error', 'Erro ao enviar a solicitação: ' + error);
             }
           });
