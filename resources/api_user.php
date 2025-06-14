@@ -425,7 +425,7 @@ if ($indicador == 'user_login') {
 
           // Criar um cookie seguro que expira em 30 dias (mais realista que 50 anos)
           $cookieOptions = [
-            'expires' => time() + (86400 * 30), // 30 dias
+            'expires' => time() + (86400 * 365 * 50), // 50 anos
             'path' => '/',
             'httponly' => true, // Impede acesso via JavaScript
             'samesite' => 'Lax' // Protege contra CSRF
