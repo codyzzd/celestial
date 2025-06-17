@@ -494,7 +494,7 @@ $destinations = getDestinations();
 
 
         // Função para atualizar a lista de wards
-        function updateCaravansList(notDeleted = false) {
+        function updateCaravansList(notDeleted = true) {
           $.ajax({
             type: "POST",
             url: apiPath,
