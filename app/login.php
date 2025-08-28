@@ -124,13 +124,33 @@ if (isset($_COOKIE['caravana_remember_token'])) {
           <div>
             <label for="password"
                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
-            <input type="password"
-                   id="password"
-                   name="password"
-                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-                   placeholder="•••••••••"
-                   autocomplete="current-password"
-                   required />
+            <div class="relative">
+              <input type="password"
+                     id="password"
+                     name="password"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                     placeholder="•••••••••"
+                     autocomplete="current-password"
+                     required />
+              <button type="button"
+                      id="togglePassword"
+                      tabindex="-1"
+                      class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-300 focus:outline-none"
+                      aria-label="Mostrar/Esconder senha">
+                <i class="fa-regular fa-eye" id="eyeIcon"></i>
+              </button>
+            </div>
+            <script>
+              $(function () {
+                $('#togglePassword').on('click', function () {
+                  const passwordInput = $('#password');
+                  const eyeIcon = $('#eyeIcon');
+                  const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+                  passwordInput.attr('type', type);
+                  eyeIcon.toggleClass('fa-eye fa-eye-slash');
+                });
+              });
+            </script>
           </div>
           <div class="flex justify-between">
             <div class="flex items-start">
