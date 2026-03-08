@@ -1451,6 +1451,7 @@ WHERE p.deleted_at IS NULL
 GROUP BY w.id, w.name
 ORDER BY unique_passengers DESC;";
 
+
   // Preparar a declaração
   $stmt = $conn->prepare($sql);
 
