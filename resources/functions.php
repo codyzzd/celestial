@@ -1418,6 +1418,7 @@ function getTopWardsViajantes($stake_id)
   $conn = getDatabaseConnection();
 
   // Preparar a consulta SQL
+  /*
   $sql = "SELECT
     w.name AS ward_name,
     COUNT(DISTINCT s.id_passenger) AS total_passengers
@@ -1437,7 +1438,18 @@ WHERE
 GROUP BY
     w.name
 ORDER BY
-    total_passengers DESC;";
+    total_passengers DESC;";*/
+
+  $sql = "SELECT w.name AS ward_name, COUNT(DISTINCT s.id_passenger) AS unique_passengers
+FROM seats s
+JOIN passengers p ON s.id_passenger = p.id
+JOIN caravans c ON s.id_caravan = c.id
+JOIN wards w ON p.id_ward = w.id
+WHERE p.deleted_at IS NULL
+  AND c.return_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+  AND c.id_stake = ?
+GROUP BY w.id, w.name
+ORDER BY unique_passengers DESC;";
 
   // Preparar a declaração
   $stmt = $conn->prepare($sql);

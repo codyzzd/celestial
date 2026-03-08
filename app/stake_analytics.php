@@ -142,7 +142,7 @@ $topWardsViajantes = getTopWardsViajantes($stake_id);
             <?php
             $maxPassengers = max(array_column($topWardsViajantes, 'total_passengers'));
             foreach ($topWardsViajantes as $index => $ward):
-              $percentage = ($ward['total_passengers'] / $maxPassengers) * 100;
+
               ?>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <td class="px-4 py-3">
@@ -153,11 +153,7 @@ $topWardsViajantes = getTopWardsViajantes($stake_id);
                 </td>
                 <td class="px-4 py-3">
                   <div class="flex flex-col gap-1">
-                    <span><?= htmlspecialchars($ward['total_passengers']) ?></span>
-                    <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
-                      <div class="bg-purple-600 h-2 rounded-full"
-                           style="width: <?= $percentage ?>%"></div>
-                    </div>
+                    <?= htmlspecialchars($ward['unique_passengers']) ?>
                   </div>
                 </td>
               </tr>
