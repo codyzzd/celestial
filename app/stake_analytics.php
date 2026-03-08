@@ -140,7 +140,7 @@ $topWardsViajantes = getTopWardsViajantes($stake_id);
           </thead>
           <tbody>
             <?php
-            $maxPassengers = max(array_column($topWardsViajantes, 'total_passengers'));
+           
             foreach ($topWardsViajantes as $index => $ward):
 
               ?>
