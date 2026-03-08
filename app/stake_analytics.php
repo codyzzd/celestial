@@ -59,7 +59,7 @@ $topWardsViajantes = getTopWardsViajantes($stake_id);
         </div>
       </div>
       <!-- gerador de relatorio -->
-      <div class="p-4 bg-white rounded-lg shadow  flex flex-col  gap-2 w-full  relative-container">
+      <div class="p-4 bg-white rounded-lg shadow  flex flex-col  gap-2 w-full  relative-container hidden">
         <form class="grid gap-4 grid-cols-2"
               id="ward_edit"
               action="stake_analytics_report.php"
@@ -82,7 +82,7 @@ $topWardsViajantes = getTopWardsViajantes($stake_id);
         </form>
       </div>
       <!-- Top 10 Passengers Table -->
-      <h2 class="text-lg font-semibold text-gray-900">Top 5 Viajantes (últimos 12 meses)</h2>
+      <h2 class="text-lg font-semibold text-gray-900">Top 10 Viajantes (últimos 12 meses)</h2>
       <div class="relative overflow-x-auto rounded-lg mb-8 border-gray-700">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">

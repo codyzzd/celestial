@@ -1342,7 +1342,7 @@ function getTop10passengers($stake_id)
   $conn = getDatabaseConnection();
 
   // Preparar a consulta SQL
-  $sql = "SELECT
+  /*$sql = "SELECT
     s.id_passenger,
     p.name AS passenger_name,
     w.name AS ward_name,
@@ -1368,7 +1368,19 @@ function getTop10passengers($stake_id)
   ORDER BY
     total_seats DESC,
     p.name ASC
-  LIMIT 5";
+  LIMIT 5";*/
+
+  $sql = "SELECT p.name AS passenger_name, w.name AS ward_name, COUNT(*) AS total_seats
+FROM seats s
+JOIN passengers p ON s.id_passenger = p.id
+JOIN caravans c ON s.id_caravan = c.id
+JOIN wards w ON p.id_ward = w.id
+WHERE p.deleted_at IS NULL
+  AND c.return_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+  AND c.id_stake = ?
+GROUP BY s.id_passenger, p.name, w.name
+ORDER BY total_seats DESC
+LIMIT 10;";
 
   // Preparar a declaração
   $stmt = $conn->prepare($sql);
