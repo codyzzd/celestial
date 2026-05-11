@@ -47,8 +47,8 @@ if ($indicador == 'stake_add') {
       $new_stake_id = $uuid_row['new_id'];
 
       // Preparar a query de inserção
-      $stmt = $conn->prepare("INSERT INTO stakes (id, name, cod, created_by) VALUES (?, ?, ?, ?)");
-      $stmt->bind_param("ssss", $new_stake_id, $name, $cod, $user_id);
+      $stmt = $conn->prepare("INSERT INTO stakes (id, name, cod) VALUES (?, ?, ?)");
+      $stmt->bind_param("sss", $new_stake_id, $name, $cod);
 
       if (!$stmt->execute()) {
         throw new Exception('Erro ao adicionar a stake: ' . $stmt->error);
