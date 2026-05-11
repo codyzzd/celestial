@@ -21,6 +21,11 @@ if ($indicador == 'stake_add') {
   $name = $_POST['name'] ?? '';
   $cod = $_POST['cod'] ?? '';
 
+  if (empty($user_id) || empty($name) || empty($cod)) {
+    echo json_encode(['status' => 'error', 'msg' => 'Dados incompletos fornecidos.']);
+    exit;
+  }
+
   // Verificar se o código já existe no banco de dados
   $stmt = $conn->prepare("SELECT id FROM stakes WHERE cod = ?");
   $stmt->bind_param("s", $cod);
@@ -28,21 +33,63 @@ if ($indicador == 'stake_add') {
   $stmt->store_result();
 
   if ($stmt->num_rows > 0) {
-    echo json_encode(['status' => 'error', 'msg' => 'Código já existe.']);
+    echo json_encode(['status' => 'error', 'msg' => 'Esta estaca já existe!']);
+    $stmt->close();
   } else {
     $stmt->close();
 
-    // Preparar a query de inserção
-    $stmt = $conn->prepare("INSERT INTO stakes (id, name, cod, created_by) VALUES (UUID(), ?, ?, ?)");
-    $stmt->bind_param("sss", $name, $cod, $user_id);
+    try {
+      $conn->begin_transaction();
 
-    if ($stmt->execute()) {
-      echo json_encode(['status' => 'success', 'msg' => 'Estaca adicionada com sucesso.']);
-    } else {
-      echo json_encode(['status' => 'error', 'msg' => 'Erro ao adicionar estaca.']);
+      // Gerar o UUID antes do insert para vincular o usuário à nova estaca.
+      $uuid_stmt = $conn->query("SELECT UUID() AS new_id");
+      $uuid_row = $uuid_stmt->fetch_assoc();
+      $new_stake_id = $uuid_row['new_id'];
+
+      // Preparar a query de inserção
+      $stmt = $conn->prepare("INSERT INTO stakes (id, name, cod, created_by) VALUES (?, ?, ?, ?)");
+      $stmt->bind_param("ssss", $new_stake_id, $name, $cod, $user_id);
+
+      if (!$stmt->execute()) {
+        throw new Exception('Erro ao adicionar a stake: ' . $stmt->error);
+      }
+
+      $stmt->close();
+
+      // Buscar o ID da role "Líder da estaca"
+      $role_stmt = $conn->prepare("SELECT id FROM roles WHERE slug = ?");
+      $role_name = 'stake_lider';
+      $role_stmt->bind_param("s", $role_name);
+      $role_stmt->execute();
+      $role_result = $role_stmt->get_result();
+      $role_row = $role_result->fetch_assoc();
+      $role_stmt->close();
+
+      if (!$role_row) {
+        throw new Exception('Role de líder da estaca não encontrada.');
+      }
+
+      $role_id = $role_row['id'];
+
+      // Atualizar o campo id_stake e role do usuário
+      $stmt = $conn->prepare("UPDATE users SET id_stake = ?, role = ? WHERE id = ?");
+      $stmt->bind_param("sss", $new_stake_id, $role_id, $user_id);
+
+      if (!$stmt->execute()) {
+        throw new Exception('Erro ao atualizar o usuário: ' . $stmt->error);
+      }
+
+      $stmt->close();
+      $conn->commit();
+
+      echo json_encode([
+        'status' => 'loading',
+        'msg' => 'Estaca adicionada com sucesso! Seu usuário está sendo ativado como líder...'
+      ]);
+    } catch (Exception $e) {
+      $conn->rollback();
+      echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
     }
-
-    $stmt->close();
   }
 }
 
