@@ -123,6 +123,67 @@ if ($indicador == 'stake_edit') {
   $stmt->close();
 }
 
+if ($indicador == 'ward_add') {
+  // Pegar dados do form
+  $user_id = $_POST['user_id'] ?? '';
+  $name = $_POST['name'] ?? '';
+  $cod = $_POST['cod'] ?? '';
+
+  if (empty($user_id) || empty($name) || empty($cod)) {
+    echo json_encode(['status' => 'error', 'msg' => 'Dados incompletos fornecidos.']);
+    exit;
+  }
+
+  // Verificar se o código já existe no banco de dados
+  $stmt = $conn->prepare("SELECT id FROM wards WHERE cod = ?");
+  $stmt->bind_param("s", $cod);
+  $stmt->execute();
+  $stmt->store_result();
+
+  if ($stmt->num_rows > 0) {
+    echo json_encode([
+      'status' => 'error',
+      'msg' => 'Esta ala já existe!'
+    ]);
+    $stmt->close();
+  } else {
+    $stmt->close();
+
+    // Buscar o id_stake do usuário
+    $stmt = $conn->prepare("SELECT id_stake FROM users WHERE id = ?");
+    $stmt->bind_param("s", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($id_stake);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($id_stake) {
+      // Preparar a query de inserção com UUID gerado diretamente no MySQL e id_stake
+      $stmt = $conn->prepare("INSERT INTO wards (id, name, cod, id_stake) VALUES (UUID(), ?, ?, ?)");
+      $stmt->bind_param("sss", $name, $cod, $id_stake);
+
+      if ($stmt->execute()) {
+        echo json_encode([
+          'status' => 'success',
+          'msg' => 'Ala adicionada com sucesso!'
+        ]);
+      } else {
+        echo json_encode([
+          'status' => 'error',
+          'msg' => 'Erro ao adicionar ala: ' . $stmt->error
+        ]);
+      }
+
+      $stmt->close();
+    } else {
+      echo json_encode([
+        'status' => 'error',
+        'msg' => 'Erro: id_stake não encontrado para o usuário.'
+      ]);
+    }
+  }
+}
+
 
 if ($indicador == 'ward_edit') {
   // Pegar dados do form
