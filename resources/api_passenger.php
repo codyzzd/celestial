@@ -99,7 +99,7 @@ if ($indicador == 'passenger_edit') {
   $stmt = $conn->prepare("UPDATE passengers SET name = ?, nasc_date = ?, sex = ?, id_ward = ?, id_document = ?, document = ?, obs = ?, id_relationship = ?, id_church = ?, barcode = ?, expiration_date = ? WHERE id = ?");
 
   // A ordem dos parâmetros e tipos deve ser corrigida
-  $stmt->bind_param("ssississssss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_relationship, $id_church, $barcode, $expiration_date, $id);
+  $stmt->bind_param("ssisssssssss", $name, $nasc_date, $sex, $id_ward, $id_document, $document, $obs, $id_relationship, $id_church, $barcode, $expiration_date, $id);
 
   // Executar a query
   if ($stmt->execute()) {
