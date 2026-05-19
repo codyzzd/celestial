@@ -30,6 +30,8 @@ $return_date = isset($caravan['return_date']) ? formatDateOrTime($caravan['retur
 $return_time = isset($caravan['return_time']) ? formatDateOrTime($caravan['return_time'], 'time_Hi') : '';
 $obs = isset($caravan['obs']) ? htmlspecialchars($caravan['obs']) : '';
 $total_seats = isset($caravan['total_seats']) ? htmlspecialchars($caravan['total_seats']) : '';
+$caravan_id = isset($caravan['id']) ? htmlspecialchars($caravan['id']) : '';
+$reservation_page = isset($caravan['total_seats']) && $caravan['total_seats'] !== null ? 'caravan_total_seats.php' : 'caravan.php';
 
 //get vehicles
 $vehicles = getVehicles($user_stake);
@@ -169,6 +171,13 @@ $destinations = getDestinations();
                            required
                            autocomplete="off" />
                   </div>
+                  <div class="col-span-2 mt-4">
+                    <a href="<?= $reservation_page ?>?id=<?= $caravan_id ?>"
+                       class="block w-full px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 text-center">
+                      <i class="fa fa-edit me-2"></i>
+                      Editar Reservas
+                    </a>
+                  </div>
                 </div>
               <?php else: ?>
                 <div id="seats_vehicles"
@@ -231,6 +240,13 @@ $destinations = getDestinations();
                            class="block w-full px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 text-center">
                           <i class="fa fa-table me-2"></i>
                           Lista de passageiros
+                        </a>
+                      </div>
+                      <div class="col-span-2 mt-2">
+                        <a href="<?= $reservation_page ?>?id=<?= $caravan_id ?>"
+                           class="block w-full px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-100 text-center">
+                          <i class="fa fa-edit me-2"></i>
+                          Editar Reservas
                         </a>
                       </div>
                     </div>
