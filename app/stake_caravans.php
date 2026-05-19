@@ -321,6 +321,32 @@ $destinations = getDestinations();
         </div>
       </div>
       <div class="flex flex-col gap-4">
+        <div class="border-b border-gray-200 dark:border-gray-700">
+          <ul class="flex flex-wrap -mb-px text-sm font-medium text-center"
+              id="caravan-tabs"
+              data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500"
+              data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
+              role="tablist">
+            <li class="me-2"
+                role="presentation">
+              <button class="caravan-filter-tab inline-block p-4 border-b-2 rounded-t-lg text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500"
+                      id="caravans-active-tab"
+                      type="button"
+                      role="tab"
+                      aria-selected="true"
+                      data-caravan-filter="active">Ativas</button>
+            </li>
+            <li class="me-2"
+                role="presentation">
+              <button class="caravan-filter-tab inline-block p-4 border-b-2 rounded-t-lg dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
+                      id="caravans-archived-tab"
+                      type="button"
+                      role="tab"
+                      aria-selected="false"
+                      data-caravan-filter="archived">Arquivadas</button>
+            </li>
+          </ul>
+        </div>
         <div>
           <select id="perpage"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -376,8 +402,10 @@ $destinations = getDestinations();
         <div class="p-4  rounded-lg   flex flex-col   w-full  border-[2px] border-gray-300 border-dashed hidden"
              id="empty_state">
           <i class="fa fa-circle-question text-3xl text-gray-500 mb-2"></i>
-          <h5 class="text-xl font-semibold text-gray-900 dark:text-white">Cade as alas?</h5>
-          <p class="text-gray-600 dark:text-gray-300 text-base">Vamos lá, não vai deixar as pedras fazerem o trabalho, vai? Comece a cadastrar suas alas e vamos juntos fortalecer o reino de Deus.</p>
+          <h5 class="text-xl font-semibold text-gray-900 dark:text-white"
+              id="empty_state_title">Nenhuma caravana ativa</h5>
+          <p class="text-gray-600 dark:text-gray-300 text-base"
+             id="empty_state_text">Adicione uma caravana para começar a gestão da estaca.</p>
         </div>
       </div>
     </section>
@@ -400,6 +428,7 @@ $destinations = getDestinations();
         var currentPage = 1;
         // const itemsPerPage = 4; // Número de itens por página
         var itemsPerPage = parseInt($('#perpage').val());
+        var currentCaravanFilter = 'active';
 
         // Mascarar campo 'cod' dentro do formulário com id 'ward_add'
         $('#caravan_add #start_date').mask('00/00/0000');
@@ -493,8 +522,39 @@ $destinations = getDestinations();
 
 
 
-        // Função para atualizar a lista de wards
-        function updateCaravansList(notDeleted = true) {
+        function isActiveCaravan(caravan) {
+          return caravan.deleted_at === null || caravan.deleted_at === '';
+        }
+
+        function updateEmptyState() {
+          if (currentCaravanFilter === 'archived') {
+            $('#empty_state_title').text('Nenhuma caravana arquivada');
+            $('#empty_state_text').text('As caravanas arquivadas aparecerão aqui.');
+          } else {
+            $('#empty_state_title').text('Nenhuma caravana ativa');
+            $('#empty_state_text').text('Adicione uma caravana para começar a gestão da estaca.');
+          }
+        }
+
+        function updateCaravanTabState() {
+          $('.caravan-filter-tab').each(function () {
+            const isActiveTab = $(this).data('caravan-filter') === currentCaravanFilter;
+            $(this)
+              .attr('aria-selected', isActiveTab ? 'true' : 'false')
+              .toggleClass('text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500', isActiveTab)
+              .toggleClass('dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300', !isActiveTab);
+          });
+        }
+
+        $('.caravan-filter-tab').on('click', function () {
+          currentCaravanFilter = $(this).data('caravan-filter');
+          currentPage = 1;
+          updateCaravanTabState();
+          updateCaravansList();
+        });
+
+        // Função para atualizar a lista de caravanas
+        function updateCaravansList() {
           $.ajax({
             type: "POST",
             url: apiPath,
@@ -512,16 +572,18 @@ $destinations = getDestinations();
                 // Limpar o conteúdo atual do container
                 container.empty();
 
-                // Filtrar Caravans baseado no parâmetro opcional
-                if (notDeleted) {
-                  Caravans = Caravans.filter(function (caravan) {
-                    return caravan.deleted_at === null;
-                  });
-                }
+                Caravans = Caravans.filter(function (caravan) {
+                  return currentCaravanFilter === 'archived'
+                    ? !isActiveCaravan(caravan)
+                    : isActiveCaravan(caravan);
+                });
 
                 if (Caravans.length === 0) {
+                  updateEmptyState();
                   $('#empty_state').removeClass('hidden').addClass('block');
                   $('#caravan_list').removeClass('block').addClass('hidden');
+                  $('#pagination_text').empty();
+                  $('.pagination-prev, .pagination-next').prop('disabled', true).addClass('cursor-not-allowed opacity-50');
                 } else {
                   $('#empty_state').removeClass('block').addClass('hidden');
                   $('#caravan_list').removeClass('hidden').addClass('block');
@@ -543,6 +605,12 @@ $destinations = getDestinations();
                   }
 
                   function displayPage(page) {
+                    const totalPages = Math.ceil(Caravans.length / itemsPerPage);
+                    if (page > totalPages) {
+                      currentPage = totalPages;
+                      page = currentPage;
+                    }
+
                     const startIndex = (page - 1) * itemsPerPage;
                     const endIndex = page * itemsPerPage;
                     const paginatedItems = Caravans.slice(startIndex, endIndex);
@@ -601,6 +669,7 @@ $destinations = getDestinations();
           itemsPerPage = parseInt($('#perpage').val());
           // console.log('Items per page:', itemsPerPage); // Apenas para depuração
           // Você pode chamar outras funções aqui para atualizar a lista com base no novo valor
+          currentPage = 1;
           updateCaravansList(); // Exemplo de chamada de função
         }
 
@@ -640,7 +709,7 @@ $destinations = getDestinations();
 
         function changePage(page) {
           currentPage = page;
-          updateCaravansList(true);
+          updateCaravansList();
         }
 
 
@@ -678,7 +747,10 @@ $destinations = getDestinations();
                   $("#caravan_add")[0].reset(); // Reseta o formulário
                   $("#vehicleTableBody").empty(); // Limpa o conteúdo do tbody
                   toast(jsonResponse.status, jsonResponse.msg);
-                  updateCaravansList(true);
+                  currentCaravanFilter = 'active';
+                  currentPage = 1;
+                  updateCaravanTabState();
+                  updateCaravansList();
                   $('[data-modal-hide="caravan_add_modal"]').click();//fechar modal
                 } else if (jsonResponse.status === "error") {
                   toast(jsonResponse.status, jsonResponse.msg);
@@ -694,7 +766,8 @@ $destinations = getDestinations();
         });
 
         //atualizar uma vez que carrega a pagina
-        updateCaravansList(true);
+        updateCaravanTabState();
+        updateCaravansList();
 
 
       });
