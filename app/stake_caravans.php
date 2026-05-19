@@ -578,6 +578,16 @@ $destinations = getDestinations();
                     : isActiveCaravan(caravan);
                 });
 
+                Caravans.sort(function (a, b) {
+                  const dateComparison = b.start_date.localeCompare(a.start_date);
+
+                  if (dateComparison !== 0) {
+                    return dateComparison;
+                  }
+
+                  return b.start_time.localeCompare(a.start_time);
+                });
+
                 if (Caravans.length === 0) {
                   updateEmptyState();
                   $('#empty_state').removeClass('hidden').addClass('block');
