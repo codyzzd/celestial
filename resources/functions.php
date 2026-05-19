@@ -525,8 +525,9 @@ function getCaravans($user_id)
   }
 
   // Passo 2: Buscar as caravanas onde id_stake corresponde e a data de partida é no futuro ou hoje
-  //$today = date('Y-m-d');
-  $today = date('Y-m-d', strtotime('-3 months'));
+  $today = date('Y-m-d');
+  // Para reativar a janela dos últimos 3 meses, use a linha abaixo no lugar da linha acima.
+  // $today = date('Y-m-d', strtotime('-3 months'));
   $stmt = $conn->prepare("SELECT * FROM caravans WHERE id_stake = ? AND start_date >= ? AND deleted_at IS NULL order by start_date asc");
   $stmt->bind_param("ss", $id_stake, $today);
   $stmt->execute();
@@ -582,8 +583,9 @@ function getCaravansApprove($user_id, $user_role)
   }
 
   // Passo 3: Configurar a SQL com base no filtro escolhido
-  // $today = date('Y-m-d');
-  $today = date('Y-m-d', strtotime('-3 months'));
+  $today = date('Y-m-d');
+  // Para reativar a janela dos últimos 3 meses, use a linha abaixo no lugar da linha acima.
+  // $today = date('Y-m-d', strtotime('-3 months'));
   $query = "
         SELECT
             c.id,
