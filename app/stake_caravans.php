@@ -325,7 +325,7 @@ $destinations = getDestinations();
           <ul class="flex flex-wrap -mb-px text-sm font-medium text-center"
               id="caravan-tabs"
               data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500"
-              data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
+              data-tabs-inactive-classes="border-transparent text-gray-600 hover:text-purple-700 hover:border-purple-300 dark:border-transparent dark:text-gray-300 dark:hover:text-purple-400 dark:hover:border-purple-500"
               role="tablist">
             <li class="me-2"
                 role="presentation">
@@ -338,7 +338,7 @@ $destinations = getDestinations();
             </li>
             <li class="me-2"
                 role="presentation">
-              <button class="caravan-filter-tab inline-block p-4 border-b-2 rounded-t-lg dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
+              <button class="caravan-filter-tab inline-block p-4 border-b-2 rounded-t-lg border-transparent text-gray-600 hover:text-purple-700 hover:border-purple-300 dark:border-transparent dark:text-gray-300 dark:hover:text-purple-400 dark:hover:border-purple-500"
                       id="caravans-archived-tab"
                       type="button"
                       role="tab"
@@ -542,7 +542,7 @@ $destinations = getDestinations();
             $(this)
               .attr('aria-selected', isActiveTab ? 'true' : 'false')
               .toggleClass('text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500', isActiveTab)
-              .toggleClass('dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300', !isActiveTab);
+              .toggleClass('border-transparent text-gray-600 hover:text-purple-700 hover:border-purple-300 dark:border-transparent dark:text-gray-300 dark:hover:text-purple-400 dark:hover:border-purple-500', !isActiveTab);
           });
         }
 
