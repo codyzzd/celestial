@@ -318,14 +318,14 @@ $relations = getRelations();
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
-                <div class="col-span-2">
+                <div class="col-span-2 hidden">
                   <div class="inline-flex items-center justify-center w-full">
                     <p class="text-lg font-bold dark:text-white hidden">Recomendação</p>
                     <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                     <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900 uppercase">Recomendação</span>
                   </div>
                 </div>
-                <div class="col-span-2">
+                <div class="col-span-2 hidden">
                   <label for="barcode"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código de barra</label>
                   <input type="text"
@@ -334,7 +334,7 @@ $relations = getRelations();
                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                          placeholder="ex: 8869481203" />
                 </div>
-                <div>
+                <div class="hidden">
                   <label for="mes"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mês</label>
                   <select id="mes"
@@ -362,7 +362,7 @@ $relations = getRelations();
                     <?php endforeach; ?>
                   </select>
                 </div>
-                <div>
+                <div class="hidden">
                   <label for="ano"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ano</label>
                   <input type="number"
@@ -569,14 +569,14 @@ $relations = getRelations();
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"></textarea>
                 </div>
-                <div class="col-span-2">
+                <div class="col-span-2 hidden">
                   <div class="inline-flex items-center justify-center w-full">
                     <p class="text-lg font-bold dark:text-white hidden">Recomendação</p>
                     <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                     <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900 uppercase">Recomendação</span>
                   </div>
                 </div>
-                <div class="col-span-2">
+                <div class="col-span-2 hidden">
                   <label for="barcode"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código de barra</label>
                   <input type="text"
@@ -585,7 +585,7 @@ $relations = getRelations();
                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                          placeholder="ex: 8869481203" />
                 </div>
-                <div>
+                <div class="hidden">
                   <label for="mes"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mês</label>
                   <select id="mes"
@@ -614,7 +614,7 @@ $relations = getRelations();
                     <?php endforeach; ?>
                   </select>
                 </div>
-                <div>
+                <div class="hidden">
                   <label for="ano"
                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ano</label>
                   <input type="number"
